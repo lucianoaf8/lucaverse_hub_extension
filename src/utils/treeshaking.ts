@@ -59,30 +59,35 @@ class TreeShakingOptimizer {
       enableDynamicImportOptimization: true,
       platform: 'web',
       debugMode: false,
-      ...config
+      ...config,
     };
 
     this.dependencyGraph = {
       nodes: {},
       edges: [],
       entryPoints: [],
-      deadNodes: []
+      deadNodes: [],
     };
 
     this.optimizationResults = [];
     this.platformFeatures = this.detectPlatformFeatures();
-    
+
     this.initializeTreeShaking();
   }
 
   /**
    * Perform aggressive tree shaking for utility libraries
    */
-  async optimizeUtilityLibraries(libraryConfig: Record<string, {
-    imports: string[];
-    usedFunctions: string[];
-    alternativeImports?: Record<string, string>;
-  }>): Promise<TreeShakingResult> {
+  async optimizeUtilityLibraries(
+    libraryConfig: Record<
+      string,
+      {
+        imports: string[];
+        usedFunctions: string[];
+        alternativeImports?: Record<string, string>;
+      }
+    >
+  ): Promise<TreeShakingResult> {
     if (!this.config.enableAggressiveTreeShaking) {
       return this.createEmptyResult('aggressive-tree-shaking-disabled');
     }
@@ -97,7 +102,7 @@ class TreeShakingOptimizer {
 
     for (const [library, config] of Object.entries(libraryConfig)) {
       const analysis = await this.analyzeUtilityLibrary(library, config);
-      
+
       totalOriginalSize += analysis.originalSize;
       totalOptimizedSize += analysis.optimizedSize;
       removedModules.push(...analysis.removedModules);
@@ -113,7 +118,7 @@ class TreeShakingOptimizer {
       unusedExports,
       sideEffects: [],
       conditionalInclusions: {},
-      optimizationTechniques: [...new Set(optimizationTechniques)]
+      optimizationTechniques: [...new Set(optimizationTechniques)],
     };
 
     this.optimizationResults.push(result);
@@ -137,16 +142,16 @@ class TreeShakingOptimizer {
 
     for (const modulePath of moduleList) {
       const analysis = await this.analyzeSideEffects(modulePath);
-      
+
       originalSize += analysis.size;
-      
+
       if (analysis.hasSideEffects) {
         sideEffects.push(modulePath);
-        
+
         // Try to eliminate or minimize side effects
         const optimized = await this.optimizeSideEffects(modulePath, analysis);
         optimizedSize += optimized.size;
-        
+
         if (optimized.canRemove) {
           removedModules.push(modulePath);
         }
@@ -163,7 +168,7 @@ class TreeShakingOptimizer {
       unusedExports: [],
       sideEffects,
       conditionalInclusions: {},
-      optimizationTechniques: ['side-effect-elimination', 'pure-annotation']
+      optimizationTechniques: ['side-effect-elimination', 'pure-annotation'],
     };
 
     this.optimizationResults.push(result);
@@ -173,11 +178,16 @@ class TreeShakingOptimizer {
   /**
    * Implement conditional feature inclusion based on platform
    */
-  async implementConditionalInclusion(featureMap: Record<string, {
-    platforms: ('web' | 'extension' | 'electron')[];
-    modules: string[];
-    alternatives?: Record<string, string>;
-  }>): Promise<TreeShakingResult> {
+  async implementConditionalInclusion(
+    featureMap: Record<
+      string,
+      {
+        platforms: ('web' | 'extension' | 'electron')[];
+        modules: string[];
+        alternatives?: Record<string, string>;
+      }
+    >
+  ): Promise<TreeShakingResult> {
     if (!this.config.enableConditionalInclusion) {
       return this.createEmptyResult('conditional-inclusion-disabled');
     }
@@ -201,7 +211,7 @@ class TreeShakingOptimizer {
           optimizedSize += moduleSize;
         } else {
           removedModules.push(module);
-          
+
           // Use alternative implementation if available
           if (config.alternatives && config.alternatives[this.config.platform]) {
             const altSize = await this.getModuleSize(config.alternatives[this.config.platform]);
@@ -219,7 +229,7 @@ class TreeShakingOptimizer {
       unusedExports: [],
       sideEffects: [],
       conditionalInclusions,
-      optimizationTechniques: ['conditional-inclusion', 'platform-specific-builds']
+      optimizationTechniques: ['conditional-inclusion', 'platform-specific-builds'],
     };
 
     this.optimizationResults.push(result);
@@ -287,7 +297,7 @@ class TreeShakingOptimizer {
       unusedExports,
       sideEffects: [],
       conditionalInclusions: {},
-      optimizationTechniques: ['unused-export-elimination', 'export-analysis']
+      optimizationTechniques: ['unused-export-elimination', 'export-analysis'],
     };
 
     this.optimizationResults.push(result);
@@ -297,11 +307,13 @@ class TreeShakingOptimizer {
   /**
    * Optimize dynamic imports
    */
-  async optimizeDynamicImports(dynamicImports: Array<{
-    condition: string;
-    module: string;
-    priority: 'critical' | 'important' | 'normal';
-  }>): Promise<TreeShakingResult> {
+  async optimizeDynamicImports(
+    dynamicImports: Array<{
+      condition: string;
+      module: string;
+      priority: 'critical' | 'important' | 'normal';
+    }>
+  ): Promise<TreeShakingResult> {
     if (!this.config.enableDynamicImportOptimization) {
       return this.createEmptyResult('dynamic-import-optimization-disabled');
     }
@@ -330,7 +342,7 @@ class TreeShakingOptimizer {
       unusedExports: [],
       sideEffects: [],
       conditionalInclusions: {},
-      optimizationTechniques: [...new Set(optimizationTechniques)]
+      optimizationTechniques: [...new Set(optimizationTechniques)],
     };
 
     this.optimizationResults.push(result);
@@ -351,7 +363,10 @@ class TreeShakingOptimizer {
     recommendations: string[];
   } {
     const totalOriginalSize = this.optimizationResults.reduce((sum, r) => sum + r.originalSize, 0);
-    const totalOptimizedSize = this.optimizationResults.reduce((sum, r) => sum + r.optimizedSize, 0);
+    const totalOptimizedSize = this.optimizationResults.reduce(
+      (sum, r) => sum + r.optimizedSize,
+      0
+    );
     const totalSavings = totalOriginalSize - totalOptimizedSize;
     const savingsPercentage = totalOriginalSize > 0 ? (totalSavings / totalOriginalSize) * 100 : 0;
 
@@ -360,10 +375,10 @@ class TreeShakingOptimizer {
         totalOriginalSize,
         totalOptimizedSize,
         totalSavings,
-        savingsPercentage
+        savingsPercentage,
       },
       optimizations: this.optimizationResults,
-      recommendations: this.generateRecommendations()
+      recommendations: this.generateRecommendations(),
     };
   }
 
@@ -375,7 +390,9 @@ class TreeShakingOptimizer {
     const usageRatio = config.usedFunctions.length / config.imports.length;
     const optimizedSize = Math.round(originalSize * usageRatio * 0.8); // 20% overhead
 
-    const unusedFunctions = config.imports.filter((imp: string) => !config.usedFunctions.includes(imp));
+    const unusedFunctions = config.imports.filter(
+      (imp: string) => !config.usedFunctions.includes(imp)
+    );
 
     return {
       originalSize,
@@ -385,7 +402,7 @@ class TreeShakingOptimizer {
       unusedExports: unusedFunctions,
       sideEffects: [],
       conditionalInclusions: {},
-      optimizationTechniques: ['specific-imports', 'unused-function-elimination']
+      optimizationTechniques: ['specific-imports', 'unused-function-elimination'],
     };
   }
 
@@ -402,11 +419,14 @@ class TreeShakingOptimizer {
       unusedExports: [],
       hasSideEffects,
       conditionalUsage: false,
-      size
+      size,
     };
   }
 
-  private async optimizeSideEffects(modulePath: string, analysis: ModuleAnalysis): Promise<{
+  private async optimizeSideEffects(
+    modulePath: string,
+    analysis: ModuleAnalysis
+  ): Promise<{
     size: number;
     canRemove: boolean;
   }> {
@@ -433,7 +453,7 @@ class TreeShakingOptimizer {
       this.dependencyGraph.edges.push({
         from: modulePath,
         to: importPath,
-        imports: [importPath]
+        imports: [importPath],
       });
     }
   }
@@ -470,8 +490,9 @@ class TreeShakingOptimizer {
     this.dependencyGraph.entryPoints.forEach(entryPoint => traverse(entryPoint));
 
     // Find dead nodes (unreachable from entry points)
-    this.dependencyGraph.deadNodes = Object.keys(this.dependencyGraph.nodes)
-      .filter(nodePath => !reachable.has(nodePath));
+    this.dependencyGraph.deadNodes = Object.keys(this.dependencyGraph.nodes).filter(
+      nodePath => !reachable.has(nodePath)
+    );
   }
 
   private async analyzeModule(modulePath: string): Promise<ModuleAnalysis> {
@@ -489,7 +510,7 @@ class TreeShakingOptimizer {
       unusedExports,
       hasSideEffects: Math.random() > 0.8, // 20% chance
       conditionalUsage: Math.random() > 0.9, // 10% chance
-      size: Math.floor(Math.random() * 30000) + 5000 // 5-35KB
+      size: Math.floor(Math.random() * 30000) + 5000, // 5-35KB
     };
   }
 
@@ -546,7 +567,9 @@ class TreeShakingOptimizer {
 
   private isConstantCondition(condition: string): boolean {
     // Simulate constant condition detection
-    return condition.includes('true') || condition.includes('false') || condition.includes('NODE_ENV');
+    return (
+      condition.includes('true') || condition.includes('false') || condition.includes('NODE_ENV')
+    );
   }
 
   private detectPlatformFeatures(): Record<string, boolean> {
@@ -558,7 +581,7 @@ class TreeShakingOptimizer {
       electronAPIs: this.config.platform === 'electron',
       fileSystemAccess: this.config.platform !== 'web',
       notifications: true,
-      clipboard: true
+      clipboard: true,
     };
   }
 
@@ -567,25 +590,39 @@ class TreeShakingOptimizer {
     const report = this.generateDeadCodeReport();
 
     if (report.summary.savingsPercentage < 20) {
-      recommendations.push('Low tree shaking effectiveness. Review import patterns and use specific imports.');
+      recommendations.push(
+        'Low tree shaking effectiveness. Review import patterns and use specific imports.'
+      );
     }
 
     if (this.dependencyGraph.deadNodes.length > 0) {
-      recommendations.push(`Found ${this.dependencyGraph.deadNodes.length} dead code modules. Consider removing unused dependencies.`);
+      recommendations.push(
+        `Found ${this.dependencyGraph.deadNodes.length} dead code modules. Consider removing unused dependencies.`
+      );
     }
 
-    const unusedExportCount = this.optimizationResults.reduce((sum, r) => sum + r.unusedExports.length, 0);
+    const unusedExportCount = this.optimizationResults.reduce(
+      (sum, r) => sum + r.unusedExports.length,
+      0
+    );
     if (unusedExportCount > 10) {
-      recommendations.push('High number of unused exports detected. Review and clean up module exports.');
+      recommendations.push(
+        'High number of unused exports detected. Review and clean up module exports.'
+      );
     }
 
     if (!this.config.enableAggressiveTreeShaking) {
       recommendations.push('Enable aggressive tree shaking for better optimization results.');
     }
 
-    const sideEffectCount = this.optimizationResults.reduce((sum, r) => sum + r.sideEffects.length, 0);
+    const sideEffectCount = this.optimizationResults.reduce(
+      (sum, r) => sum + r.sideEffects.length,
+      0
+    );
     if (sideEffectCount > 5) {
-      recommendations.push('High number of side effects detected. Consider marking modules as side-effect-free.');
+      recommendations.push(
+        'High number of side effects detected. Consider marking modules as side-effect-free.'
+      );
     }
 
     return recommendations;
@@ -600,7 +637,7 @@ class TreeShakingOptimizer {
       unusedExports: [],
       sideEffects: [],
       conditionalInclusions: {},
-      optimizationTechniques: [technique]
+      optimizationTechniques: [technique],
     };
   }
 
@@ -614,7 +651,12 @@ class TreeShakingOptimizer {
     // Initialize tree shaking configuration
     this.log('Tree shaking optimizer initialized');
     this.log(`Platform: ${this.config.platform}`);
-    this.log(`Features enabled: ${Object.entries(this.config).filter(([, value]) => value === true).map(([key]) => key).join(', ')}`);
+    this.log(
+      `Features enabled: ${Object.entries(this.config)
+        .filter(([, value]) => value === true)
+        .map(([key]) => key)
+        .join(', ')}`
+    );
   }
 }
 
@@ -626,9 +668,13 @@ export const globalTreeShakingOptimizer = new TreeShakingOptimizer({
   enableModuleBoundaryAnalysis: true,
   enableUnusedExportDetection: true,
   enableDynamicImportOptimization: true,
-  platform: typeof window !== 'undefined' && (window as any).chrome?.runtime ? 'extension' :
-           typeof window !== 'undefined' && (window as any).require ? 'electron' : 'web',
-  debugMode: process.env.NODE_ENV === 'development'
+  platform:
+    typeof window !== 'undefined' && (window as any).chrome?.runtime
+      ? 'extension'
+      : typeof window !== 'undefined' && (window as any).require
+        ? 'electron'
+        : 'web',
+  debugMode: process.env.NODE_ENV === 'development',
 });
 
 // Make tree shaking optimizer available globally for debugging

@@ -34,7 +34,7 @@ export type DeepOptional<T> = {
 };
 
 // Discriminated unions for different panel states
-export type PanelStateType = 
+export type PanelStateType =
   | { type: 'idle'; data: null }
   | { type: 'dragging'; data: { startPosition: Position; currentPosition: Position } }
   | { type: 'resizing'; data: { direction: ResizeDirection; startSize: Size; currentSize: Size } }
@@ -42,12 +42,12 @@ export type PanelStateType =
   | { type: 'error'; data: { message: string; code?: string } };
 
 // Action result types
-export type ActionResult<T = unknown> = 
+export type ActionResult<T = unknown> =
   | { success: true; data: T }
   | { success: false; error: string; code?: string };
 
 // API response wrapper
-export type APIResponse<T = unknown> = 
+export type APIResponse<T = unknown> =
   | { status: 'success'; data: T }
   | { status: 'error'; error: string; details?: unknown }
   | { status: 'loading' };
@@ -61,9 +61,7 @@ export type AsyncCallback<T = void> = (arg: T) => Promise<void>;
 export type UnsubscribeFn = () => void;
 
 // Validation types
-export type ValidationResult = 
-  | { valid: true }
-  | { valid: false; errors: ValidationError[] };
+export type ValidationResult = { valid: true } | { valid: false; errors: ValidationError[] };
 
 export interface ValidationError {
   field: string;
@@ -76,7 +74,7 @@ export type ConfigValue = string | number | boolean | object | null;
 export type ConfigObject = Record<string, ConfigValue>;
 
 // Utility for extracting array element type
-export type ArrayElement<ArrayType extends readonly unknown[]> = 
+export type ArrayElement<ArrayType extends readonly unknown[]> =
   ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
 
 // Utility for extracting promise return type
@@ -89,10 +87,14 @@ export type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
 export type WithOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
 // Utility for extracting function parameters
-export type Parameters<T extends (...args: any) => any> = T extends (...args: infer P) => any ? P : never;
+export type Parameters<T extends (...args: any) => any> = T extends (...args: infer P) => any
+  ? P
+  : never;
 
 // Utility for extracting function return type
-export type ReturnType<T extends (...args: any) => any> = T extends (...args: any) => infer R ? R : any;
+export type ReturnType<T extends (...args: any) => any> = T extends (...args: any) => infer R
+  ? R
+  : any;
 
 // Type guard utilities
 export type TypeGuard<T> = (value: unknown) => value is T;

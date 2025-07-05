@@ -4,17 +4,17 @@ import { ZIndexLayer } from '../../utils/zIndexManager';
 import clsx from 'clsx';
 
 // Context menu action types
-export type ContextMenuAction = 
-  | 'duplicate' 
-  | 'delete' 
-  | 'group' 
+export type ContextMenuAction =
+  | 'duplicate'
+  | 'delete'
+  | 'group'
   | 'ungroup'
-  | 'bring-to-front' 
+  | 'bring-to-front'
   | 'send-to-back'
   | 'bring-forward'
   | 'send-backward'
-  | 'settings' 
-  | 'export' 
+  | 'settings'
+  | 'export'
   | 'fullscreen'
   | 'minimize'
   | 'maximize'
@@ -43,32 +43,32 @@ export interface PanelContextMenuProps {
   x: number;
   y: number;
   visible: boolean;
-  
+
   // Panel context
   selectedPanels: PanelLayout[];
   allPanels: PanelLayout[];
-  
+
   // Event handlers
   onAction: (action: ContextMenuAction, panelIds: string[]) => void;
   onClose: () => void;
-  
+
   // Configuration
   customItems?: ContextMenuItem[];
   disabledActions?: ContextMenuAction[];
   showIcons?: boolean;
   showShortcuts?: boolean;
-  
+
   // Panel-specific context
   canGroup?: boolean;
   canUngroup?: boolean;
   hasClipboard?: boolean;
-  
+
   className?: string;
 }
 
 // Keyboard shortcut handler
 const SHORTCUTS: Record<string, ContextMenuAction> = {
-  'Delete': 'delete',
+  Delete: 'delete',
   'Ctrl+D': 'duplicate',
   'Ctrl+G': 'group',
   'Ctrl+Shift+G': 'ungroup',
@@ -76,7 +76,7 @@ const SHORTCUTS: Record<string, ContextMenuAction> = {
   'Ctrl+[': 'send-to-back',
   'Ctrl+Shift+]': 'bring-forward',
   'Ctrl+Shift+[': 'send-backward',
-  'F11': 'fullscreen',
+  F11: 'fullscreen',
   'Ctrl+L': 'lock',
   'Ctrl+C': 'copy',
   'Ctrl+V': 'paste',
@@ -111,14 +111,17 @@ const MenuItem: React.FC<{
     setShowSubmenu(false);
   }, []);
 
-  const handleClick = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    if (!item.disabled && !item.submenu) {
-      onAction(item.action);
-    }
-  }, [item.disabled, item.submenu, item.action, onAction]);
+  const handleClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (!item.disabled && !item.submenu) {
+        onAction(item.action);
+      }
+    },
+    [item.disabled, item.submenu, item.action, onAction]
+  );
 
   useEffect(() => {
     return () => {
@@ -153,17 +156,13 @@ const MenuItem: React.FC<{
       >
         <div className="flex items-center space-x-3">
           {showIcons && (
-            <span className="w-4 h-4 flex items-center justify-center text-xs">
-              {item.icon}
-            </span>
+            <span className="w-4 h-4 flex items-center justify-center text-xs">{item.icon}</span>
           )}
           <span>{item.label}</span>
         </div>
-        
-        {item.submenu && (
-          <span className="text-white/60">▶</span>
-        )}
-        
+
+        {item.submenu && <span className="text-white/60">▶</span>}
+
         {showShortcuts && item.shortcut && !item.submenu && (
           <kbd className="text-xs text-white/50 bg-white/10 px-1 rounded ml-auto">
             {item.shortcut}
@@ -211,18 +210,21 @@ export const PanelContextMenu: React.FC<PanelContextMenuProps> = ({
   const [adjustedPosition, setAdjustedPosition] = useState({ x, y });
 
   // Handle action execution
-  const handleAction = useCallback((action: ContextMenuAction) => {
-    const panelIds = selectedPanels.map(p => p.id);
-    onAction(action, panelIds);
-    onClose();
-  }, [selectedPanels, onAction, onClose]);
+  const handleAction = useCallback(
+    (action: ContextMenuAction) => {
+      const panelIds = selectedPanels.map(p => p.id);
+      onAction(action, panelIds);
+      onClose();
+    },
+    [selectedPanels, onAction, onClose]
+  );
 
   // Generate menu items based on context
   const generateMenuItems = useCallback((): ContextMenuItem[] => {
     const isMultiSelect = selectedPanels.length > 1;
     const isSingleSelect = selectedPanels.length === 1;
     const selectedPanel = isSingleSelect ? selectedPanels[0] : null;
-    
+
     const baseItems: ContextMenuItem[] = [
       // Basic operations
       {
@@ -393,16 +395,16 @@ export const PanelContextMenu: React.FC<PanelContextMenuProps> = ({
     // Filter out separator-only items at start/end
     const filteredItems = baseItems.filter((item, index, array) => {
       if (!item.separator) return true;
-      
+
       // Remove separators at start
       if (index === 0) return false;
-      
+
       // Remove separators at end
       if (index === array.length - 1) return false;
-      
+
       // Remove consecutive separators
       if (array[index - 1]?.separator) return false;
-      
+
       return true;
     });
 
@@ -480,9 +482,10 @@ export const PanelContextMenu: React.FC<PanelContextMenuProps> = ({
     if (!visible) return;
 
     const handleKeydown = (event: KeyboardEvent) => {
-      const shortcutKey = event.ctrlKey || event.metaKey
-        ? `Ctrl+${event.shiftKey ? 'Shift+' : ''}${event.key.toUpperCase()}`
-        : event.key;
+      const shortcutKey =
+        event.ctrlKey || event.metaKey
+          ? `Ctrl+${event.shiftKey ? 'Shift+' : ''}${event.key.toUpperCase()}`
+          : event.key;
 
       const action = SHORTCUTS[shortcutKey];
       if (action && !disabledActions.includes(action)) {
@@ -523,8 +526,7 @@ export const PanelContextMenu: React.FC<PanelContextMenuProps> = ({
           <div className="text-xs text-white/60 uppercase tracking-wide">
             {selectedPanels.length === 1
               ? selectedPanels[0].metadata?.title || selectedPanels[0].id
-              : `${selectedPanels.length} panels selected`
-            }
+              : `${selectedPanels.length} panels selected`}
           </div>
         </div>
       )}
@@ -569,20 +571,20 @@ export const useContextMenu = () => {
     selectedPanels: [],
   });
 
-  const showContextMenu = useCallback((
-    event: React.MouseEvent | MouseEvent,
-    selectedPanels: PanelLayout[]
-  ) => {
-    event.preventDefault();
-    event.stopPropagation();
+  const showContextMenu = useCallback(
+    (event: React.MouseEvent | MouseEvent, selectedPanels: PanelLayout[]) => {
+      event.preventDefault();
+      event.stopPropagation();
 
-    setContextMenu({
-      x: event.clientX,
-      y: event.clientY,
-      visible: true,
-      selectedPanels,
-    });
-  }, []);
+      setContextMenu({
+        x: event.clientX,
+        y: event.clientY,
+        visible: true,
+        selectedPanels,
+      });
+    },
+    []
+  );
 
   const hideContextMenu = useCallback(() => {
     setContextMenu(prev => ({ ...prev, visible: false }));
@@ -601,7 +603,7 @@ export const getDefaultContextMenuItems = (
   allPanels: PanelLayout[]
 ): ContextMenuItem[] => {
   const isMultiSelect = selectedPanels.length > 1;
-  
+
   return [
     {
       id: 'duplicate',

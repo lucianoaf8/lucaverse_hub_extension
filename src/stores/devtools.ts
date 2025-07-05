@@ -16,27 +16,22 @@ export interface DevToolsConfig {
 }
 
 // Enhanced DevTools middleware with time-travel debugging
-export const createDevToolsMiddleware = <T>(
-  config: DevToolsConfig
-) => {
+export const createDevToolsMiddleware = <T>(config: DevToolsConfig) => {
   return (f: StateCreator<T>) => {
     if (typeof window === 'undefined' || !config.enabled) {
       return f;
     }
 
-    return devtools(
-      subscribeWithSelector(f),
-      {
-        name: config.name,
-        serialize: config.serialize ?? true,
-        trace: config.trace ?? true,
-        traceLimit: config.traceLimit ?? 25,
-        // Enable action tracking
-        actionCreators: {
-          // Add custom action creators for better debugging
-        }
-      }
-    );
+    return devtools(subscribeWithSelector(f), {
+      name: config.name,
+      serialize: config.serialize ?? true,
+      trace: config.trace ?? true,
+      traceLimit: config.traceLimit ?? 25,
+      // Enable action tracking
+      actionCreators: {
+        // Add custom action creators for better debugging
+      },
+    });
   };
 };
 
@@ -51,19 +46,20 @@ interface StoreMetrics {
 
 class StorePerformanceTracker {
   private metrics = new Map<string, StoreMetrics>();
-  
+
   trackAction(storeName: string, actionName: string, duration: number, stateSize: number) {
     const current = this.metrics.get(storeName) || {
       actionCount: 0,
       lastActionTime: 0,
       renderCount: 0,
       averageActionTime: 0,
-      stateSize: 0
+      stateSize: 0,
     };
 
     current.actionCount++;
     current.lastActionTime = Date.now();
-    current.averageActionTime = (current.averageActionTime * (current.actionCount - 1) + duration) / current.actionCount;
+    current.averageActionTime =
+      (current.averageActionTime * (current.actionCount - 1) + duration) / current.actionCount;
     current.stateSize = stateSize;
 
     this.metrics.set(storeName, current);
@@ -72,7 +68,8 @@ class StorePerformanceTracker {
     if (duration > 100) {
       console.warn(`🐌 Slow action in ${storeName}.${actionName}: ${duration}ms`);
     }
-    if (stateSize > 1024 * 1024) { // 1MB
+    if (stateSize > 1024 * 1024) {
+      // 1MB
       console.warn(`📦 Large state in ${storeName}: ${(stateSize / 1024 / 1024).toFixed(2)}MB`);
     }
   }
@@ -98,9 +95,12 @@ export const storePerformanceTracker = new StorePerformanceTracker();
 
 // Action logging for debugging
 export const createActionLogger = (storeName: string) => {
-  return <T extends Record<string, any>>(set: (partial: T | Partial<T> | ((state: T) => T | Partial<T>)) => void, get: () => T) => {
+  return <T extends Record<string, any>>(
+    set: (partial: T | Partial<T> | ((state: T) => T | Partial<T>)) => void,
+    get: () => T
+  ) => {
     const originalSet = set;
-    
+
     return (
       partial: T | Partial<T> | ((state: T) => T | Partial<T>),
       replace?: boolean,
@@ -108,21 +108,16 @@ export const createActionLogger = (storeName: string) => {
     ) => {
       const startTime = performance.now();
       const prevState = get();
-      
+
       originalSet(partial, replace);
-      
+
       const endTime = performance.now();
       const duration = endTime - startTime;
       const newState = get();
       const stateSize = JSON.stringify(newState).length;
-      
+
       // Track performance
-      storePerformanceTracker.trackAction(
-        storeName,
-        actionName || 'unknown',
-        duration,
-        stateSize
-      );
+      storePerformanceTracker.trackAction(storeName, actionName || 'unknown', duration, stateSize);
 
       // Log action details in development
       if (process.env.NODE_ENV === 'development') {
@@ -141,22 +136,22 @@ export const createActionLogger = (storeName: string) => {
 export const createStateDiffer = () => {
   const getStateChanges = (prevState: any, newState: any, path = ''): string[] => {
     const changes: string[] = [];
-    
+
     if (typeof prevState !== typeof newState) {
       changes.push(`${path}: type changed from ${typeof prevState} to ${typeof newState}`);
       return changes;
     }
-    
+
     if (prevState === newState) {
       return changes;
     }
-    
+
     if (typeof prevState === 'object' && prevState !== null) {
       const allKeys = new Set([...Object.keys(prevState), ...Object.keys(newState)]);
-      
+
       for (const key of allKeys) {
         const newPath = path ? `${path}.${key}` : key;
-        
+
         if (!(key in prevState)) {
           changes.push(`${newPath}: added`);
         } else if (!(key in newState)) {
@@ -168,10 +163,10 @@ export const createStateDiffer = () => {
     } else {
       changes.push(`${path}: changed from ${prevState} to ${newState}`);
     }
-    
+
     return changes;
   };
-  
+
   return { getStateChanges };
 };
 
@@ -196,27 +191,28 @@ export const initializeCrossPlatformDevTools = () => {
 // DevTools state inspection helpers
 export const inspectStoreState = (storeName: string, state: any) => {
   if (process.env.NODE_ENV !== 'development') return;
-  
+
   console.group(`🔍 ${storeName} State Inspection`);
   console.log('Current State:', state);
   console.log('State Type:', typeof state);
   console.log('State Size:', `${(JSON.stringify(state).length / 1024).toFixed(2)}KB`);
-  
+
   // Check for potential issues
   const issues: string[] = [];
-  
-  if (JSON.stringify(state).length > 512 * 1024) { // 512KB
+
+  if (JSON.stringify(state).length > 512 * 1024) {
+    // 512KB
     issues.push('State is very large (>512KB)');
   }
-  
+
   if (hasCircularReferences(state)) {
     issues.push('State contains circular references');
   }
-  
+
   if (issues.length > 0) {
     console.warn('Potential Issues:', issues);
   }
-  
+
   console.groupEnd();
 };
 
@@ -227,7 +223,7 @@ const hasCircularReferences = (obj: any, seen = new WeakSet()): boolean => {
       return true;
     }
     seen.add(obj);
-    
+
     for (const key in obj) {
       if (hasCircularReferences(obj[key], seen)) {
         return true;
@@ -242,22 +238,23 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
   (window as any).__STORE_DEVTOOLS__ = {
     tracker: storePerformanceTracker,
     inspectState: inspectStoreState,
-    createDiffer: createStateDiffer
+    createDiffer: createStateDiffer,
   };
 }
 
 // Export default configuration for different environments
-export const defaultDevToolsConfig = {
-  development: {
-    enabled: true,
-    serialize: true,
-    trace: true,
-    traceLimit: 25
-  },
-  production: {
-    enabled: false,
-    serialize: false,
-    trace: false,
-    traceLimit: 0
-  }
-}[process.env.NODE_ENV as 'development' | 'production'] || defaultDevToolsConfig.development;
+export const defaultDevToolsConfig =
+  {
+    development: {
+      enabled: true,
+      serialize: true,
+      trace: true,
+      traceLimit: 25,
+    },
+    production: {
+      enabled: false,
+      serialize: false,
+      trace: false,
+      traceLimit: 0,
+    },
+  }[process.env.NODE_ENV as 'development' | 'production'] || defaultDevToolsConfig.development;

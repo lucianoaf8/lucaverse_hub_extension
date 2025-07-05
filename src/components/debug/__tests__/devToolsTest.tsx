@@ -40,19 +40,19 @@ export const DevToolsValidation: React.FC = () => {
       const inspector = new StateInspector();
       const report = inspector.generateStateReport(layoutStore);
       const duration = performance.now() - startTime;
-      
+
       results.push({
         test: 'State Inspection',
         passed: report.summary.status !== undefined,
         message: `Generated state report with ${report.analysis.issues.length} issues`,
-        duration
+        duration,
       });
       console.log('✅ State inspection test passed');
     } catch (error) {
       results.push({
         test: 'State Inspection',
         passed: false,
-        message: `Failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+        message: `Failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
       });
       console.error('❌ State inspection test failed:', error);
     }
@@ -62,26 +62,26 @@ export const DevToolsValidation: React.FC = () => {
       const startTime = performance.now();
       const monitor = new PerformanceMonitor();
       monitor.startProfiling();
-      
+
       // Simulate some work
       await new Promise(resolve => setTimeout(resolve, 100));
-      
+
       monitor.stopProfiling();
       const metrics = monitor.getMetrics();
       const duration = performance.now() - startTime;
-      
+
       results.push({
         test: 'Performance Monitoring',
         passed: metrics !== undefined && typeof metrics.renderCount === 'number',
         message: `Captured metrics: ${metrics.renderCount} renders`,
-        duration
+        duration,
       });
       console.log('✅ Performance monitoring test passed');
     } catch (error) {
       results.push({
         test: 'Performance Monitoring',
         passed: false,
-        message: `Failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+        message: `Failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
       });
       console.error('❌ Performance monitoring test failed:', error);
     }
@@ -96,19 +96,19 @@ export const DevToolsValidation: React.FC = () => {
         'low'
       );
       const duration = performance.now() - startTime;
-      
+
       results.push({
         test: 'Error Tracking',
         passed: typeof errorId === 'string' && errorId.length > 0,
         message: `Error tracked with ID: ${errorId}`,
-        duration
+        duration,
       });
       console.log('✅ Error tracking test passed');
     } catch (error) {
       results.push({
         test: 'Error Tracking',
         passed: false,
-        message: `Failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+        message: `Failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
       });
       console.error('❌ Error tracking test failed:', error);
     }
@@ -116,22 +116,28 @@ export const DevToolsValidation: React.FC = () => {
     // Test 4: DevTools Integration
     try {
       const startTime = performance.now();
-      const hasReduxDevTools = typeof window !== 'undefined' && !!(window as any).__REDUX_DEVTOOLS_EXTENSION__;
-      const hasStoreDevTools = typeof window !== 'undefined' && !!(window as any).__STORE_DEVTOOLS__;
+      const hasReduxDevTools =
+        typeof window !== 'undefined' && !!(window as any).__REDUX_DEVTOOLS_EXTENSION__;
+      const hasStoreDevTools =
+        typeof window !== 'undefined' && !!(window as any).__STORE_DEVTOOLS__;
       const duration = performance.now() - startTime;
-      
+
       results.push({
         test: 'DevTools Integration',
         passed: hasReduxDevTools || hasStoreDevTools,
-        message: hasReduxDevTools ? 'Redux DevTools available' : hasStoreDevTools ? 'Store DevTools available' : 'No DevTools detected',
-        duration
+        message: hasReduxDevTools
+          ? 'Redux DevTools available'
+          : hasStoreDevTools
+            ? 'Store DevTools available'
+            : 'No DevTools detected',
+        duration,
       });
       console.log('✅ DevTools integration test passed');
     } catch (error) {
       results.push({
         test: 'DevTools Integration',
         passed: false,
-        message: `Failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+        message: `Failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
       });
       console.error('❌ DevTools integration test failed:', error);
     }
@@ -139,27 +145,29 @@ export const DevToolsValidation: React.FC = () => {
     // Test 5: Development Shortcuts
     try {
       const startTime = performance.now();
-      
+
       // Test shortcut manager existence
       const hasShortcuts = typeof window !== 'undefined' && !!(window as any).__DEV_SHORTCUTS__;
-      
+
       // Test mock data generation
       globalDevShortcuts.generateMockData({ panels: 1 });
-      
+
       const duration = performance.now() - startTime;
-      
+
       results.push({
         test: 'Development Shortcuts',
         passed: hasShortcuts,
-        message: hasShortcuts ? 'Shortcuts manager available and mock data generated' : 'Shortcuts manager not found',
-        duration
+        message: hasShortcuts
+          ? 'Shortcuts manager available and mock data generated'
+          : 'Shortcuts manager not found',
+        duration,
       });
       console.log('✅ Development shortcuts test passed');
     } catch (error) {
       results.push({
         test: 'Development Shortcuts',
         passed: false,
-        message: `Failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+        message: `Failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
       });
       console.error('❌ Development shortcuts test failed:', error);
     }
@@ -171,19 +179,19 @@ export const DevToolsValidation: React.FC = () => {
       await new Promise(resolve => setTimeout(resolve, 100)); // Allow render
       setShowDebugPanel(false);
       const duration = performance.now() - startTime;
-      
+
       results.push({
         test: 'Debug Panel Rendering',
         passed: true,
         message: 'Debug panel rendered successfully',
-        duration
+        duration,
       });
       console.log('✅ Debug panel rendering test passed');
     } catch (error) {
       results.push({
         test: 'Debug Panel Rendering',
         passed: false,
-        message: `Failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+        message: `Failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
       });
       console.error('❌ Debug panel rendering test failed:', error);
     }
@@ -191,7 +199,7 @@ export const DevToolsValidation: React.FC = () => {
     // Test 7: Store DevTools Actions
     try {
       const startTime = performance.now();
-      
+
       // Test layout store action
       layoutStore.addPanel({
         component: 'SmartHub' as any,
@@ -199,27 +207,27 @@ export const DevToolsValidation: React.FC = () => {
         size: { width: 200, height: 150 },
         zIndex: 1,
         visible: true,
-        title: 'Test Panel'
+        title: 'Test Panel',
       });
-      
+
       // Test app store action
       appStore.toggleTheme();
       appStore.toggleTheme(); // Toggle back
-      
+
       const duration = performance.now() - startTime;
-      
+
       results.push({
         test: 'Store DevTools Actions',
         passed: true,
         message: 'Store actions executed with DevTools tracking',
-        duration
+        duration,
       });
       console.log('✅ Store DevTools actions test passed');
     } catch (error) {
       results.push({
         test: 'Store DevTools Actions',
         passed: false,
-        message: `Failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+        message: `Failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
       });
       console.error('❌ Store DevTools actions test failed:', error);
     }
@@ -234,7 +242,7 @@ export const DevToolsValidation: React.FC = () => {
 
     console.log(`\n📊 DevTools Validation Summary:`);
     console.log(`   Passed: ${passed}/${total} (${passRate.toFixed(1)}%)`);
-    
+
     if (passRate >= 85) {
       console.log('✅ DevTools validation PASSED - All major functionality working');
     } else {
@@ -249,8 +257,8 @@ export const DevToolsValidation: React.FC = () => {
     }, 1000);
   }, []);
 
-  const getStatusEmoji = (passed: boolean) => passed ? '✅' : '❌';
-  const getStatusColor = (passed: boolean) => passed ? 'text-green-400' : 'text-red-400';
+  const getStatusEmoji = (passed: boolean) => (passed ? '✅' : '❌');
+  const getStatusColor = (passed: boolean) => (passed ? 'text-green-400' : 'text-red-400');
 
   const passedTests = testResults.filter(r => r.passed).length;
   const totalTests = testResults.length;
@@ -301,7 +309,7 @@ export const DevToolsValidation: React.FC = () => {
         {/* Test Results */}
         <div className="space-y-4">
           <h2 className="text-xl font-semibold mb-4">Test Results</h2>
-          
+
           {testResults.map((result, index) => (
             <div key={index} className="bg-white/10 rounded-lg p-4">
               <div className="flex items-start justify-between">
@@ -315,9 +323,7 @@ export const DevToolsValidation: React.FC = () => {
                       </span>
                     )}
                   </div>
-                  <p className={`text-sm ${getStatusColor(result.passed)}`}>
-                    {result.message}
-                  </p>
+                  <p className={`text-sm ${getStatusColor(result.passed)}`}>{result.message}</p>
                 </div>
               </div>
             </div>
@@ -342,33 +348,47 @@ export const DevToolsValidation: React.FC = () => {
           <h3 className="text-lg font-semibold mb-4">Task 17 Success Criteria</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div className="space-y-2">
-              <div className={`flex items-center gap-2 ${passedTests >= 1 ? 'text-green-400' : 'text-gray-400'}`}>
+              <div
+                className={`flex items-center gap-2 ${passedTests >= 1 ? 'text-green-400' : 'text-gray-400'}`}
+              >
                 <span>{passedTests >= 1 ? '✅' : '⏳'}</span>
                 <span>React DevTools shows components with proper names</span>
               </div>
-              <div className={`flex items-center gap-2 ${passedTests >= 2 ? 'text-green-400' : 'text-gray-400'}`}>
+              <div
+                className={`flex items-center gap-2 ${passedTests >= 2 ? 'text-green-400' : 'text-gray-400'}`}
+              >
                 <span>{passedTests >= 2 ? '✅' : '⏳'}</span>
                 <span>Zustand DevTools displays store actions and state</span>
               </div>
-              <div className={`flex items-center gap-2 ${passedTests >= 3 ? 'text-green-400' : 'text-gray-400'}`}>
+              <div
+                className={`flex items-center gap-2 ${passedTests >= 3 ? 'text-green-400' : 'text-gray-400'}`}
+              >
                 <span>{passedTests >= 3 ? '✅' : '⏳'}</span>
                 <span>Debug panel provides comprehensive information</span>
               </div>
-              <div className={`flex items-center gap-2 ${passedTests >= 4 ? 'text-green-400' : 'text-gray-400'}`}>
+              <div
+                className={`flex items-center gap-2 ${passedTests >= 4 ? 'text-green-400' : 'text-gray-400'}`}
+              >
                 <span>{passedTests >= 4 ? '✅' : '⏳'}</span>
                 <span>State inspection utilities identify anomalies</span>
               </div>
             </div>
             <div className="space-y-2">
-              <div className={`flex items-center gap-2 ${passedTests >= 5 ? 'text-green-400' : 'text-gray-400'}`}>
+              <div
+                className={`flex items-center gap-2 ${passedTests >= 5 ? 'text-green-400' : 'text-gray-400'}`}
+              >
                 <span>{passedTests >= 5 ? '✅' : '⏳'}</span>
                 <span>Performance monitoring detects bottlenecks</span>
               </div>
-              <div className={`flex items-center gap-2 ${passedTests >= 6 ? 'text-green-400' : 'text-gray-400'}`}>
+              <div
+                className={`flex items-center gap-2 ${passedTests >= 6 ? 'text-green-400' : 'text-gray-400'}`}
+              >
                 <span>{passedTests >= 6 ? '✅' : '⏳'}</span>
                 <span>Error tracking captures and categorizes errors</span>
               </div>
-              <div className={`flex items-center gap-2 ${passedTests >= 7 ? 'text-green-400' : 'text-gray-400'}`}>
+              <div
+                className={`flex items-center gap-2 ${passedTests >= 7 ? 'text-green-400' : 'text-gray-400'}`}
+              >
                 <span>{passedTests >= 7 ? '✅' : '⏳'}</span>
                 <span>Development shortcuts provide quick access</span>
               </div>
@@ -402,10 +422,7 @@ export const DevToolsValidation: React.FC = () => {
 
       {/* Debug Panel */}
       {showDebugPanel && (
-        <DebugPanel
-          visible={showDebugPanel}
-          onClose={() => setShowDebugPanel(false)}
-        />
+        <DebugPanel visible={showDebugPanel} onClose={() => setShowDebugPanel(false)} />
       )}
     </div>
   );

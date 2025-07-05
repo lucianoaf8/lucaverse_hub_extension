@@ -16,13 +16,8 @@ import {
   Active,
   Over,
 } from '@dnd-kit/core';
-import {
-  restrictToWindowEdges,
-  restrictToParentElement,
-} from '@dnd-kit/modifiers';
-import { 
-  sortableKeyboardCoordinates
-} from '@dnd-kit/sortable';
+import { restrictToWindowEdges, restrictToParentElement } from '@dnd-kit/modifiers';
+import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 
 // Types for drag and drop operations
 export interface DragState {
@@ -51,15 +46,15 @@ interface DragDropContextType {
 export const DragDropContext = React.createContext<DragDropContextType | null>(null);
 
 // Custom collision detection with panel-specific logic
-const customCollisionDetection: CollisionDetection = (args) => {
+const customCollisionDetection: CollisionDetection = args => {
   // First, use closest center for general detection
   const closestCenterCollisions = closestCenter(args);
-  
+
   // If we have center collisions, return them
   if (closestCenterCollisions.length > 0) {
     return closestCenterCollisions;
   }
-  
+
   // Fallback to closest corners for edge cases
   return closestCorners(args);
 };
@@ -113,14 +108,12 @@ export const DragDropProvider: React.FC<DragDropProviderProps> = ({
   );
 
   // Apply container restriction modifier if enabled
-  const finalModifiers = restrictToContainer 
-    ? [...modifiers, restrictToParentElement]
-    : modifiers;
+  const finalModifiers = restrictToContainer ? [...modifiers, restrictToParentElement] : modifiers;
 
   // Handle drag start with state updates and announcements
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
-    
+
     setDragState({
       activeId: active.id as string,
       activePanelData: active.data.current,
@@ -135,7 +128,7 @@ export const DragDropProvider: React.FC<DragDropProviderProps> = ({
   // Handle drag move with real-time updates
   const handleDragMove = (event: DragMoveEvent) => {
     const { delta } = event;
-    
+
     setDragState(prev => ({
       ...prev,
       dragOffset: delta,
@@ -148,7 +141,7 @@ export const DragDropProvider: React.FC<DragDropProviderProps> = ({
   // Handle drag end with cleanup and final positioning
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    
+
     // Reset drag state
     setDragState({
       activeId: null,
@@ -177,16 +170,14 @@ export const DragDropProvider: React.FC<DragDropProviderProps> = ({
         {children}
         <DragOverlay>
           {dragState.activeId ? (
-            <div 
+            <div
               className="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-2xl opacity-60 pointer-events-none"
               style={{
                 width: dragState.activePanelData?.size?.width || 300,
                 height: dragState.activePanelData?.size?.height || 200,
               }}
             >
-              <div className="p-4 text-white/80">
-                Dragging Panel: {dragState.activeId}
-              </div>
+              <div className="p-4 text-white/80">Dragging Panel: {dragState.activeId}</div>
             </div>
           ) : null}
         </DragOverlay>

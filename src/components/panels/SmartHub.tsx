@@ -43,7 +43,7 @@ export const SmartHub: React.FC<SmartHubProps> = ({
   size,
   onMove,
   onResize,
-  className = ''
+  className = '',
 }) => {
   // Local state
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
@@ -93,7 +93,7 @@ export const SmartHub: React.FC<SmartHubProps> = ({
             isPinned: true,
             tags: ['development', 'code'],
             createdAt: Date.now() - 86400000,
-            updatedAt: Date.now()
+            updatedAt: Date.now(),
           },
           {
             id: 2,
@@ -104,7 +104,7 @@ export const SmartHub: React.FC<SmartHubProps> = ({
             isPinned: false,
             tags: ['documentation', 'web'],
             createdAt: Date.now() - 172800000,
-            updatedAt: Date.now()
+            updatedAt: Date.now(),
           },
           {
             id: 3,
@@ -115,8 +115,8 @@ export const SmartHub: React.FC<SmartHubProps> = ({
             isPinned: true,
             tags: ['development', 'help'],
             createdAt: Date.now() - 259200000,
-            updatedAt: Date.now()
-          }
+            updatedAt: Date.now(),
+          },
         ];
         setBookmarks(sampleBookmarks);
         saveBookmarksToStorage(sampleBookmarks);
@@ -163,9 +163,7 @@ export const SmartHub: React.FC<SmartHubProps> = ({
       .sort((a, b) => b.visits - a.visits)
       .slice(0, 4);
 
-    const pinned = bookmarksToProcess
-      .filter(b => b.isPinned)
-      .slice(0, 6);
+    const pinned = bookmarksToProcess.filter(b => b.isPinned).slice(0, 6);
 
     const recent = bookmarksToProcess
       .filter(b => !mostVisited.includes(b) && !b.isPinned)
@@ -176,22 +174,25 @@ export const SmartHub: React.FC<SmartHubProps> = ({
   }, []);
 
   // Perform search with filtering
-  const performSearch = useCallback((query: string) => {
-    if (!query || query.length < 2) {
-      setFilteredBookmarksData(processBookmarks(bookmarks));
-      return;
-    }
+  const performSearch = useCallback(
+    (query: string) => {
+      if (!query || query.length < 2) {
+        setFilteredBookmarksData(processBookmarks(bookmarks));
+        return;
+      }
 
-    const filtered = bookmarks.filter(bookmark =>
-      bookmark.title.toLowerCase().includes(query.toLowerCase()) ||
-      bookmark.url.toLowerCase().includes(query.toLowerCase()) ||
-      (bookmark.tags && bookmark.tags.some(tag =>
-        tag.toLowerCase().includes(query.toLowerCase())
-      ))
-    );
+      const filtered = bookmarks.filter(
+        bookmark =>
+          bookmark.title.toLowerCase().includes(query.toLowerCase()) ||
+          bookmark.url.toLowerCase().includes(query.toLowerCase()) ||
+          (bookmark.tags &&
+            bookmark.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase())))
+      );
 
-    setFilteredBookmarksData(processBookmarks(filtered));
-  }, [bookmarks, processBookmarks]);
+      setFilteredBookmarksData(processBookmarks(filtered));
+    },
+    [bookmarks, processBookmarks]
+  );
 
   // Update bookmarks data when bookmarks change
   useEffect(() => {
@@ -201,52 +202,58 @@ export const SmartHub: React.FC<SmartHubProps> = ({
   }, [bookmarks, searchQuery, activeFilter, processBookmarks]);
 
   // Handle link click
-  const handleLinkClick = useCallback((bookmark: Bookmark) => {
-    // Update visit count
-    const updatedBookmarks = bookmarks.map(b =>
-      b.id === bookmark.id ? { ...b, visits: (b.visits || 0) + 1, updatedAt: Date.now() } : b
-    );
-    setBookmarks(updatedBookmarks);
-    saveBookmarksToStorage(updatedBookmarks);
+  const handleLinkClick = useCallback(
+    (bookmark: Bookmark) => {
+      // Update visit count
+      const updatedBookmarks = bookmarks.map(b =>
+        b.id === bookmark.id ? { ...b, visits: (b.visits || 0) + 1, updatedAt: Date.now() } : b
+      );
+      setBookmarks(updatedBookmarks);
+      saveBookmarksToStorage(updatedBookmarks);
 
-    // Add to recent links
-    const newRecentLink: RecentLink = {
-      url: bookmark.url,
-      title: bookmark.title,
-      timestamp: Date.now()
-    };
+      // Add to recent links
+      const newRecentLink: RecentLink = {
+        url: bookmark.url,
+        title: bookmark.title,
+        timestamp: Date.now(),
+      };
 
-    const updatedRecentLinks = [
-      newRecentLink,
-      ...recentLinks.filter(link => link.url !== bookmark.url).slice(0, 9)
-    ];
+      const updatedRecentLinks = [
+        newRecentLink,
+        ...recentLinks.filter(link => link.url !== bookmark.url).slice(0, 9),
+      ];
 
-    setRecentLinks(updatedRecentLinks);
-    saveRecentLinksToStorage(updatedRecentLinks);
+      setRecentLinks(updatedRecentLinks);
+      saveRecentLinksToStorage(updatedRecentLinks);
 
-    // Open link
-    window.open(bookmark.url, '_blank');
-  }, [bookmarks, recentLinks, saveBookmarksToStorage, saveRecentLinksToStorage]);
+      // Open link
+      window.open(bookmark.url, '_blank');
+    },
+    [bookmarks, recentLinks, saveBookmarksToStorage, saveRecentLinksToStorage]
+  );
 
   // Handle pin toggle
-  const handlePinToggle = useCallback((bookmark: Bookmark, event: React.MouseEvent) => {
-    event.stopPropagation();
-    
-    const updatedBookmarks = bookmarks.map(b =>
-      b.id === bookmark.id ? { ...b, isPinned: !b.isPinned, updatedAt: Date.now() } : b
-    );
-    
-    setBookmarks(updatedBookmarks);
-    saveBookmarksToStorage(updatedBookmarks);
-  }, [bookmarks, saveBookmarksToStorage]);
+  const handlePinToggle = useCallback(
+    (bookmark: Bookmark, event: React.MouseEvent) => {
+      event.stopPropagation();
+
+      const updatedBookmarks = bookmarks.map(b =>
+        b.id === bookmark.id ? { ...b, isPinned: !b.isPinned, updatedAt: Date.now() } : b
+      );
+
+      setBookmarks(updatedBookmarks);
+      saveBookmarksToStorage(updatedBookmarks);
+    },
+    [bookmarks, saveBookmarksToStorage]
+  );
 
   // Handle QR code request
   const handleQRRequest = useCallback((bookmark: Bookmark, event: React.MouseEvent) => {
     event.stopPropagation();
-    
+
     // Create simple QR modal
     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(bookmark.url)}`;
-    
+
     const modal = document.createElement('div');
     modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
     modal.innerHTML = `
@@ -258,31 +265,32 @@ export const SmartHub: React.FC<SmartHubProps> = ({
         </div>
       </div>
     `;
-    
-    modal.onclick = (e) => {
+
+    modal.onclick = e => {
       if (e.target === modal || (e.target as HTMLElement).textContent === 'Close') {
         document.body.removeChild(modal);
       }
     };
-    
+
     document.body.appendChild(modal);
   }, []);
 
   // Handle tag filter
-  const handleTagFilter = useCallback((tag: string) => {
-    if (activeFilter === tag) {
-      // Clear filter
-      setActiveFilter(null);
-      setFilteredBookmarksData(processBookmarks(bookmarks));
-    } else {
-      // Apply filter
-      setActiveFilter(tag);
-      const filtered = bookmarks.filter(bookmark =>
-        bookmark.tags && bookmark.tags.includes(tag)
-      );
-      setFilteredBookmarksData(processBookmarks(filtered));
-    }
-  }, [activeFilter, bookmarks, processBookmarks]);
+  const handleTagFilter = useCallback(
+    (tag: string) => {
+      if (activeFilter === tag) {
+        // Clear filter
+        setActiveFilter(null);
+        setFilteredBookmarksData(processBookmarks(bookmarks));
+      } else {
+        // Apply filter
+        setActiveFilter(tag);
+        const filtered = bookmarks.filter(bookmark => bookmark.tags && bookmark.tags.includes(tag));
+        setFilteredBookmarksData(processBookmarks(filtered));
+      }
+    },
+    [activeFilter, bookmarks, processBookmarks]
+  );
 
   // Common tags from bookmarks
   const availableTags = useMemo(() => {
@@ -294,75 +302,79 @@ export const SmartHub: React.FC<SmartHubProps> = ({
   }, [bookmarks]);
 
   // Render bookmark item
-  const renderBookmarkItem = useCallback((bookmark: Bookmark) => (
-    <div
-      key={bookmark.id}
-      className="link-item glass-panel p-3 rounded-lg cursor-pointer hover:bg-white hover:bg-opacity-20 transition-all duration-200 group"
-      onClick={() => handleLinkClick(bookmark)}
-    >
-      <div className="flex items-center space-x-3">
-        <div className="text-2xl flex-shrink-0">{bookmark.favicon}</div>
-        <div className="flex-1 min-w-0">
-          <div className="text-white font-medium truncate">{bookmark.title}</div>
-          <div className="text-white text-opacity-60 text-xs truncate">
-            {new URL(bookmark.url).hostname}
+  const renderBookmarkItem = useCallback(
+    (bookmark: Bookmark) => (
+      <div
+        key={bookmark.id}
+        className="link-item glass-panel p-3 rounded-lg cursor-pointer hover:bg-white hover:bg-opacity-20 transition-all duration-200 group"
+        onClick={() => handleLinkClick(bookmark)}
+      >
+        <div className="flex items-center space-x-3">
+          <div className="text-2xl flex-shrink-0">{bookmark.favicon}</div>
+          <div className="flex-1 min-w-0">
+            <div className="text-white font-medium truncate">{bookmark.title}</div>
+            <div className="text-white text-opacity-60 text-xs truncate">
+              {new URL(bookmark.url).hostname}
+            </div>
           </div>
-        </div>
-        {bookmark.visits > 0 && (
-          <div className="text-white text-opacity-40 text-xs flex-shrink-0">
-            {bookmark.visits}x
+          {bookmark.visits > 0 && (
+            <div className="text-white text-opacity-40 text-xs flex-shrink-0">
+              {bookmark.visits}x
+            </div>
+          )}
+          <div className="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <button
+              onClick={e => handleQRRequest(bookmark, e)}
+              className="w-6 h-6 flex items-center justify-center text-white text-opacity-60 hover:text-opacity-100 hover:bg-white hover:bg-opacity-20 rounded"
+              title="QR Code"
+            >
+              📱
+            </button>
+            <button
+              onClick={e => handlePinToggle(bookmark, e)}
+              className={`w-6 h-6 flex items-center justify-center rounded ${
+                bookmark.isPinned
+                  ? 'text-yellow-400 bg-yellow-400 bg-opacity-20'
+                  : 'text-white text-opacity-60 hover:text-opacity-100 hover:bg-white hover:bg-opacity-20'
+              }`}
+              title={bookmark.isPinned ? 'Unpin' : 'Pin'}
+            >
+              📌
+            </button>
           </div>
-        )}
-        <div className="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button
-            onClick={(e) => handleQRRequest(bookmark, e)}
-            className="w-6 h-6 flex items-center justify-center text-white text-opacity-60 hover:text-opacity-100 hover:bg-white hover:bg-opacity-20 rounded"
-            title="QR Code"
-          >
-            📱
-          </button>
-          <button
-            onClick={(e) => handlePinToggle(bookmark, e)}
-            className={`w-6 h-6 flex items-center justify-center rounded ${
-              bookmark.isPinned
-                ? 'text-yellow-400 bg-yellow-400 bg-opacity-20'
-                : 'text-white text-opacity-60 hover:text-opacity-100 hover:bg-white hover:bg-opacity-20'
-            }`}
-            title={bookmark.isPinned ? 'Unpin' : 'Pin'}
-          >
-            📌
-          </button>
         </div>
       </div>
-    </div>
-  ), [handleLinkClick, handlePinToggle, handleQRRequest]);
+    ),
+    [handleLinkClick, handlePinToggle, handleQRRequest]
+  );
 
   // Render bookmark section
-  const renderBookmarkSection = useCallback((title: string, bookmarks: Bookmark[], emoji: string) => {
-    if (bookmarks.length === 0) {
+  const renderBookmarkSection = useCallback(
+    (title: string, bookmarks: Bookmark[], emoji: string) => {
+      if (bookmarks.length === 0) {
+        return (
+          <div className="mb-6">
+            <div className="text-white text-opacity-80 font-medium mb-3 flex items-center space-x-2">
+              <span>{emoji}</span>
+              <span>{title}</span>
+            </div>
+            <div className="text-white text-opacity-40 text-sm italic">No items yet</div>
+          </div>
+        );
+      }
+
       return (
         <div className="mb-6">
           <div className="text-white text-opacity-80 font-medium mb-3 flex items-center space-x-2">
             <span>{emoji}</span>
             <span>{title}</span>
           </div>
-          <div className="text-white text-opacity-40 text-sm italic">No items yet</div>
+          <div className="space-y-2">{bookmarks.map(renderBookmarkItem)}</div>
         </div>
       );
-    }
-
-    return (
-      <div className="mb-6">
-        <div className="text-white text-opacity-80 font-medium mb-3 flex items-center space-x-2">
-          <span>{emoji}</span>
-          <span>{title}</span>
-        </div>
-        <div className="space-y-2">
-          {bookmarks.map(renderBookmarkItem)}
-        </div>
-      </div>
-    );
-  }, [renderBookmarkItem]);
+    },
+    [renderBookmarkItem]
+  );
 
   return (
     <Panel
@@ -377,7 +389,7 @@ export const SmartHub: React.FC<SmartHubProps> = ({
       className={className}
       constraints={{
         minSize: { width: 400, height: 300 },
-        maxSize: { width: 800, height: 700 }
+        maxSize: { width: 800, height: 700 },
       }}
     >
       <div className="h-full flex flex-col">
@@ -388,7 +400,7 @@ export const SmartHub: React.FC<SmartHubProps> = ({
               type="text"
               placeholder="Search bookmarks..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
               className="w-full px-4 py-2 bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg text-white placeholder-white placeholder-opacity-60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
             />
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white text-opacity-40">

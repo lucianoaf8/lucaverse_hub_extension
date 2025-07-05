@@ -51,9 +51,9 @@ export const PANEL_COMPONENTS: Record<string, PanelComponentMetadata> = {
     maxSize: { width: 800, height: 700 },
     component: SmartHub,
     shortcuts: ['Ctrl+1', 'Alt+B'],
-    keywords: ['bookmarks', 'links', 'search', 'quick access', 'favorites']
+    keywords: ['bookmarks', 'links', 'search', 'quick access', 'favorites'],
   },
-  
+
   'ai-chat': {
     id: 'ai-chat',
     name: 'AI Command Center',
@@ -65,9 +65,9 @@ export const PANEL_COMPONENTS: Record<string, PanelComponentMetadata> = {
     maxSize: { width: 800, height: 800 },
     component: AIChat,
     shortcuts: ['Ctrl+2', 'Alt+A'],
-    keywords: ['ai', 'chat', 'assistant', 'gpt', 'claude', 'gemini', 'conversation']
+    keywords: ['ai', 'chat', 'assistant', 'gpt', 'claude', 'gemini', 'conversation'],
   },
-  
+
   'task-manager': {
     id: 'task-manager',
     name: 'Mission Control Tasks',
@@ -79,10 +79,10 @@ export const PANEL_COMPONENTS: Record<string, PanelComponentMetadata> = {
     maxSize: { width: 800, height: 800 },
     component: TaskManager,
     shortcuts: ['Ctrl+3', 'Alt+T'],
-    keywords: ['tasks', 'todo', 'productivity', 'priorities', 'projects', 'tracking']
+    keywords: ['tasks', 'todo', 'productivity', 'priorities', 'projects', 'tracking'],
   },
-  
-  'productivity': {
+
+  productivity: {
     id: 'productivity',
     name: 'Productivity Station',
     description: 'Pomodoro timer with focus modes and productivity tracking',
@@ -93,8 +93,8 @@ export const PANEL_COMPONENTS: Record<string, PanelComponentMetadata> = {
     maxSize: { width: 800, height: 900 },
     component: Productivity,
     shortcuts: ['Ctrl+4', 'Alt+P'],
-    keywords: ['pomodoro', 'timer', 'focus', 'productivity', 'breaks', 'sessions']
-  }
+    keywords: ['pomodoro', 'timer', 'focus', 'productivity', 'breaks', 'sessions'],
+  },
 };
 
 // Helper functions for component management
@@ -116,7 +116,9 @@ export const getAllComponents = (): PanelComponentMetadata[] => {
 /**
  * Get components by category
  */
-export const getComponentsByCategory = (category: PanelComponentMetadata['category']): PanelComponentMetadata[] => {
+export const getComponentsByCategory = (
+  category: PanelComponentMetadata['category']
+): PanelComponentMetadata[] => {
   return Object.values(PANEL_COMPONENTS).filter(comp => comp.category === category);
 };
 
@@ -125,14 +127,12 @@ export const getComponentsByCategory = (category: PanelComponentMetadata['catego
  */
 export const searchComponents = (query: string): PanelComponentMetadata[] => {
   const lowerQuery = query.toLowerCase();
-  
+
   return Object.values(PANEL_COMPONENTS).filter(comp => {
-    const searchText = [
-      comp.name,
-      comp.description,
-      ...(comp.keywords || [])
-    ].join(' ').toLowerCase();
-    
+    const searchText = [comp.name, comp.description, ...(comp.keywords || [])]
+      .join(' ')
+      .toLowerCase();
+
     return searchText.includes(lowerQuery);
   });
 };
@@ -213,10 +213,10 @@ export const getDefaultPosition = (
   // Calculate cascade offset based on existing panels
   const cascadeOffset = 30;
   const numExisting = existingPanels.length;
-  
+
   return {
-    x: baseX + (numExisting * cascadeOffset),
-    y: baseY + (numExisting * cascadeOffset)
+    x: baseX + numExisting * cascadeOffset,
+    y: baseY + numExisting * cascadeOffset,
   };
 };
 
@@ -227,7 +227,7 @@ export const componentLoaders = {
   'smart-hub': () => import('./SmartHub'),
   'ai-chat': () => import('./AIChat'),
   'task-manager': () => import('./TaskManager'),
-  'productivity': () => import('./Productivity')
+  productivity: () => import('./Productivity'),
 };
 
 /**
@@ -238,7 +238,7 @@ export const loadComponent = async (componentId: string) => {
   if (!loader) {
     throw new Error(`No loader found for component: ${componentId}`);
   }
-  
+
   try {
     const module = await loader();
     return module.default;
@@ -262,5 +262,5 @@ export default {
   createPanelComponent,
   validateComponentProps,
   getDefaultPosition,
-  loadComponent
+  loadComponent,
 };

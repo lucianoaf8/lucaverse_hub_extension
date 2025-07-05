@@ -62,7 +62,7 @@ const testPanels = [
 ];
 
 // Test component content
-const TestPanelContent: React.FC<{ panel: typeof testPanels[0] }> = ({ panel }) => {
+const TestPanelContent: React.FC<{ panel: (typeof testPanels)[0] }> = ({ panel }) => {
   return (
     <div className="w-full h-full p-4 text-white">
       <div className="flex items-center space-x-2 mb-3">
@@ -70,13 +70,17 @@ const TestPanelContent: React.FC<{ panel: typeof testPanels[0] }> = ({ panel }) 
         <h3 className="font-semibold text-lg">{panel.metadata.title}</h3>
       </div>
       <p className="text-white/70 text-sm mb-4">{panel.metadata.description}</p>
-      
+
       <div className="space-y-2 text-xs">
-        <div>Position: ({panel.position.x}, {panel.position.y})</div>
-        <div>Size: {panel.size.width} × {panel.size.height}</div>
+        <div>
+          Position: ({panel.position.x}, {panel.position.y})
+        </div>
+        <div>
+          Size: {panel.size.width} × {panel.size.height}
+        </div>
         <div>ID: {panel.id}</div>
       </div>
-      
+
       {/* Drag handle indicator */}
       <div className="absolute top-2 right-2 cursor-grab active:cursor-grabbing">
         <div className="w-6 h-6 flex items-center justify-center text-white/50 hover:text-white/80">
@@ -93,19 +97,31 @@ const InstructionsPanel: React.FC = () => {
     <div className="absolute top-4 left-4 w-80 bg-black/60 backdrop-blur-md rounded-lg p-4 text-white text-sm z-50">
       <h3 className="font-semibold mb-3 text-lg">Drag & Drop Test Instructions</h3>
       <div className="space-y-2">
-        <p><strong>🖱️ Basic Dragging:</strong> Click and drag any panel to move it</p>
-        <p><strong>🚫 Collision Detection:</strong> Panels should not overlap</p>
-        <p><strong>📏 Boundaries:</strong> Panels stay within viewport</p>
-        <p><strong>🎯 Drop Zones:</strong> Watch for highlighting when dragging</p>
-        <p><strong>⌨️ Keyboard:</strong> Use Tab to navigate, arrow keys to move</p>
-        <p><strong>🔄 Multi-Select:</strong> Hold Ctrl/Cmd to select multiple</p>
-        <p><strong>⚡ Performance:</strong> Test with 5+ panels simultaneously</p>
-      </div>
-      
-      <div className="mt-4 pt-3 border-t border-white/20">
-        <p className="text-xs text-white/60">
-          ESC to cancel drag • Check console for debug info
+        <p>
+          <strong>🖱️ Basic Dragging:</strong> Click and drag any panel to move it
         </p>
+        <p>
+          <strong>🚫 Collision Detection:</strong> Panels should not overlap
+        </p>
+        <p>
+          <strong>📏 Boundaries:</strong> Panels stay within viewport
+        </p>
+        <p>
+          <strong>🎯 Drop Zones:</strong> Watch for highlighting when dragging
+        </p>
+        <p>
+          <strong>⌨️ Keyboard:</strong> Use Tab to navigate, arrow keys to move
+        </p>
+        <p>
+          <strong>🔄 Multi-Select:</strong> Hold Ctrl/Cmd to select multiple
+        </p>
+        <p>
+          <strong>⚡ Performance:</strong> Test with 5+ panels simultaneously
+        </p>
+      </div>
+
+      <div className="mt-4 pt-3 border-t border-white/20">
+        <p className="text-xs text-white/60">ESC to cancel drag • Check console for debug info</p>
       </div>
     </div>
   );
@@ -114,39 +130,35 @@ const InstructionsPanel: React.FC = () => {
 // Main test component
 export const DragDropTest: React.FC = () => {
   const [panels, setPanels] = React.useState(testPanels);
-  
+
   // Initialize drag operations hook
-  const {
-    handleDragStart,
-    handleDragMove,
-    handleDragEnd,
-    isDragInProgress,
-    undoLastDrag,
-  } = useDragOperations({
-    enableOptimisticUpdates: true,
-    enableHistoryTracking: true,
-    enableBatchUpdates: true,
-  });
+  const { handleDragStart, handleDragMove, handleDragEnd, isDragInProgress, undoLastDrag } =
+    useDragOperations({
+      enableOptimisticUpdates: true,
+      enableHistoryTracking: true,
+      enableBatchUpdates: true,
+    });
 
   // Handle panel position updates
-  const handlePanelMove = React.useCallback((panelId: string, newPosition: { x: number; y: number }) => {
-    setPanels(prevPanels => 
-      prevPanels.map(panel => 
-        panel.id === panelId 
-          ? { ...panel, position: newPosition }
-          : panel
-      )
-    );
-  }, []);
+  const handlePanelMove = React.useCallback(
+    (panelId: string, newPosition: { x: number; y: number }) => {
+      setPanels(prevPanels =>
+        prevPanels.map(panel =>
+          panel.id === panelId ? { ...panel, position: newPosition } : panel
+        )
+      );
+    },
+    []
+  );
 
   // Add more test panels for performance testing
   const addTestPanels = React.useCallback(() => {
     const newPanels = Array.from({ length: 3 }, (_, i) => ({
       id: `test-panel-${panels.length + i + 1}`,
       component: PanelComponent.Productivity,
-      position: { 
-        x: 100 + (i * 150), 
-        y: 400 + (i * 50) 
+      position: {
+        x: 100 + i * 150,
+        y: 400 + i * 50,
       },
       size: { width: 200, height: 150 },
       zIndex: 1,
@@ -161,7 +173,7 @@ export const DragDropTest: React.FC = () => {
         color: '#8B5CF6',
       },
     }));
-    
+
     setPanels(prev => [...prev, ...newPanels]);
   }, [panels.length]);
 
@@ -196,7 +208,7 @@ export const DragDropTest: React.FC = () => {
       <div className="relative w-full h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 overflow-hidden">
         {/* Instructions */}
         <InstructionsPanel />
-        
+
         {/* Control Panel */}
         <div className="absolute top-4 right-4 space-y-2 z-50">
           <button
@@ -224,14 +236,14 @@ export const DragDropTest: React.FC = () => {
           }}
         >
           {/* Grid pattern overlay */}
-          <div 
+          <div
             className="absolute inset-0 opacity-10"
             style={{
               backgroundImage: `
                 linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
               `,
-              backgroundSize: '20px 20px'
+              backgroundSize: '20px 20px',
             }}
           />
         </DropZone>
@@ -267,18 +279,16 @@ export const DragDropTest: React.FC = () => {
           type="trash"
           className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-24 h-24"
           acceptTypes={['panel']}
-          onDropAccept={(draggedId) => {
+          onDropAccept={draggedId => {
             setPanels(prev => prev.filter(p => p.id !== draggedId));
             console.log(`Panel ${draggedId} deleted`);
           }}
         >
-          <div className="flex items-center justify-center h-full text-red-400 text-2xl">
-            🗑️
-          </div>
+          <div className="flex items-center justify-center h-full text-red-400 text-2xl">🗑️</div>
         </DropZone>
 
         {/* Draggable Panels */}
-        {panels.map((panel) => (
+        {panels.map(panel => (
           <DraggablePanel
             key={panel.id}
             id={panel.id}

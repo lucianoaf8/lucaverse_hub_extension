@@ -48,11 +48,11 @@ const DimensionDisplay: React.FC<{
 }> = ({ size, originalSize, position, violations, warnings }) => {
   const deltaWidth = size.width - originalSize.width;
   const deltaHeight = size.height - originalSize.height;
-  
+
   return (
     <div className="absolute z-50 pointer-events-none">
       {/* Main dimension display */}
-      <div 
+      <div
         className="absolute bg-black/90 text-white text-sm px-3 py-2 rounded-lg shadow-lg backdrop-blur-sm"
         style={{
           left: position.x + size.width + 10,
@@ -64,9 +64,11 @@ const DimensionDisplay: React.FC<{
             {Math.round(size.width)} × {Math.round(size.height)}
           </div>
           <div className="text-xs text-white/70">
-            ({deltaWidth >= 0 ? '+' : ''}{Math.round(deltaWidth)}, {deltaHeight >= 0 ? '+' : ''}{Math.round(deltaHeight)})
+            ({deltaWidth >= 0 ? '+' : ''}
+            {Math.round(deltaWidth)}, {deltaHeight >= 0 ? '+' : ''}
+            {Math.round(deltaHeight)})
           </div>
-          
+
           {/* Violations */}
           {violations.length > 0 && (
             <div className="text-xs text-red-300 space-y-1">
@@ -75,7 +77,7 @@ const DimensionDisplay: React.FC<{
               ))}
             </div>
           )}
-          
+
           {/* Warnings */}
           {warnings.length > 0 && (
             <div className="text-xs text-yellow-300 space-y-1">
@@ -98,7 +100,7 @@ const SnapIndicators: React.FC<{
 }> = ({ indicators, currentSize, position }) => {
   return (
     <div className="absolute inset-0 pointer-events-none z-30">
-      {indicators.map((indicator) => (
+      {indicators.map(indicator => (
         <div key={indicator.id}>
           {/* Grid snap indicators */}
           {indicator.type === 'grid' && (
@@ -116,7 +118,7 @@ const SnapIndicators: React.FC<{
               </div>
             </div>
           )}
-          
+
           {/* Common size snap indicators */}
           {indicator.type === 'common-size' && (
             <div
@@ -133,7 +135,7 @@ const SnapIndicators: React.FC<{
               </div>
             </div>
           )}
-          
+
           {/* Alignment indicators */}
           {indicator.type === 'alignment' && (
             <div
@@ -164,7 +166,7 @@ const AlignmentGuidelines: React.FC<{
   return (
     <div className="fixed inset-0 pointer-events-none z-20">
       <svg className="w-full h-full">
-        {guidelines.map((guideline) => (
+        {guidelines.map(guideline => (
           <g key={guideline.id}>
             {guideline.type === 'vertical' ? (
               <>
@@ -229,7 +231,7 @@ const ConstraintViolationOverlay: React.FC<{
   size: Size;
 }> = ({ violations, position, size }) => {
   if (violations.length === 0) return null;
-  
+
   return (
     <div
       className="absolute border-2 border-red-500 bg-red-500/10 rounded-lg pointer-events-none z-40"
@@ -244,7 +246,9 @@ const ConstraintViolationOverlay: React.FC<{
         <div className="bg-red-500/90 text-white text-sm px-3 py-2 rounded-lg backdrop-blur-sm max-w-xs">
           <div className="font-medium mb-1">⚠ Constraint Violations:</div>
           {violations.slice(0, 3).map((violation, i) => (
-            <div key={i} className="text-xs">• {violation}</div>
+            <div key={i} className="text-xs">
+              • {violation}
+            </div>
           ))}
           {violations.length > 3 && (
             <div className="text-xs opacity-70">...and {violations.length - 3} more</div>
@@ -264,7 +268,7 @@ const PreviewOutline: React.FC<{
 }> = ({ position, size, originalSize, isValid }) => {
   const isExpanding = size.width > originalSize.width || size.height > originalSize.height;
   const isShrinking = size.width < originalSize.width || size.height < originalSize.height;
-  
+
   return (
     <div
       className={clsx(
@@ -311,17 +315,17 @@ export const ResizePreview: React.FC<ResizePreviewProps> = ({
   // Generate mock data for demonstration
   const mockSnapIndicators: SnapIndicator[] = React.useMemo(() => {
     if (!showSnapIndicators) return [];
-    
+
     const indicators: SnapIndicator[] = [];
-    
+
     // Add grid snap indicators if close to grid points
     if (constraints?.snapConstraints?.enabled && constraints.snapConstraints.gridSize) {
       const gridSize = constraints.snapConstraints.gridSize;
       const snapDistance = constraints.snapConstraints.snapDistance || 15;
-      
+
       const nearestGridX = Math.round(previewSize.width / gridSize) * gridSize;
       const nearestGridY = Math.round(previewSize.height / gridSize) * gridSize;
-      
+
       if (Math.abs(previewSize.width - nearestGridX) <= snapDistance) {
         indicators.push({
           id: 'grid-width',
@@ -331,7 +335,7 @@ export const ResizePreview: React.FC<ResizePreviewProps> = ({
           label: `Grid: ${nearestGridX}px`,
         });
       }
-      
+
       if (Math.abs(previewSize.height - nearestGridY) <= snapDistance) {
         indicators.push({
           id: 'grid-height',
@@ -342,15 +346,15 @@ export const ResizePreview: React.FC<ResizePreviewProps> = ({
         });
       }
     }
-    
+
     // Add common size indicators
     if (constraints?.snapConstraints?.commonSizes) {
       const snapDistance = constraints.snapConstraints.snapDistance || 15;
-      
+
       for (const commonSize of constraints.snapConstraints.commonSizes) {
         const widthDiff = Math.abs(previewSize.width - commonSize.width);
         const heightDiff = Math.abs(previewSize.height - commonSize.height);
-        
+
         if (widthDiff <= snapDistance && heightDiff <= snapDistance) {
           indicators.push({
             id: 'common-size',
@@ -363,13 +367,13 @@ export const ResizePreview: React.FC<ResizePreviewProps> = ({
         }
       }
     }
-    
+
     return indicators;
   }, [showSnapIndicators, constraints, previewSize, position]);
 
   const mockGuidelines: Guideline[] = React.useMemo(() => {
     if (!showGuidelines) return [];
-    
+
     // Generate alignment guidelines
     return [
       {
@@ -404,7 +408,7 @@ export const ResizePreview: React.FC<ResizePreviewProps> = ({
         originalSize={originalSize}
         isValid={isValid}
       />
-      
+
       {/* Dimension display */}
       {showDimensions && (
         <DimensionDisplay
@@ -415,7 +419,7 @@ export const ResizePreview: React.FC<ResizePreviewProps> = ({
           warnings={warnings}
         />
       )}
-      
+
       {/* Snap indicators */}
       {showSnapIndicators && (
         <SnapIndicators
@@ -424,7 +428,7 @@ export const ResizePreview: React.FC<ResizePreviewProps> = ({
           position={position}
         />
       )}
-      
+
       {/* Alignment guidelines */}
       {showGuidelines && (
         <AlignmentGuidelines
@@ -432,7 +436,7 @@ export const ResizePreview: React.FC<ResizePreviewProps> = ({
           viewportSize={{ width: window.innerWidth, height: window.innerHeight }}
         />
       )}
-      
+
       {/* Constraint violation overlay */}
       {showConstraintViolations && violations.length > 0 && (
         <ConstraintViolationOverlay
@@ -441,7 +445,7 @@ export const ResizePreview: React.FC<ResizePreviewProps> = ({
           size={previewSize}
         />
       )}
-      
+
       {/* Aspect ratio indicator */}
       {constraints?.aspectRatio?.enforceOnResize && (
         <div
@@ -456,13 +460,13 @@ export const ResizePreview: React.FC<ResizePreviewProps> = ({
           </div>
         </div>
       )}
-      
+
       {/* Performance indicator for smooth animations */}
       <style jsx>{`
         .resize-preview-container {
           will-change: transform;
         }
-        
+
         .resize-preview-container * {
           backface-visibility: hidden;
           transform-style: preserve-3d;

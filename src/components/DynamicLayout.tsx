@@ -10,11 +10,11 @@ import { SmartHub, AIChat, TaskManager, Productivity } from '@/components/panels
 import { PanelToolbar } from '@/components/ui/PanelToolbar';
 import { GridOverlay } from '@/components/ui/GridOverlay';
 import { snapToGrid, magneticSnapToGrid } from '@/utils/gridSystem';
-import { 
-  findCollisions, 
-  getCollisionPreview, 
+import {
+  findCollisions,
+  getCollisionPreview,
   preventOverlap,
-  type CollisionResult 
+  type CollisionResult,
 } from '@/utils/collisionDetection';
 import { constrainPosition, calculateViewportBounds } from '@/utils/panelBounds';
 import { performanceMonitor } from '@/utils/layoutUtils';
@@ -43,7 +43,7 @@ export const DynamicLayout: React.FC<DynamicLayoutProps> = ({
   enableGridSnapping = true,
   className = '',
   onPanelInteraction,
-  onLayoutChange
+  onLayoutChange,
 }) => {
   // Layout container ref
   const containerRef = useRef<HTMLDivElement>(null);
@@ -60,7 +60,7 @@ export const DynamicLayout: React.FC<DynamicLayoutProps> = ({
     resizeState,
     updatePanel,
     selectPanel,
-    clearSelection
+    clearSelection,
   } = useLayoutStore();
 
   // Performance monitoring
@@ -77,7 +77,7 @@ export const DynamicLayout: React.FC<DynamicLayoutProps> = ({
   useLayoutKeyboard({
     enabled: enableKeyboardShortcuts,
     preventDefault: true,
-    enableOnFormTags: false
+    enableOnFormTags: false,
   });
 
   // Update container size when component mounts or resizes
@@ -87,7 +87,7 @@ export const DynamicLayout: React.FC<DynamicLayoutProps> = ({
         const rect = containerRef.current.getBoundingClientRect();
         setActualContainerSize({
           width: rect.width,
-          height: rect.height
+          height: rect.height,
         });
       }
     };
@@ -112,213 +112,221 @@ export const DynamicLayout: React.FC<DynamicLayoutProps> = ({
   }, [panels, onLayoutChange]);
 
   // Handle panel drag with collision detection and grid snapping
-  const handlePanelDrag = useCallback((
-    panelId: string,
-    position: Position,
-    isDragging: boolean
-  ) => {
-    performanceRef.current.start('drag');
+  const handlePanelDrag = useCallback(
+    (panelId: string, position: Position, isDragging: boolean) => {
+      performanceRef.current.start('drag');
 
-    const panel = panels.find(p => p.id === panelId);
-    if (!panel) return;
+      const panel = panels.find(p => p.id === panelId);
+      if (!panel) return;
 
-    let finalPosition = position;
+      let finalPosition = position;
 
-    // Apply grid snapping if enabled
-    if (enableGridSnapping && gridSettings.enabled) {
-      const snapResult = magneticSnapToGrid(
-        position,
-        gridSettings.size,
-        gridSettings.snapThreshold
-      );
-      finalPosition = snapResult.position;
-    }
-
-    // Apply viewport constraints
-    const bounds = calculateViewportBounds(actualContainerSize);
-    finalPosition = constrainPosition(finalPosition, panel.size, bounds);
-
-    // Handle collision detection
-    if (enableCollisionDetection && isDragging) {
-      const preview = getCollisionPreview(
-        finalPosition,
-        panel.size,
-        panels.filter(p => p.id !== panelId),
-        panelId
-      );
-
-      setCollisionPreview({
-        panelId,
-        isValid: preview.isValid,
-        suggestedPosition: preview.suggestedPosition
-      });
-
-      // If collision detected and prevention is needed
-      if (!preview.isValid && preview.suggestedPosition) {
-        // Show preview but don't force the position during drag
-        // User can decide whether to use suggested position
+      // Apply grid snapping if enabled
+      if (enableGridSnapping && gridSettings.enabled) {
+        const snapResult = magneticSnapToGrid(
+          position,
+          gridSettings.size,
+          gridSettings.snapThreshold
+        );
+        finalPosition = snapResult.position;
       }
-    } else {
-      setCollisionPreview(null);
-    }
 
-    // Update panel position
-    updatePanel(panelId, { position: finalPosition });
+      // Apply viewport constraints
+      const bounds = calculateViewportBounds(actualContainerSize);
+      finalPosition = constrainPosition(finalPosition, panel.size, bounds);
 
-    // Trigger interaction callback
-    if (onPanelInteraction) {
-      onPanelInteraction(panelId, 'drag');
-    }
+      // Handle collision detection
+      if (enableCollisionDetection && isDragging) {
+        const preview = getCollisionPreview(
+          finalPosition,
+          panel.size,
+          panels.filter(p => p.id !== panelId),
+          panelId
+        );
 
-    performanceRef.current.end(panels.length);
-  }, [
-    panels,
-    gridSettings,
-    actualContainerSize,
-    enableGridSnapping,
-    enableCollisionDetection,
-    updatePanel,
-    onPanelInteraction
-  ]);
+        setCollisionPreview({
+          panelId,
+          isValid: preview.isValid,
+          suggestedPosition: preview.suggestedPosition,
+        });
+
+        // If collision detected and prevention is needed
+        if (!preview.isValid && preview.suggestedPosition) {
+          // Show preview but don't force the position during drag
+          // User can decide whether to use suggested position
+        }
+      } else {
+        setCollisionPreview(null);
+      }
+
+      // Update panel position
+      updatePanel(panelId, { position: finalPosition });
+
+      // Trigger interaction callback
+      if (onPanelInteraction) {
+        onPanelInteraction(panelId, 'drag');
+      }
+
+      performanceRef.current.end(panels.length);
+    },
+    [
+      panels,
+      gridSettings,
+      actualContainerSize,
+      enableGridSnapping,
+      enableCollisionDetection,
+      updatePanel,
+      onPanelInteraction,
+    ]
+  );
 
   // Handle panel resize with constraints
-  const handlePanelResize = useCallback((
-    panelId: string,
-    size: Size
-  ) => {
-    performanceRef.current.start('resize');
+  const handlePanelResize = useCallback(
+    (panelId: string, size: Size) => {
+      performanceRef.current.start('resize');
 
-    const panel = panels.find(p => p.id === panelId);
-    if (!panel) return;
+      const panel = panels.find(p => p.id === panelId);
+      if (!panel) return;
 
-    let finalSize = size;
+      let finalSize = size;
 
-    // Apply size constraints
-    if (panel.constraints) {
-      const { minSize, maxSize } = panel.constraints;
+      // Apply size constraints
+      if (panel.constraints) {
+        const { minSize, maxSize } = panel.constraints;
+        finalSize = {
+          width: Math.max(minSize.width, Math.min(maxSize?.width || Infinity, size.width)),
+          height: Math.max(minSize.height, Math.min(maxSize?.height || Infinity, size.height)),
+        };
+      }
+
+      // Apply viewport constraints
+      const bounds = calculateViewportBounds(actualContainerSize);
+      const maxWidth = bounds.width - panel.position.x;
+      const maxHeight = bounds.height - panel.position.y;
+
       finalSize = {
-        width: Math.max(minSize.width, Math.min(maxSize?.width || Infinity, size.width)),
-        height: Math.max(minSize.height, Math.min(maxSize?.height || Infinity, size.height))
+        width: Math.min(finalSize.width, maxWidth),
+        height: Math.min(finalSize.height, maxHeight),
       };
-    }
 
-    // Apply viewport constraints
-    const bounds = calculateViewportBounds(actualContainerSize);
-    const maxWidth = bounds.width - panel.position.x;
-    const maxHeight = bounds.height - panel.position.y;
-    
-    finalSize = {
-      width: Math.min(finalSize.width, maxWidth),
-      height: Math.min(finalSize.height, maxHeight)
-    };
+      // Update panel size
+      updatePanel(panelId, { size: finalSize });
 
-    // Update panel size
-    updatePanel(panelId, { size: finalSize });
+      // Trigger interaction callback
+      if (onPanelInteraction) {
+        onPanelInteraction(panelId, 'resize');
+      }
 
-    // Trigger interaction callback
-    if (onPanelInteraction) {
-      onPanelInteraction(panelId, 'resize');
-    }
-
-    performanceRef.current.end(panels.length);
-  }, [panels, actualContainerSize, updatePanel, onPanelInteraction]);
+      performanceRef.current.end(panels.length);
+    },
+    [panels, actualContainerSize, updatePanel, onPanelInteraction]
+  );
 
   // Handle panel selection
-  const handlePanelSelect = useCallback((
-    panelId: string,
-    multiSelect: boolean = false
-  ) => {
-    selectPanel(panelId, multiSelect);
-    
-    if (onPanelInteraction) {
-      onPanelInteraction(panelId, 'select');
-    }
-  }, [selectPanel, onPanelInteraction]);
+  const handlePanelSelect = useCallback(
+    (panelId: string, multiSelect: boolean = false) => {
+      selectPanel(panelId, multiSelect);
+
+      if (onPanelInteraction) {
+        onPanelInteraction(panelId, 'select');
+      }
+    },
+    [selectPanel, onPanelInteraction]
+  );
 
   // Handle background click to clear selection
-  const handleBackgroundClick = useCallback((event: React.MouseEvent) => {
-    if (event.target === event.currentTarget) {
-      clearSelection();
-    }
-  }, [clearSelection]);
+  const handleBackgroundClick = useCallback(
+    (event: React.MouseEvent) => {
+      if (event.target === event.currentTarget) {
+        clearSelection();
+      }
+    },
+    [clearSelection]
+  );
 
   // Render individual panel component
-  const renderPanelComponent = useCallback((panel: PanelLayout) => {
-    const baseProps = {
-      id: panel.id,
-      position: panel.position,
-      size: panel.size,
-      onMove: (position: Position) => handlePanelDrag(panel.id, position, false),
-      onResize: (size: Size) => handlePanelResize(panel.id, size),
-      className: `panel-${panel.component} ${selectedPanelIds.includes(panel.id) ? 'selected' : ''}`
-    };
+  const renderPanelComponent = useCallback(
+    (panel: PanelLayout) => {
+      const baseProps = {
+        id: panel.id,
+        position: panel.position,
+        size: panel.size,
+        onMove: (position: Position) => handlePanelDrag(panel.id, position, false),
+        onResize: (size: Size) => handlePanelResize(panel.id, size),
+        className: `panel-${panel.component} ${selectedPanelIds.includes(panel.id) ? 'selected' : ''}`,
+      };
 
-    // Add drag and resize handlers
-    const enhancedProps = {
-      ...baseProps,
-      onMouseDown: () => handlePanelSelect(panel.id),
-      style: {
-        zIndex: panel.zIndex + (selectedPanelIds.includes(panel.id) ? 1000 : 0)
+      // Add drag and resize handlers
+      const enhancedProps = {
+        ...baseProps,
+        onMouseDown: () => handlePanelSelect(panel.id),
+        style: {
+          zIndex: panel.zIndex + (selectedPanelIds.includes(panel.id) ? 1000 : 0),
+        },
+      };
+
+      switch (panel.component) {
+        case PanelComponent.SmartHub:
+          return <SmartHub key={panel.id} {...enhancedProps} />;
+        case PanelComponent.AIChat:
+          return <AIChat key={panel.id} {...enhancedProps} />;
+        case PanelComponent.TaskManager:
+          return <TaskManager key={panel.id} {...enhancedProps} />;
+        case PanelComponent.Productivity:
+          return <Productivity key={panel.id} {...enhancedProps} />;
+        default:
+          return (
+            <div
+              key={panel.id}
+              className="flex items-center justify-center bg-red-500/20 border border-red-500 text-red-300 rounded"
+              style={{
+                position: 'absolute',
+                left: panel.position.x,
+                top: panel.position.y,
+                width: panel.size.width,
+                height: panel.size.height,
+                zIndex: panel.zIndex,
+              }}
+            >
+              Unknown Component: {panel.component}
+            </div>
+          );
       }
-    };
+    },
+    [panels, selectedPanelIds, handlePanelDrag, handlePanelResize, handlePanelSelect]
+  );
 
-    switch (panel.component) {
-      case PanelComponent.SmartHub:
-        return <SmartHub key={panel.id} {...enhancedProps} />;
-      case PanelComponent.AIChat:
-        return <AIChat key={panel.id} {...enhancedProps} />;
-      case PanelComponent.TaskManager:
-        return <TaskManager key={panel.id} {...enhancedProps} />;
-      case PanelComponent.Productivity:
-        return <Productivity key={panel.id} {...enhancedProps} />;
-      default:
+  // Error boundary for panel rendering
+  const renderPanelWithErrorBoundary = useCallback(
+    (panel: PanelLayout) => {
+      try {
+        return renderPanelComponent(panel);
+      } catch (error) {
+        console.error(`Error rendering panel ${panel.id}:`, error);
         return (
           <div
             key={panel.id}
-            className="flex items-center justify-center bg-red-500/20 border border-red-500 text-red-300 rounded"
+            className="flex items-center justify-center bg-red-500/20 border border-red-500 text-red-300 rounded p-4"
             style={{
               position: 'absolute',
               left: panel.position.x,
               top: panel.position.y,
               width: panel.size.width,
               height: panel.size.height,
-              zIndex: panel.zIndex
+              zIndex: panel.zIndex,
             }}
           >
-            Unknown Component: {panel.component}
+            <div className="text-center">
+              <div className="text-lg mb-2">⚠️</div>
+              <div className="text-sm">Panel Error</div>
+              <div className="text-xs opacity-75">{panel.id}</div>
+            </div>
           </div>
         );
-    }
-  }, [panels, selectedPanelIds, handlePanelDrag, handlePanelResize, handlePanelSelect]);
-
-  // Error boundary for panel rendering
-  const renderPanelWithErrorBoundary = useCallback((panel: PanelLayout) => {
-    try {
-      return renderPanelComponent(panel);
-    } catch (error) {
-      console.error(`Error rendering panel ${panel.id}:`, error);
-      return (
-        <div
-          key={panel.id}
-          className="flex items-center justify-center bg-red-500/20 border border-red-500 text-red-300 rounded p-4"
-          style={{
-            position: 'absolute',
-            left: panel.position.x,
-            top: panel.position.y,
-            width: panel.size.width,
-            height: panel.size.height,
-            zIndex: panel.zIndex
-          }}
-        >
-          <div className="text-center">
-            <div className="text-lg mb-2">⚠️</div>
-            <div className="text-sm">Panel Error</div>
-            <div className="text-xs opacity-75">{panel.id}</div>
-          </div>
-        </div>
-      );
-    }
-  }, [renderPanelComponent]);
+      }
+    },
+    [renderPanelComponent]
+  );
 
   // Memoize rendered panels for performance
   const renderedPanels = useMemo(() => {
@@ -339,7 +347,7 @@ export const DynamicLayout: React.FC<DynamicLayoutProps> = ({
     'from-slate-900',
     'via-purple-900',
     'to-slate-900',
-    className
+    className,
   ].join(' ');
 
   // Toolbar component
@@ -352,9 +360,7 @@ export const DynamicLayout: React.FC<DynamicLayoutProps> = ({
         ${toolbarPosition === 'right' ? 'rounded-l-lg' : ''}
       `}
       orientation={
-        toolbarPosition === 'left' || toolbarPosition === 'right' 
-          ? 'vertical' 
-          : 'horizontal'
+        toolbarPosition === 'left' || toolbarPosition === 'right' ? 'vertical' : 'horizontal'
       }
     />
   );
@@ -363,16 +369,12 @@ export const DynamicLayout: React.FC<DynamicLayoutProps> = ({
     <div className={layoutClasses}>
       {/* Toolbar - Top */}
       {showToolbar && toolbarPosition === 'top' && (
-        <div className="absolute top-0 left-0 right-0 z-40">
-          {toolbar}
-        </div>
+        <div className="absolute top-0 left-0 right-0 z-40">{toolbar}</div>
       )}
 
       {/* Toolbar - Left */}
       {showToolbar && toolbarPosition === 'left' && (
-        <div className="absolute top-0 left-0 bottom-0 z-40">
-          {toolbar}
-        </div>
+        <div className="absolute top-0 left-0 bottom-0 z-40">{toolbar}</div>
       )}
 
       {/* Main Layout Container */}
@@ -386,7 +388,7 @@ export const DynamicLayout: React.FC<DynamicLayoutProps> = ({
           ${showToolbar && toolbarPosition === 'right' ? 'mr-16' : ''}
         `}
         onClick={handleBackgroundClick}
-        onContextMenu={(e) => {
+        onContextMenu={e => {
           e.preventDefault();
           // Could add context menu here
         }}
@@ -413,7 +415,7 @@ export const DynamicLayout: React.FC<DynamicLayoutProps> = ({
                   left: `${Math.random() * 100}%`,
                   top: `${Math.random() * 100}%`,
                   animationDelay: `${Math.random() * 2}s`,
-                  animationDuration: `${2 + Math.random() * 3}s`
+                  animationDuration: `${2 + Math.random() * 3}s`,
                 }}
               />
             ))}
@@ -421,9 +423,7 @@ export const DynamicLayout: React.FC<DynamicLayoutProps> = ({
         </div>
 
         {/* Panels Layer */}
-        <div className="relative z-20">
-          {renderedPanels}
-        </div>
+        <div className="relative z-20">{renderedPanels}</div>
 
         {/* Collision Preview Overlay */}
         {collisionPreview && !collisionPreview.isValid && (
@@ -435,7 +435,7 @@ export const DynamicLayout: React.FC<DynamicLayoutProps> = ({
                   left: collisionPreview.suggestedPosition.x,
                   top: collisionPreview.suggestedPosition.y,
                   width: panels.find(p => p.id === collisionPreview.panelId)?.size.width || 200,
-                  height: panels.find(p => p.id === collisionPreview.panelId)?.size.height || 150
+                  height: panels.find(p => p.id === collisionPreview.panelId)?.size.height || 150,
                 }}
               >
                 <div className="absolute top-2 left-2 text-green-300 text-xs bg-green-900/50 px-2 py-1 rounded">
@@ -451,8 +451,12 @@ export const DynamicLayout: React.FC<DynamicLayoutProps> = ({
           <div className="absolute top-2 right-2 text-white/60 text-xs bg-black/20 p-2 rounded pointer-events-none z-50">
             <div>Panels: {panels.length}</div>
             <div>Selected: {selectedPanelIds.length}</div>
-            <div>Grid: {gridSettings.enabled ? 'On' : 'Off'} ({gridSettings.size}px)</div>
-            <div>Size: {actualContainerSize.width}×{actualContainerSize.height}</div>
+            <div>
+              Grid: {gridSettings.enabled ? 'On' : 'Off'} ({gridSettings.size}px)
+            </div>
+            <div>
+              Size: {actualContainerSize.width}×{actualContainerSize.height}
+            </div>
             {dragState.isDragging && <div className="text-blue-300">Dragging</div>}
             {resizeState.isResizing && <div className="text-green-300">Resizing</div>}
           </div>
@@ -461,23 +465,17 @@ export const DynamicLayout: React.FC<DynamicLayoutProps> = ({
 
       {/* Toolbar - Right */}
       {showToolbar && toolbarPosition === 'right' && (
-        <div className="absolute top-0 right-0 bottom-0 z-40">
-          {toolbar}
-        </div>
+        <div className="absolute top-0 right-0 bottom-0 z-40">{toolbar}</div>
       )}
 
       {/* Toolbar - Bottom */}
       {showToolbar && toolbarPosition === 'bottom' && (
-        <div className="absolute bottom-0 left-0 right-0 z-40">
-          {toolbar}
-        </div>
+        <div className="absolute bottom-0 left-0 right-0 z-40">{toolbar}</div>
       )}
 
       {/* Global Event Listeners */}
       {enableKeyboardShortcuts && (
-        <div className="sr-only">
-          Press Ctrl+Shift+H for keyboard shortcuts help
-        </div>
+        <div className="sr-only">Press Ctrl+Shift+H for keyboard shortcuts help</div>
       )}
     </div>
   );

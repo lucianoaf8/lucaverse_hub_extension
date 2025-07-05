@@ -27,13 +27,10 @@ const DEBUG_TABS: DebugTab[] = [
   { id: 'layout', label: 'Layout', icon: '📐' },
   { id: 'actions', label: 'Actions', icon: '🎬' },
   { id: 'errors', label: 'Errors', icon: '🚨' },
-  { id: 'memory', label: 'Memory', icon: '💾' }
+  { id: 'memory', label: 'Memory', icon: '💾' },
 ];
 
-export const DebugPanel: React.FC<DebugPanelProps> = ({ 
-  visible = false, 
-  onClose 
-}) => {
+export const DebugPanel: React.FC<DebugPanelProps> = ({ visible = false, onClose }) => {
   const [activeTab, setActiveTab] = useState<string>('state');
   const [refreshInterval, setRefreshInterval] = useState<number | null>(null);
   const [autoRefresh, setAutoRefresh] = useState(false);
@@ -67,7 +64,7 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({
         // Trigger re-render by updating a timestamp
         setRefreshInterval(Date.now());
       }, 1000);
-      
+
       return () => clearInterval(interval);
     }
   }, [autoRefresh, visible]);
@@ -87,7 +84,7 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({
             <input
               type="checkbox"
               checked={autoRefresh}
-              onChange={(e) => setAutoRefresh(e.target.checked)}
+              onChange={e => setAutoRefresh(e.target.checked)}
               className="rounded"
             />
             Auto-refresh
@@ -113,13 +110,17 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({
         {expandedSections.has('layout-store') && (
           <div className="p-3 max-h-64 overflow-auto bg-gray-800">
             <pre className="text-xs text-gray-300">
-              {JSON.stringify({
-                panels: layoutStore.panels,
-                selectedPanelIds: layoutStore.selectedPanelIds,
-                gridSettings: layoutStore.gridSettings,
-                dragState: layoutStore.dragState,
-                resizeState: layoutStore.resizeState
-              }, null, 2)}
+              {JSON.stringify(
+                {
+                  panels: layoutStore.panels,
+                  selectedPanelIds: layoutStore.selectedPanelIds,
+                  gridSettings: layoutStore.gridSettings,
+                  dragState: layoutStore.dragState,
+                  resizeState: layoutStore.resizeState,
+                },
+                null,
+                2
+              )}
             </pre>
           </div>
         )}
@@ -137,13 +138,17 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({
         {expandedSections.has('app-store') && (
           <div className="p-3 max-h-64 overflow-auto bg-gray-800">
             <pre className="text-xs text-gray-300">
-              {JSON.stringify({
-                theme: appStore.theme,
-                preferences: appStore.preferences,
-                performance: appStore.performance,
-                notifications: appStore.notifications.length,
-                shortcuts: Object.keys(appStore.shortcuts).length
-              }, null, 2)}
+              {JSON.stringify(
+                {
+                  theme: appStore.theme,
+                  preferences: appStore.preferences,
+                  performance: appStore.performance,
+                  notifications: appStore.notifications.length,
+                  shortcuts: Object.keys(appStore.shortcuts).length,
+                },
+                null,
+                2
+              )}
             </pre>
           </div>
         )}
@@ -187,7 +192,11 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <div className="text-gray-400">Memory Usage</div>
-              <div>{renderMetrics.memoryUsage ? `${(renderMetrics.memoryUsage / 1024 / 1024).toFixed(2)} MB` : 'N/A'}</div>
+              <div>
+                {renderMetrics.memoryUsage
+                  ? `${(renderMetrics.memoryUsage / 1024 / 1024).toFixed(2)} MB`
+                  : 'N/A'}
+              </div>
             </div>
             <div>
               <div className="text-gray-400">Render Count</div>
@@ -199,7 +208,9 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({
             </div>
             <div>
               <div className="text-gray-400">Frame Time</div>
-              <div>{renderMetrics.frameTime ? `${renderMetrics.frameTime.toFixed(2)}ms` : 'N/A'}</div>
+              <div>
+                {renderMetrics.frameTime ? `${renderMetrics.frameTime.toFixed(2)}ms` : 'N/A'}
+              </div>
             </div>
           </div>
         </div>
@@ -217,7 +228,7 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({
           <input
             type="checkbox"
             checked={layoutStore.gridSettings.visible}
-            onChange={(e) => layoutStore.updateGridSettings({ visible: e.target.checked })}
+            onChange={e => layoutStore.updateGridSettings({ visible: e.target.checked })}
             className="rounded"
           />
           Show Grid Overlay
@@ -226,7 +237,7 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({
           <input
             type="checkbox"
             checked={layoutStore.gridSettings.enabled}
-            onChange={(e) => layoutStore.setGridSnap(e.target.checked)}
+            onChange={e => layoutStore.setGridSnap(e.target.checked)}
             className="rounded"
           />
           Grid Snapping
@@ -241,10 +252,13 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({
         <div className="p-3 bg-gray-800 max-h-48 overflow-auto">
           {layoutStore.panels.map(panel => (
             <div key={panel.id} className="mb-2 p-2 bg-gray-700 rounded text-xs">
-              <div className="font-medium">{panel.component} - {panel.id.slice(0, 8)}</div>
+              <div className="font-medium">
+                {panel.component} - {panel.id.slice(0, 8)}
+              </div>
               <div className="text-gray-300">
-                Position: ({panel.position.x}, {panel.position.y})<br/>
-                Size: {panel.size.width} × {panel.size.height}<br/>
+                Position: ({panel.position.x}, {panel.position.y})<br />
+                Size: {panel.size.width} × {panel.size.height}
+                <br />
                 Z-Index: {panel.zIndex}
               </div>
             </div>
@@ -302,7 +316,7 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({
                 size: { width: 300, height: 200 },
                 zIndex: 1,
                 visible: true,
-                title: 'Debug Panel'
+                title: 'Debug Panel',
               });
             }}
             className="w-full p-2 bg-green-600 text-white rounded text-sm"
@@ -324,8 +338,8 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">Error Tracking</h3>
       <div className="text-gray-400 text-sm">
-        Error tracking system would display captured errors here.
-        Integration with error boundary and console capture.
+        Error tracking system would display captured errors here. Integration with error boundary
+        and console capture.
       </div>
     </div>
   );
@@ -333,7 +347,7 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({
   const renderMemoryTab = () => (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">Memory Usage</h3>
-      
+
       {/* Memory Info */}
       <div className="border border-gray-600 rounded">
         <div className="p-3 bg-gray-700 rounded-t">
@@ -344,15 +358,21 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({
             <div className="grid grid-cols-1 gap-2 text-sm">
               <div className="flex justify-between">
                 <span>Used JS Heap:</span>
-                <span>{((performance as any).memory.usedJSHeapSize / 1024 / 1024).toFixed(2)} MB</span>
+                <span>
+                  {((performance as any).memory.usedJSHeapSize / 1024 / 1024).toFixed(2)} MB
+                </span>
               </div>
               <div className="flex justify-between">
                 <span>Total JS Heap:</span>
-                <span>{((performance as any).memory.totalJSHeapSize / 1024 / 1024).toFixed(2)} MB</span>
+                <span>
+                  {((performance as any).memory.totalJSHeapSize / 1024 / 1024).toFixed(2)} MB
+                </span>
               </div>
               <div className="flex justify-between">
                 <span>Heap Limit:</span>
-                <span>{((performance as any).memory.jsHeapSizeLimit / 1024 / 1024).toFixed(2)} MB</span>
+                <span>
+                  {((performance as any).memory.jsHeapSizeLimit / 1024 / 1024).toFixed(2)} MB
+                </span>
               </div>
             </div>
           ) : (
@@ -382,13 +402,20 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case 'state': return renderStateTab();
-      case 'performance': return renderPerformanceTab();
-      case 'layout': return renderLayoutTab();
-      case 'actions': return renderActionsTab();
-      case 'errors': return renderErrorsTab();
-      case 'memory': return renderMemoryTab();
-      default: return renderStateTab();
+      case 'state':
+        return renderStateTab();
+      case 'performance':
+        return renderPerformanceTab();
+      case 'layout':
+        return renderLayoutTab();
+      case 'actions':
+        return renderActionsTab();
+      case 'errors':
+        return renderErrorsTab();
+      case 'memory':
+        return renderMemoryTab();
+      default:
+        return renderStateTab();
     }
   };
 
@@ -400,10 +427,7 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({
           <span className="text-lg">🛠️</span>
           <span className="font-semibold">Debug Panel</span>
         </div>
-        <button
-          onClick={onClose}
-          className="text-gray-400 hover:text-white transition-colors"
-        >
+        <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors">
           ✕
         </button>
       </div>
@@ -415,8 +439,8 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-1 px-3 py-2 text-sm whitespace-nowrap transition-colors ${
-              activeTab === tab.id 
-                ? 'bg-blue-600 text-white' 
+              activeTab === tab.id
+                ? 'bg-blue-600 text-white'
                 : 'text-gray-300 hover:text-white hover:bg-gray-700'
             }`}
           >
@@ -427,9 +451,7 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({
       </div>
 
       {/* Content */}
-      <div className="p-4 overflow-auto max-h-[calc(90vh-8rem)]">
-        {renderTabContent()}
-      </div>
+      <div className="p-4 overflow-auto max-h-[calc(90vh-8rem)]">{renderTabContent()}</div>
     </div>
   );
 };

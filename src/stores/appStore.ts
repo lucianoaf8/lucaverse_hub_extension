@@ -61,60 +61,62 @@ interface UserPreferences {
 interface AppState {
   // Theme and UI
   theme: ThemeVariant;
-  
+
   // User preferences
   preferences: UserPreferences;
-  
+
   // Performance settings
   performance: PerformanceSettings;
-  
+
   // Keyboard shortcuts
   shortcuts: Record<string, KeyboardShortcut>;
-  
+
   // Notification system
   notifications: AppNotification[];
   notificationQueue: AppNotification[];
   maxNotifications: number;
-  
+
   // Application metadata
   lastSaved: number;
   version: string;
   initialized: boolean;
-  
+
   // Actions
-  updateSettings: (settings: Partial<Pick<AppState, 'theme' | 'preferences' | 'performance'>>) => void;
+  updateSettings: (
+    settings: Partial<Pick<AppState, 'theme' | 'preferences' | 'performance'>>
+  ) => void;
   resetToDefaults: () => void;
-  
+
   // Theme actions
   setTheme: (theme: ThemeVariant) => void;
   toggleTheme: () => void;
-  
+
   // Preference actions
   updatePreferences: (preferences: Partial<UserPreferences>) => void;
   toggleDebugMode: () => void;
   toggleAutoSave: () => void;
-  
+
   // Performance actions
   updatePerformanceSettings: (settings: Partial<PerformanceSettings>) => void;
   toggleAnimations: () => void;
-  
+
   // Shortcut actions
   updateShortcut: (actionName: string, shortcut: Partial<KeyboardShortcut>) => void;
   addShortcut: (shortcut: KeyboardShortcut) => void;
   removeShortcut: (actionName: string) => void;
   resetShortcutsToDefaults: () => void;
-  
+
   // Notification actions
   addNotification: (notification: Omit<AppNotification, 'id' | 'timestamp'>) => void;
   removeNotification: (id: string) => void;
   markNotificationAsRead: (id: string) => void;
   clearAllNotifications: () => void;
   clearReadNotifications: () => void;
-  
+
   // Utility actions
   markAsInitialized: () => void;
   updateLastSaved: () => void;
-  
+
   // Computed selectors
   getUnreadNotifications: () => AppNotification[];
   getNotificationsByType: (type: AppNotification['type']) => AppNotification[];
@@ -190,7 +192,7 @@ const defaultShortcuts: Record<string, KeyboardShortcut> = {
 // Default application state
 const defaultAppState: Omit<AppState, keyof AppActions> = {
   theme: ThemeVariant.Dark,
-  
+
   preferences: {
     autoSave: true,
     debugMode: false,
@@ -201,7 +203,7 @@ const defaultAppState: Omit<AppState, keyof AppActions> = {
     compactMode: false,
     language: 'en',
   },
-  
+
   performance: {
     animationsEnabled: true,
     particleEffectsEnabled: true,
@@ -211,13 +213,13 @@ const defaultAppState: Omit<AppState, keyof AppActions> = {
     autoSaveInterval: 30000, // 30 seconds
     maxHistorySize: 50,
   },
-  
+
   shortcuts: defaultShortcuts,
-  
+
   notifications: [],
   notificationQueue: [],
   maxNotifications: 5,
-  
+
   lastSaved: 0,
   version: '2.0.0',
   initialized: false,
@@ -257,92 +259,119 @@ export const useAppStore = create<AppState>()(
     enabled: defaultDevToolsConfig.enabled,
     serialize: defaultDevToolsConfig.serialize,
     trace: defaultDevToolsConfig.trace,
-    traceLimit: defaultDevToolsConfig.traceLimit
+    traceLimit: defaultDevToolsConfig.traceLimit,
   })((set, get) => ({
-      ...defaultAppState,
+    ...defaultAppState,
 
-      // General settings actions
-      updateSettings: (settings) => {
-        set((state) => ({
+    // General settings actions
+    updateSettings: settings => {
+      set(
+        state => ({
           ...state,
           ...settings,
           lastSaved: Date.now(),
-        }), false, 'updateSettings');
-      },
+        }),
+        false,
+        'updateSettings'
+      );
+    },
 
-      resetToDefaults: () => {
-        set({
+    resetToDefaults: () => {
+      set(
+        {
           ...defaultAppState,
           initialized: true,
           lastSaved: Date.now(),
-        }, false, 'resetToDefaults');
-      },
+        },
+        false,
+        'resetToDefaults'
+      );
+    },
 
-      // Theme actions
-      setTheme: (theme) => {
-        set({ theme, lastSaved: Date.now() }, false, 'setTheme');
-      },
+    // Theme actions
+    setTheme: theme => {
+      set({ theme, lastSaved: Date.now() }, false, 'setTheme');
+    },
 
-      toggleTheme: () => {
-        const currentTheme = get().theme;
-        const newTheme = currentTheme === ThemeVariant.Dark 
-          ? ThemeVariant.Light 
-          : ThemeVariant.Dark;
-        set({ theme: newTheme, lastSaved: Date.now() }, false, 'toggleTheme');
-      },
+    toggleTheme: () => {
+      const currentTheme = get().theme;
+      const newTheme = currentTheme === ThemeVariant.Dark ? ThemeVariant.Light : ThemeVariant.Dark;
+      set({ theme: newTheme, lastSaved: Date.now() }, false, 'toggleTheme');
+    },
 
-      // Preference actions
-      updatePreferences: (preferences) => {
-        set((state) => ({
+    // Preference actions
+    updatePreferences: preferences => {
+      set(
+        state => ({
           preferences: { ...state.preferences, ...preferences },
           lastSaved: Date.now(),
-        }), false, 'updatePreferences');
-      },
+        }),
+        false,
+        'updatePreferences'
+      );
+    },
 
-      toggleDebugMode: () => {
-        set((state) => ({
+    toggleDebugMode: () => {
+      set(
+        state => ({
           preferences: {
             ...state.preferences,
             debugMode: !state.preferences.debugMode,
           },
           lastSaved: Date.now(),
-        }), false, 'toggleDebugMode');
-      },
+        }),
+        false,
+        'toggleDebugMode'
+      );
+    },
 
-      toggleAutoSave: () => {
-        set((state) => ({
+    toggleAutoSave: () => {
+      set(
+        state => ({
           preferences: {
             ...state.preferences,
             autoSave: !state.preferences.autoSave,
           },
           lastSaved: Date.now(),
-        }), false, 'toggleAutoSave');
-      },
+        }),
+        false,
+        'toggleAutoSave'
+      );
+    },
 
-      // Performance actions
-      updatePerformanceSettings: (settings) => {
-        set((state) => ({
+    // Performance actions
+    updatePerformanceSettings: settings => {
+      set(
+        state => ({
           performance: { ...state.performance, ...settings },
           lastSaved: Date.now(),
-        }), false, 'updatePerformanceSettings');
-      },
+        }),
+        false,
+        'updatePerformanceSettings'
+      );
+    },
 
-      toggleAnimations: () => {
-        set((state) => ({
+    toggleAnimations: () => {
+      set(
+        state => ({
           performance: {
             ...state.performance,
             animationsEnabled: !state.performance.animationsEnabled,
           },
           lastSaved: Date.now(),
-        }), false, 'toggleAnimations');
-      },
+        }),
+        false,
+        'toggleAnimations'
+      );
+    },
 
-      // Shortcut actions
-      updateShortcut: (actionName, shortcut) => {
-        set((state) => {
+    // Shortcut actions
+    updateShortcut: (actionName, shortcut) => {
+      set(
+        state => {
           const existingShortcut = state.shortcuts[actionName];
           if (!existingShortcut) return state;
-          
+
           return {
             shortcuts: {
               ...state.shortcuts,
@@ -350,114 +379,143 @@ export const useAppStore = create<AppState>()(
             },
             lastSaved: Date.now(),
           };
-        }, false, 'updateShortcut');
-      },
+        },
+        false,
+        'updateShortcut'
+      );
+    },
 
-      addShortcut: (shortcut) => {
-        set((state) => ({
+    addShortcut: shortcut => {
+      set(
+        state => ({
           shortcuts: {
             ...state.shortcuts,
             [shortcut.action]: shortcut,
           },
           lastSaved: Date.now(),
-        }), false, 'addShortcut');
-      },
+        }),
+        false,
+        'addShortcut'
+      );
+    },
 
-      removeShortcut: (actionName) => {
-        set((state) => {
+    removeShortcut: actionName => {
+      set(
+        state => {
           const newShortcuts = { ...state.shortcuts };
           delete newShortcuts[actionName];
           return {
             shortcuts: newShortcuts,
             lastSaved: Date.now(),
           };
-        }, false, 'removeShortcut');
-      },
+        },
+        false,
+        'removeShortcut'
+      );
+    },
 
-      resetShortcutsToDefaults: () => {
-        set({
+    resetShortcutsToDefaults: () => {
+      set(
+        {
           shortcuts: defaultShortcuts,
           lastSaved: Date.now(),
-        }, false, 'resetShortcutsToDefaults');
-      },
+        },
+        false,
+        'resetShortcutsToDefaults'
+      );
+    },
 
-      // Notification actions
-      addNotification: (notification) => {
-        const id = `notification-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-        const newNotification: AppNotification = {
-          ...notification,
-          id,
-          timestamp: Date.now(),
-          read: false,
-        };
+    // Notification actions
+    addNotification: notification => {
+      const id = `notification-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const newNotification: AppNotification = {
+        ...notification,
+        id,
+        timestamp: Date.now(),
+        read: false,
+      };
 
-        set((state) => {
+      set(
+        state => {
           const notifications = [newNotification, ...state.notifications];
-          
+
           // Limit notifications to maxNotifications
           if (notifications.length > state.maxNotifications) {
             notifications.splice(state.maxNotifications);
           }
-          
+
           return { notifications };
-        }, false, 'addNotification');
+        },
+        false,
+        'addNotification'
+      );
 
-        // Auto-remove non-persistent notifications
-        if (!notification.persistent) {
-          const duration = notification.duration || 5000;
-          setTimeout(() => {
-            get().removeNotification(id);
-          }, duration);
-        }
-      },
+      // Auto-remove non-persistent notifications
+      if (!notification.persistent) {
+        const duration = notification.duration || 5000;
+        setTimeout(() => {
+          get().removeNotification(id);
+        }, duration);
+      }
+    },
 
-      removeNotification: (id) => {
-        set((state) => ({
+    removeNotification: id => {
+      set(
+        state => ({
           notifications: state.notifications.filter(n => n.id !== id),
-        }), false, 'removeNotification');
-      },
+        }),
+        false,
+        'removeNotification'
+      );
+    },
 
-      markNotificationAsRead: (id) => {
-        set((state) => ({
-          notifications: state.notifications.map(n =>
-            n.id === id ? { ...n, read: true } : n
-          ),
-        }), false, 'markNotificationAsRead');
-      },
+    markNotificationAsRead: id => {
+      set(
+        state => ({
+          notifications: state.notifications.map(n => (n.id === id ? { ...n, read: true } : n)),
+        }),
+        false,
+        'markNotificationAsRead'
+      );
+    },
 
-      clearAllNotifications: () => {
-        set({ notifications: [] }, false, 'clearAllNotifications');
-      },
+    clearAllNotifications: () => {
+      set({ notifications: [] }, false, 'clearAllNotifications');
+    },
 
-      clearReadNotifications: () => {
-        set((state) => ({
+    clearReadNotifications: () => {
+      set(
+        state => ({
           notifications: state.notifications.filter(n => !n.read),
-        }), false, 'clearReadNotifications');
-      },
+        }),
+        false,
+        'clearReadNotifications'
+      );
+    },
 
-      // Utility actions
-      markAsInitialized: () => {
-        set({ initialized: true }, false, 'markAsInitialized');
-      },
+    // Utility actions
+    markAsInitialized: () => {
+      set({ initialized: true }, false, 'markAsInitialized');
+    },
 
-      updateLastSaved: () => {
-        set({ lastSaved: Date.now() }, false, 'updateLastSaved');
-      },
+    updateLastSaved: () => {
+      set({ lastSaved: Date.now() }, false, 'updateLastSaved');
+    },
 
-      // Computed selectors
-      getUnreadNotifications: () => {
-        return get().notifications.filter(n => !n.read);
-      },
+    // Computed selectors
+    getUnreadNotifications: () => {
+      return get().notifications.filter(n => !n.read);
+    },
 
-      getNotificationsByType: (type) => {
-        return get().notifications.filter(n => n.type === type);
-      },
+    getNotificationsByType: type => {
+      return get().notifications.filter(n => n.type === type);
+    },
 
-      isShortcutEnabled: (actionName) => {
-        const shortcut = get().shortcuts[actionName];
-        return shortcut ? shortcut.enabled : false;
-      },
-    }))
+    isShortcutEnabled: actionName => {
+      const shortcut = get().shortcuts[actionName];
+      return shortcut ? shortcut.enabled : false;
+    },
+  }))
 );
 
 // Export type for external use

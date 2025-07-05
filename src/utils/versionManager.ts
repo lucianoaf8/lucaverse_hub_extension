@@ -31,27 +31,27 @@ export const VERSION_HISTORY: { [key: string]: VersionInfo } = {
     version: '1.0.0',
     releaseDate: '2023-01-01',
     features: ['basic-quadrants', 'localStorage'],
-    breaking: false
+    breaking: false,
   },
   '1.1.0': {
     version: '1.1.0',
     releaseDate: '2023-06-01',
     features: ['bookmarks', 'tasks', 'timer'],
-    breaking: false
+    breaking: false,
   },
   '1.2.0': {
     version: '1.2.0',
     releaseDate: '2023-12-01',
     features: ['ai-chat', 'themes', 'workspace'],
-    breaking: false
+    breaking: false,
   },
   '2.0.0': {
     version: '2.0.0',
     releaseDate: '2024-12-01',
     features: ['react', 'typescript', 'zustand', 'multi-platform'],
     breaking: true,
-    migrationNotes: 'Complete architecture migration to React'
-  }
+    migrationNotes: 'Complete architecture migration to React',
+  },
 };
 
 /**
@@ -115,7 +115,7 @@ export function getMigrationPath(fromVersion: string, toVersion: string): Migrat
     '1.0.0-1.1.0': {
       version: '1.1.0',
       description: 'Add bookmarks and tasks support',
-      handler: (data) => {
+      handler: data => {
         // Migration logic for 1.0.0 to 1.1.0
         if (!data['lucaverse-bookmarks']) {
           data['lucaverse-bookmarks'] = JSON.stringify([]);
@@ -125,15 +125,14 @@ export function getMigrationPath(fromVersion: string, toVersion: string): Migrat
         }
         return data;
       },
-      validate: (data) => {
-        return data['lucaverse-bookmarks'] !== undefined && 
-               data['lucaverse-tasks'] !== undefined;
-      }
+      validate: data => {
+        return data['lucaverse-bookmarks'] !== undefined && data['lucaverse-tasks'] !== undefined;
+      },
     },
     '1.1.0-1.2.0': {
       version: '1.2.0',
       description: 'Add AI chat and themes',
-      handler: (data) => {
+      handler: data => {
         // Migration logic for 1.1.0 to 1.2.0
         if (!data['lucaverse-chat-history']) {
           data['lucaverse-chat-history'] = JSON.stringify([]);
@@ -142,16 +141,16 @@ export function getMigrationPath(fromVersion: string, toVersion: string): Migrat
           data['lucaverse-theme'] = JSON.stringify('dark');
         }
         return data;
-      }
+      },
     },
     '1.2.0-2.0.0': {
       version: '2.0.0',
       description: 'Migrate to React architecture',
-      handler: (data) => {
+      handler: data => {
         // This is handled by the main migration system
         return data;
-      }
-    }
+      },
+    },
   };
 
   // Build migration path
@@ -172,7 +171,7 @@ export function getMigrationPath(fromVersion: string, toVersion: string): Migrat
     from: fromVersion,
     to: toVersion,
     steps,
-    reversible: fromVersion.startsWith('2.') // Only React versions are reversible
+    reversible: fromVersion.startsWith('2.'), // Only React versions are reversible
   };
 }
 
@@ -189,7 +188,7 @@ export async function executeMigrationPath(
 
   for (let i = 0; i < path.steps.length; i++) {
     const step = path.steps[i];
-    
+
     if (onProgress) {
       onProgress(i + 1, path.steps.length, step.description);
     }
@@ -203,7 +202,7 @@ export async function executeMigrationPath(
 
       // Execute migration
       currentData = await step.handler(currentData);
-      
+
       // Update version
       if (currentData['lucaverse-state']) {
         try {
@@ -217,7 +216,6 @@ export async function executeMigrationPath(
       } else {
         currentData['lucaverse-state'] = JSON.stringify({ version: step.version });
       }
-      
     } catch (error) {
       errors.push(`Migration to ${step.version} failed: ${error}`);
     }
@@ -226,7 +224,7 @@ export async function executeMigrationPath(
   return {
     success: errors.length === 0,
     data: currentData,
-    errors
+    errors,
   };
 }
 
@@ -244,11 +242,11 @@ function compareVersions(a: string | number[], b: string | number[]): number {
   for (let i = 0; i < Math.max(versionA.length, versionB.length); i++) {
     const partA = versionA[i] || 0;
     const partB = versionB[i] || 0;
-    
+
     if (partA < partB) return -1;
     if (partA > partB) return 1;
   }
-  
+
   return 0;
 }
 
@@ -263,7 +261,7 @@ export function getCompatibilityInfo(version: string): {
   const info = {
     compatible: [] as string[],
     incompatible: [] as string[],
-    requiresMigration: [] as string[]
+    requiresMigration: [] as string[],
   };
 
   const allVersions = Object.keys(VERSION_HISTORY);
@@ -308,12 +306,12 @@ export class MigrationHistory {
     try {
       const history = this.getAll();
       history.unshift(entry);
-      
+
       // Keep only recent entries
       if (history.length > this.MAX_ENTRIES) {
         history.length = this.MAX_ENTRIES;
       }
-      
+
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(history));
     } catch (error) {
       console.error('Failed to save migration history:', error);

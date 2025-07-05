@@ -22,7 +22,7 @@ import {
   HardwareAPI,
   SystemInfo,
   MemoryInfo,
-  FileDialogOptions
+  FileDialogOptions,
 } from './base.ts';
 
 // Web Storage Implementation
@@ -51,9 +51,9 @@ class WebStorageAPI implements StorageAPI {
       const fullKey = this.storageKey + key;
       const oldValue = localStorage.getItem(fullKey);
       const newValue = JSON.stringify(value);
-      
+
       localStorage.setItem(fullKey, newValue);
-      
+
       // Emit change event
       this.emitStorageChange(key, oldValue ? JSON.parse(oldValue) : undefined, value);
     } catch (error) {
@@ -66,9 +66,9 @@ class WebStorageAPI implements StorageAPI {
     try {
       const fullKey = this.storageKey + key;
       const oldValue = localStorage.getItem(fullKey);
-      
+
       localStorage.removeItem(fullKey);
-      
+
       // Emit change event
       if (oldValue) {
         this.emitStorageChange(key, JSON.parse(oldValue), undefined);
@@ -91,7 +91,7 @@ class WebStorageAPI implements StorageAPI {
 
       // Remove all our keys
       keys.forEach(key => localStorage.removeItem(this.storageKey + key));
-      
+
       // Emit change events
       keys.forEach(key => this.emitStorageChange(key, undefined, undefined));
     } catch (error) {
@@ -140,7 +140,7 @@ class WebStorageAPI implements StorageAPI {
       key,
       oldValue,
       newValue,
-      storageArea: 'local'
+      storageArea: 'local',
     };
 
     this.listeners.forEach(callback => callback([change]));
@@ -153,7 +153,7 @@ class WebStorageAPI implements StorageAPI {
         key,
         oldValue: event.oldValue ? JSON.parse(event.oldValue) : undefined,
         newValue: event.newValue ? JSON.parse(event.newValue) : undefined,
-        storageArea: 'local'
+        storageArea: 'local',
       };
 
       this.listeners.forEach(callback => callback([change]));
@@ -174,14 +174,14 @@ class WebNotificationAPI implements NotificationAPI {
       if (permission !== 'granted') return null;
 
       const notificationId = `web_notification_${++this.notificationCounter}`;
-      
+
       const notification = new Notification(options.title, {
         body: options.message,
         icon: options.iconUrl || '/assets/icon-48.png',
         image: options.imageUrl,
         silent: options.silent,
         requireInteraction: options.requireInteraction,
-        tag: notificationId
+        tag: notificationId,
       });
 
       notification.onclick = () => {
@@ -218,9 +218,9 @@ class WebNotificationAPI implements NotificationAPI {
           iconUrl: options.iconUrl,
           imageUrl: options.imageUrl,
           silent: options.silent,
-          requireInteraction: options.requireInteraction
+          requireInteraction: options.requireInteraction,
         });
-        
+
         if (newId) {
           // Replace the old notification with new one using same ID
           const newNotification = this.notifications.get(newId);
@@ -229,10 +229,10 @@ class WebNotificationAPI implements NotificationAPI {
             this.notifications.set(id, newNotification);
           }
         }
-        
+
         return !!newId;
       }
-      
+
       return false;
     } catch (error) {
       console.error('Web notification update error:', error);
@@ -260,7 +260,7 @@ class WebNotificationAPI implements NotificationAPI {
       id,
       title: notification.title,
       message: notification.body,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     }));
   }
 
@@ -281,7 +281,7 @@ class WebNotificationAPI implements NotificationAPI {
       }
 
       let permission = Notification.permission;
-      
+
       if (permission === 'default') {
         permission = await Notification.requestPermission();
       }
@@ -318,15 +318,15 @@ class WebWindowAPI implements WindowAPI {
     try {
       const windowId = `web_window_${++this.windowCounter}`;
       const features = this.buildWindowFeatures(options);
-      
+
       const newWindow = window.open(options.url || 'about:blank', windowId, features);
-      
+
       if (!newWindow) {
         throw new Error('Failed to create window - popup blocked');
       }
 
       this.windows.set(windowId, newWindow);
-      
+
       const windowInfo: WindowInfo = {
         id: windowId,
         focused: options.focused !== false,
@@ -337,7 +337,7 @@ class WebWindowAPI implements WindowAPI {
         incognito: false,
         type: options.type || 'normal',
         state: 'normal',
-        alwaysOnTop: false
+        alwaysOnTop: false,
       };
 
       this.createListeners.forEach(callback => callback(windowInfo));
@@ -351,15 +351,15 @@ class WebWindowAPI implements WindowAPI {
   async update(windowId: string, options: WindowUpdateOptions): Promise<WindowInfo> {
     try {
       const targetWindow = this.windows.get(windowId) || window;
-      
+
       if (options.width !== undefined && options.height !== undefined) {
         targetWindow.resizeTo(options.width, options.height);
       }
-      
+
       if (options.left !== undefined && options.top !== undefined) {
         targetWindow.moveTo(options.left, options.top);
       }
-      
+
       if (options.focused) {
         targetWindow.focus();
       }
@@ -402,7 +402,7 @@ class WebWindowAPI implements WindowAPI {
 
   async getAll(): Promise<WindowInfo[]> {
     const windows: WindowInfo[] = [this.getWindowInfo('main', window)];
-    
+
     this.windows.forEach((win, id) => {
       if (!win.closed) {
         windows.push(this.getWindowInfo(id, win));
@@ -431,19 +431,19 @@ class WebWindowAPI implements WindowAPI {
 
   private buildWindowFeatures(options: WindowCreateOptions): string {
     const features: string[] = [];
-    
+
     if (options.width) features.push(`width=${options.width}`);
     if (options.height) features.push(`height=${options.height}`);
     if (options.left) features.push(`left=${options.left}`);
     if (options.top) features.push(`top=${options.top}`);
-    
+
     features.push('menubar=no');
     features.push('toolbar=no');
     features.push('location=no');
     features.push('status=no');
     features.push('scrollbars=yes');
     features.push('resizable=yes');
-    
+
     return features.join(',');
   }
 
@@ -458,7 +458,7 @@ class WebWindowAPI implements WindowAPI {
       incognito: false,
       type: 'normal',
       state: 'normal',
-      alwaysOnTop: false
+      alwaysOnTop: false,
     };
   }
 }
@@ -562,20 +562,20 @@ class WebFileSystemAPI implements FileSystemAPI {
           types: options?.filters?.map(filter => ({
             description: filter.name,
             accept: {
-              'application/octet-stream': filter.extensions.map(ext => `.${ext}`)
-            }
-          }))
+              'application/octet-stream': filter.extensions.map(ext => `.${ext}`),
+            },
+          })),
         };
 
         const fileHandles = await (window as any).showOpenFilePicker(pickerOptions);
         return fileHandles.map((handle: any) => handle.name);
       } else {
         // Fallback to HTML file input
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
           const input = document.createElement('input');
           input.type = 'file';
           input.multiple = options?.properties?.includes('multiSelections') || false;
-          
+
           if (options?.filters) {
             const extensions = options.filters.flatMap(f => f.extensions);
             input.accept = extensions.map(ext => `.${ext}`).join(',');
@@ -604,9 +604,9 @@ class WebFileSystemAPI implements FileSystemAPI {
           types: options?.filters?.map(filter => ({
             description: filter.name,
             accept: {
-              'application/octet-stream': filter.extensions.map(ext => `.${ext}`)
-            }
-          }))
+              'application/octet-stream': filter.extensions.map(ext => `.${ext}`),
+            },
+          })),
         };
 
         const fileHandle = await (window as any).showSaveFilePicker(pickerOptions);
@@ -644,9 +644,10 @@ class WebHardwareAPI implements HardwareAPI {
   async getNetworkType(): Promise<string> {
     try {
       // @ts-ignore - Connection API may not be available
-      const connection = (navigator as any).connection || 
-                        (navigator as any).mozConnection || 
-                        (navigator as any).webkitConnection;
+      const connection =
+        (navigator as any).connection ||
+        (navigator as any).mozConnection ||
+        (navigator as any).webkitConnection;
       return connection?.effectiveType || 'unknown';
     } catch (error) {
       return 'unknown';
@@ -666,13 +667,13 @@ class WebHardwareAPI implements HardwareAPI {
         return {
           used: memory.usedJSHeapSize,
           total: memory.totalJSHeapSize,
-          available: memory.jsHeapSizeLimit - memory.usedJSHeapSize
+          available: memory.jsHeapSizeLimit - memory.usedJSHeapSize,
         };
       }
     } catch (error) {
       console.error('Web memory usage error:', error);
     }
-    
+
     return { used: 0, total: 0, available: 0 };
   }
 }
@@ -696,7 +697,7 @@ class WebSystemAPI implements SystemAPI {
       version: '1.0.0',
       userAgent: navigator.userAgent,
       language: navigator.language,
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     };
   }
 }
@@ -759,44 +760,44 @@ export class WebPlatformAPI implements PlatformAPI {
         local: true,
         sync: false,
         managed: false,
-        unlimited: false
+        unlimited: false,
       },
       notifications: {
         basic: 'Notification' in window,
         rich: 'Notification' in window,
         actions: false,
-        images: 'Notification' in window
+        images: 'Notification' in window,
       },
       windows: {
         create: true,
         focus: true,
         multiple: true,
-        alwaysOnTop: false
+        alwaysOnTop: false,
       },
       system: {
         clipboard: !!navigator.clipboard,
         fileSystem: 'showOpenFilePicker' in window,
         hardware: true,
-        nativeMenus: false
+        nativeMenus: false,
       },
       background: {
         serviceWorker: 'serviceWorker' in navigator,
         persistentPages: true,
-        alarms: false
-      }
+        alarms: false,
+      },
     };
   }
 
   isSupported(feature: string): boolean {
     const capabilities = this.getCapabilities();
     const parts = feature.split('.');
-    
+
     let current: any = capabilities;
     for (const part of parts) {
       if (current[part] === undefined) return false;
       current = current[part];
     }
-    
+
     return Boolean(current);
   }
 
@@ -811,7 +812,7 @@ export class WebPlatformAPI implements PlatformAPI {
       message,
       platform: this.type,
       feature,
-      originalError
+      originalError,
     };
 
     this.errorListeners.forEach(callback => callback(error));
@@ -820,7 +821,7 @@ export class WebPlatformAPI implements PlatformAPI {
 
 // Check if web platform is available
 export const isWebPlatformAvailable = (): boolean => {
-  return typeof window !== 'undefined' && 
-         typeof document !== 'undefined' && 
-         !window.chrome?.runtime?.id;
+  return (
+    typeof window !== 'undefined' && typeof document !== 'undefined' && !window.chrome?.runtime?.id
+  );
 };

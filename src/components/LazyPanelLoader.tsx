@@ -32,19 +32,19 @@ export interface LoadingState {
 }
 
 // Lazy imports with dynamic chunking
-const LazySmartHub = React.lazy(() => 
+const LazySmartHub = React.lazy(() =>
   import('@/components/panels/SmartHub').then(module => ({ default: module.SmartHub }))
 );
 
-const LazyAIChat = React.lazy(() => 
+const LazyAIChat = React.lazy(() =>
   import('@/components/panels/AIChat').then(module => ({ default: module.AIChat }))
 );
 
-const LazyTaskManager = React.lazy(() => 
+const LazyTaskManager = React.lazy(() =>
   import('@/components/panels/TaskManager').then(module => ({ default: module.TaskManager }))
 );
 
-const LazyProductivity = React.lazy(() => 
+const LazyProductivity = React.lazy(() =>
   import('@/components/panels/Productivity').then(module => ({ default: module.Productivity }))
 );
 
@@ -65,9 +65,9 @@ const RELATED_PANELS: Record<PanelType, PanelType[]> = {
 };
 
 // Skeleton component for loading states
-const PanelSkeleton: React.FC<{ panelType: PanelType; className?: string }> = ({ 
-  panelType, 
-  className = '' 
+const PanelSkeleton: React.FC<{ panelType: PanelType; className?: string }> = ({
+  panelType,
+  className = '',
 }) => {
   const getSkeletonConfig = (type: PanelType) => {
     switch (type) {
@@ -77,8 +77,8 @@ const PanelSkeleton: React.FC<{ panelType: PanelType; className?: string }> = ({
           elements: [
             { type: 'header', width: '60%' },
             { type: 'grid', columns: 3, rows: 2 },
-            { type: 'footer', width: '100%' }
-          ]
+            { type: 'footer', width: '100%' },
+          ],
         };
       case 'AIChat':
         return {
@@ -86,8 +86,8 @@ const PanelSkeleton: React.FC<{ panelType: PanelType; className?: string }> = ({
           elements: [
             { type: 'header', width: '40%' },
             { type: 'messages', count: 4 },
-            { type: 'input', width: '100%' }
-          ]
+            { type: 'input', width: '100%' },
+          ],
         };
       case 'TaskManager':
         return {
@@ -95,8 +95,8 @@ const PanelSkeleton: React.FC<{ panelType: PanelType; className?: string }> = ({
           elements: [
             { type: 'header', width: '50%' },
             { type: 'list', items: 5 },
-            { type: 'button', width: '30%' }
-          ]
+            { type: 'button', width: '30%' },
+          ],
         };
       case 'Productivity':
         return {
@@ -104,8 +104,8 @@ const PanelSkeleton: React.FC<{ panelType: PanelType; className?: string }> = ({
           elements: [
             { type: 'stats', columns: 2 },
             { type: 'chart', height: '120px' },
-            { type: 'controls', width: '80%' }
-          ]
+            { type: 'controls', width: '80%' },
+          ],
         };
     }
   };
@@ -116,7 +116,10 @@ const PanelSkeleton: React.FC<{ panelType: PanelType; className?: string }> = ({
     <div className={`panel-skeleton animate-pulse ${className}`}>
       {/* Panel Header */}
       <div className="skeleton-header p-4 border-b border-gray-200/20">
-        <div className="skeleton-title h-6 bg-gray-300/20 rounded" style={{ width: config.elements[0].width }} />
+        <div
+          className="skeleton-title h-6 bg-gray-300/20 rounded"
+          style={{ width: config.elements[0].width }}
+        />
       </div>
 
       {/* Panel Content */}
@@ -125,22 +128,26 @@ const PanelSkeleton: React.FC<{ panelType: PanelType; className?: string }> = ({
           <div key={index} className="skeleton-element">
             {element.type === 'grid' && (
               <div className={`grid grid-cols-${element.columns} gap-3`}>
-                {Array.from({ length: (element.columns || 1) * (element.rows || 1) }).map((_, i) => (
-                  <div key={i} className="h-16 bg-gray-300/20 rounded" />
-                ))}
+                {Array.from({ length: (element.columns || 1) * (element.rows || 1) }).map(
+                  (_, i) => (
+                    <div key={i} className="h-16 bg-gray-300/20 rounded" />
+                  )
+                )}
               </div>
             )}
-            
+
             {element.type === 'messages' && (
               <div className="space-y-3">
                 {Array.from({ length: element.count || 3 }).map((_, i) => (
                   <div key={i} className={`flex ${i % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
-                    <div className={`h-12 bg-gray-300/20 rounded-lg ${i % 2 === 0 ? 'w-3/4' : 'w-2/3'}`} />
+                    <div
+                      className={`h-12 bg-gray-300/20 rounded-lg ${i % 2 === 0 ? 'w-3/4' : 'w-2/3'}`}
+                    />
                   </div>
                 ))}
               </div>
             )}
-            
+
             {element.type === 'list' && (
               <div className="space-y-2">
                 {Array.from({ length: element.items || 3 }).map((_, i) => (
@@ -151,7 +158,7 @@ const PanelSkeleton: React.FC<{ panelType: PanelType; className?: string }> = ({
                 ))}
               </div>
             )}
-            
+
             {element.type === 'stats' && (
               <div className={`grid grid-cols-${element.columns || 2} gap-4`}>
                 {Array.from({ length: element.columns || 2 }).map((_, i) => (
@@ -162,17 +169,21 @@ const PanelSkeleton: React.FC<{ panelType: PanelType; className?: string }> = ({
                 ))}
               </div>
             )}
-            
+
             {element.type === 'chart' && (
-              <div 
-                className="bg-gray-300/20 rounded" 
+              <div
+                className="bg-gray-300/20 rounded"
                 style={{ height: element.height || '100px' }}
               />
             )}
-            
-            {(element.type === 'header' || element.type === 'footer' || element.type === 'button' || element.type === 'input' || element.type === 'controls') && (
-              <div 
-                className="h-10 bg-gray-300/20 rounded" 
+
+            {(element.type === 'header' ||
+              element.type === 'footer' ||
+              element.type === 'button' ||
+              element.type === 'input' ||
+              element.type === 'controls') && (
+              <div
+                className="h-10 bg-gray-300/20 rounded"
                 style={{ width: element.width || '100%' }}
               />
             )}
@@ -192,15 +203,20 @@ const PanelSkeleton: React.FC<{ panelType: PanelType; className?: string }> = ({
 };
 
 // Error fallback component
-const PanelErrorFallback: React.FC<{ 
-  error: Error; 
+const PanelErrorFallback: React.FC<{
+  error: Error;
   onRetry: () => void;
   panelType: PanelType;
 }> = ({ error, onRetry, panelType }) => (
   <div className="panel-error p-6 text-center bg-red-50/10 border border-red-200/20 rounded-lg">
     <div className="text-red-400 mb-4">
       <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
       </svg>
     </div>
     <h3 className="text-lg font-medium text-red-300 mb-2">Failed to load {panelType}</h3>
@@ -216,19 +232,22 @@ const PanelErrorFallback: React.FC<{
 
 // Performance monitoring for lazy loading
 class LazyLoadingMonitor {
-  private static metrics = new Map<string, {
-    loadTime: number;
-    retryCount: number;
-    success: boolean;
-    timestamp: number;
-  }>();
+  private static metrics = new Map<
+    string,
+    {
+      loadTime: number;
+      retryCount: number;
+      success: boolean;
+      timestamp: number;
+    }
+  >();
 
   static recordLoadStart(panelId: string): void {
     this.metrics.set(panelId, {
       loadTime: performance.now(),
       retryCount: 0,
       success: false,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
   }
 
@@ -250,7 +269,7 @@ class LazyLoadingMonitor {
   static getMetrics(): Array<{ panelId: string; metric: any }> {
     return Array.from(this.metrics.entries()).map(([panelId, metric]) => ({
       panelId,
-      metric
+      metric,
     }));
   }
 
@@ -279,7 +298,7 @@ export const LazyPanelLoader: React.FC<LazyPanelProps> = ({
   const [loadingState, setLoadingState] = useState<LoadingState>({
     isLoading: false,
     hasLoaded: false,
-    retryCount: 0
+    retryCount: 0,
   });
 
   const [shouldLoad, setShouldLoad] = useState(!enableIntersectionObserver || isVisible);
@@ -292,17 +311,17 @@ export const LazyPanelLoader: React.FC<LazyPanelProps> = ({
     if (!enableIntersectionObserver || shouldLoad) return;
 
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
+      entries => {
+        entries.forEach(entry => {
           if (entry.isIntersecting) {
             setShouldLoad(true);
             observer.disconnect();
           }
         });
       },
-      { 
+      {
         rootMargin: '50px', // Start loading 50px before entering viewport
-        threshold: 0.1 
+        threshold: 0.1,
       }
     );
 
@@ -317,7 +336,7 @@ export const LazyPanelLoader: React.FC<LazyPanelProps> = ({
   useEffect(() => {
     if (shouldLoad && preloadRelated && loadingState.hasLoaded) {
       const relatedPanels = RELATED_PANELS[panelType];
-      relatedPanels.forEach(async (relatedType) => {
+      relatedPanels.forEach(async relatedType => {
         try {
           await globalAssetPreloader.preloadComponentDependencies(relatedType);
         } catch (error) {
@@ -351,37 +370,43 @@ export const LazyPanelLoader: React.FC<LazyPanelProps> = ({
     }
   }, [shouldLoad, loadingState.isLoading, loadingState.hasLoaded, panelId, onLoadStart]);
 
-  const handleLoadComplete = useCallback((loadTime: number) => {
-    setLoadingState(prev => ({ 
-      ...prev, 
-      isLoading: false, 
-      hasLoaded: true, 
-      loadTime 
-    }));
-    setShowFallback(false);
-    LazyLoadingMonitor.recordLoadComplete(panelId, true);
-    onLoadComplete?.(loadTime);
-  }, [panelId, onLoadComplete]);
+  const handleLoadComplete = useCallback(
+    (loadTime: number) => {
+      setLoadingState(prev => ({
+        ...prev,
+        isLoading: false,
+        hasLoaded: true,
+        loadTime,
+      }));
+      setShowFallback(false);
+      LazyLoadingMonitor.recordLoadComplete(panelId, true);
+      onLoadComplete?.(loadTime);
+    },
+    [panelId, onLoadComplete]
+  );
 
-  const handleLoadError = useCallback((error: Error) => {
-    setLoadingState(prev => ({ 
-      ...prev, 
-      isLoading: false, 
-      error,
-      retryCount: prev.retryCount + 1
-    }));
-    setShowFallback(false);
-    LazyLoadingMonitor.recordLoadComplete(panelId, false);
-    LazyLoadingMonitor.recordRetry(panelId);
-    onLoadError?.(error);
-  }, [panelId, onLoadError]);
+  const handleLoadError = useCallback(
+    (error: Error) => {
+      setLoadingState(prev => ({
+        ...prev,
+        isLoading: false,
+        error,
+        retryCount: prev.retryCount + 1,
+      }));
+      setShowFallback(false);
+      LazyLoadingMonitor.recordLoadComplete(panelId, false);
+      LazyLoadingMonitor.recordRetry(panelId);
+      onLoadError?.(error);
+    },
+    [panelId, onLoadError]
+  );
 
   const handleRetry = useCallback(() => {
-    setLoadingState(prev => ({ 
-      ...prev, 
-      error: undefined, 
-      isLoading: false, 
-      hasLoaded: false 
+    setLoadingState(prev => ({
+      ...prev,
+      error: undefined,
+      isLoading: false,
+      hasLoaded: false,
     }));
     setShouldLoad(false);
     // Trigger reload by resetting shouldLoad
@@ -391,10 +416,10 @@ export const LazyPanelLoader: React.FC<LazyPanelProps> = ({
   // Component loader with error handling
   const ComponentLoader: React.FC = () => {
     const PanelComponent = PANEL_COMPONENTS[panelType];
-    
+
     useEffect(() => {
       const startTime = performance.now();
-      
+
       return () => {
         const loadTime = performance.now() - startTime;
         handleLoadComplete(loadTime);
@@ -407,8 +432,8 @@ export const LazyPanelLoader: React.FC<LazyPanelProps> = ({
   // Don't render anything until should load
   if (!shouldLoad) {
     return (
-      <div 
-        ref={observerRef} 
+      <div
+        ref={observerRef}
         className={`lazy-panel-placeholder ${className}`}
         style={{ minHeight: '200px', ...style }}
       />
@@ -419,8 +444,8 @@ export const LazyPanelLoader: React.FC<LazyPanelProps> = ({
   if (loadingState.error) {
     return (
       <div className={`lazy-panel-error ${className}`} style={style}>
-        <PanelErrorFallback 
-          error={loadingState.error} 
+        <PanelErrorFallback
+          error={loadingState.error}
           onRetry={handleRetry}
           panelType={panelType}
         />
@@ -432,14 +457,10 @@ export const LazyPanelLoader: React.FC<LazyPanelProps> = ({
     <div className={`lazy-panel-container ${className}`} style={style}>
       <ErrorBoundary
         fallback={({ error }) => (
-          <PanelErrorFallback 
-            error={error} 
-            onRetry={handleRetry}
-            panelType={panelType}
-          />
+          <PanelErrorFallback error={error} onRetry={handleRetry} panelType={panelType} />
         )}
       >
-        <Suspense 
+        <Suspense
           fallback={
             showFallback ? (
               <PanelSkeleton panelType={panelType} className="relative" />
@@ -473,7 +494,7 @@ export const useLazyLoadingMetrics = () => {
     metrics,
     averageLoadTime: LazyLoadingMonitor.getAverageLoadTime(),
     totalPanelsLoaded: metrics.filter(m => m.metric.success).length,
-    totalFailures: metrics.filter(m => !m.metric.success).length
+    totalFailures: metrics.filter(m => !m.metric.success).length,
   };
 };
 

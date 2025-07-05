@@ -27,13 +27,13 @@ export const GridOverlay: React.FC<GridOverlayProps> = ({
   showCoordinates = false,
   highlightSnapZones = true,
   snapZones = [],
-  className = ''
+  className = '',
 }) => {
   const { gridSettings, viewport, dragState, resizeState } = useLayoutStore();
 
   // Use props or fall back to store settings
-  const effectiveVisible = visible ?? gridSettings.visible ?? 
-    (dragState.isDragging || resizeState.isResizing);
+  const effectiveVisible =
+    visible ?? gridSettings.visible ?? (dragState.isDragging || resizeState.isResizing);
   const effectiveGridSize = gridSize ?? gridSettings.size;
   const effectiveOpacity = opacity ?? gridSettings.opacity;
   const effectiveColor = color ?? gridSettings.color;
@@ -75,7 +75,7 @@ export const GridOverlay: React.FC<GridOverlayProps> = ({
           backgroundColor: '#3b82f6',
           borderRadius: '50%',
           boxShadow: '0 0 10px rgba(59, 130, 246, 0.5)',
-          zIndex: 1000
+          zIndex: 1000,
         }}
       />
     ));
@@ -93,7 +93,7 @@ export const GridOverlay: React.FC<GridOverlayProps> = ({
         className="absolute pointer-events-none bg-gray-900 text-white text-xs px-2 py-1 rounded shadow-lg z-[1001]"
         style={{
           left: currentPosition.x + 10,
-          top: currentPosition.y - 30
+          top: currentPosition.y - 30,
         }}
       >
         x: {Math.round(currentPosition.x)}, y: {Math.round(currentPosition.y)}
@@ -106,16 +106,13 @@ export const GridOverlay: React.FC<GridOverlayProps> = ({
   }
 
   return (
-    <div 
-      className={`absolute inset-0 pointer-events-none ${className}`}
-      style={{ zIndex: 50 }}
-    >
+    <div className={`absolute inset-0 pointer-events-none ${className}`} style={{ zIndex: 50 }}>
       {/* Grid lines using SVG for performance */}
       <svg
         className="absolute inset-0 w-full h-full"
-        style={{ 
+        style={{
           opacity: effectiveOpacity,
-          pointerEvents: 'none'
+          pointerEvents: 'none',
         }}
       >
         <defs>
@@ -134,11 +131,7 @@ export const GridOverlay: React.FC<GridOverlayProps> = ({
             />
           </pattern>
         </defs>
-        <rect
-          width="100%"
-          height="100%"
-          fill="url(#grid)"
-        />
+        <rect width="100%" height="100%" fill="url(#grid)" />
       </svg>
 
       {/* Alternative CSS grid implementation (commented out for performance) */}
@@ -162,10 +155,12 @@ export const GridOverlay: React.FC<GridOverlayProps> = ({
         <div
           className="absolute w-2 h-2 bg-blue-500 rounded-full shadow-lg pointer-events-none"
           style={{
-            left: Math.round(dragState.currentPosition.x / effectiveGridSize) * effectiveGridSize - 4,
-            top: Math.round(dragState.currentPosition.y / effectiveGridSize) * effectiveGridSize - 4,
+            left:
+              Math.round(dragState.currentPosition.x / effectiveGridSize) * effectiveGridSize - 4,
+            top:
+              Math.round(dragState.currentPosition.y / effectiveGridSize) * effectiveGridSize - 4,
             zIndex: 100,
-            transform: 'translate(0, 0)' // Force GPU acceleration
+            transform: 'translate(0, 0)', // Force GPU acceleration
           }}
         />
       )}
@@ -183,7 +178,7 @@ export const GridOverlay: React.FC<GridOverlayProps> = ({
           style={{
             left: dragState.currentPosition?.x ?? 0,
             top: dragState.currentPosition?.y ?? 0,
-            zIndex: 99
+            zIndex: 99,
           }}
         >
           {/* Horizontal snap line */}
@@ -194,7 +189,7 @@ export const GridOverlay: React.FC<GridOverlayProps> = ({
               top: 0,
               width: viewport.bounds.width,
               height: 1,
-              pointerEvents: 'none'
+              pointerEvents: 'none',
             }}
           />
           {/* Vertical snap line */}
@@ -205,7 +200,7 @@ export const GridOverlay: React.FC<GridOverlayProps> = ({
               top: -viewport.bounds.height / 2,
               width: 1,
               height: viewport.bounds.height,
-              pointerEvents: 'none'
+              pointerEvents: 'none',
             }}
           />
         </div>
@@ -217,7 +212,9 @@ export const GridOverlay: React.FC<GridOverlayProps> = ({
           <div>Grid Size: {effectiveGridSize}px</div>
           <div>Visible: {effectiveVisible ? 'Yes' : 'No'}</div>
           <div>Snap Enabled: {gridSettings.enabled ? 'Yes' : 'No'}</div>
-          <div>Viewport: {viewport.bounds.width} × {viewport.bounds.height}</div>
+          <div>
+            Viewport: {viewport.bounds.width} × {viewport.bounds.height}
+          </div>
         </div>
       )}
     </div>

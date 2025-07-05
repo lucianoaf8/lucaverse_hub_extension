@@ -23,7 +23,7 @@ import {
   SystemInfo,
   MemoryInfo,
   FileDialogOptions,
-  PlatformContext
+  PlatformContext,
 } from './base.ts';
 
 // Chrome Storage Implementation
@@ -93,14 +93,17 @@ class ChromeStorageAPI implements StorageAPI {
     return chrome.storage.local.QUOTA_BYTES || 10485760;
   }
 
-  private handleStorageChange(changes: Record<string, chrome.storage.StorageChange>, namespace: string): void {
+  private handleStorageChange(
+    changes: Record<string, chrome.storage.StorageChange>,
+    namespace: string
+  ): void {
     if (namespace !== 'local') return;
-    
+
     const storageChanges: StorageChange[] = Object.entries(changes).map(([key, change]) => ({
       key,
       oldValue: change.oldValue,
       newValue: change.newValue,
-      storageArea: namespace
+      storageArea: namespace,
     }));
 
     this.listeners.forEach(callback => callback(storageChanges));
@@ -134,7 +137,7 @@ class ChromeNotificationAPI implements NotificationAPI {
         progress: options.progress,
         priority: options.priority || 0,
         silent: options.silent,
-        requireInteraction: options.requireInteraction
+        requireInteraction: options.requireInteraction,
       };
 
       const notificationId = await chrome.notifications.create(chromeOptions);
@@ -153,7 +156,7 @@ class ChromeNotificationAPI implements NotificationAPI {
         iconUrl: options.iconUrl,
         imageUrl: options.imageUrl,
         progress: options.progress,
-        priority: options.priority
+        priority: options.priority,
       };
 
       const success = await chrome.notifications.update(id, chromeOptions);
@@ -181,7 +184,7 @@ class ChromeNotificationAPI implements NotificationAPI {
         id,
         title: notification.title || '',
         message: notification.message || '',
-        timestamp: Date.now()
+        timestamp: Date.now(),
       }));
     } catch (error) {
       console.error('Chrome notification getAll error:', error);
@@ -237,7 +240,7 @@ class ChromeWindowAPI implements WindowAPI {
         left: options.left,
         top: options.top,
         focused: options.focused,
-        incognito: options.incognito
+        incognito: options.incognito,
       };
 
       const window = await chrome.windows.create(chromeOptions);
@@ -257,7 +260,7 @@ class ChromeWindowAPI implements WindowAPI {
         top: options.top,
         focused: options.focused,
         drawAttention: options.drawAttention,
-        state: options.state as chrome.windows.WindowState
+        state: options.state as chrome.windows.WindowState,
       };
 
       const window = await chrome.windows.update(parseInt(windowId), chromeOptions);
@@ -332,7 +335,7 @@ class ChromeWindowAPI implements WindowAPI {
       incognito: window.incognito || false,
       type: window.type || 'normal',
       state: window.state || 'normal',
-      alwaysOnTop: window.alwaysOnTop || false
+      alwaysOnTop: window.alwaysOnTop || false,
     };
   }
 
@@ -423,11 +426,11 @@ class ChromeFileSystemAPI implements FileSystemAPI {
 
   async showOpenDialog(options?: FileDialogOptions): Promise<string[]> {
     // Use HTML file input as fallback
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const input = document.createElement('input');
       input.type = 'file';
       input.multiple = options?.properties?.includes('multiSelections') || false;
-      
+
       if (options?.filters) {
         const extensions = options.filters.flatMap(f => f.extensions);
         input.accept = extensions.map(ext => `.${ext}`).join(',');
@@ -468,7 +471,8 @@ class ChromeHardwareAPI implements HardwareAPI {
   async getNetworkType(): Promise<string> {
     try {
       // @ts-ignore - Connection API may not be available
-      const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      const connection =
+        navigator.connection || navigator.mozConnection || navigator.webkitConnection;
       return connection?.effectiveType || 'unknown';
     } catch (error) {
       return 'unknown';
@@ -488,13 +492,13 @@ class ChromeHardwareAPI implements HardwareAPI {
         return {
           used: memory.usedJSHeapSize,
           total: memory.totalJSHeapSize,
-          available: memory.jsHeapSizeLimit - memory.usedJSHeapSize
+          available: memory.jsHeapSizeLimit - memory.usedJSHeapSize,
         };
       }
     } catch (error) {
       console.error('Chrome memory usage error:', error);
     }
-    
+
     return { used: 0, total: 0, available: 0 };
   }
 }
@@ -518,7 +522,7 @@ class ChromeSystemAPI implements SystemAPI {
       version: chrome.runtime.getManifest().version,
       userAgent: navigator.userAgent,
       language: navigator.language,
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     };
   }
 }
@@ -573,44 +577,44 @@ export class ChromePlatformAPI implements PlatformAPI {
         local: !!chrome?.storage?.local,
         sync: !!chrome?.storage?.sync,
         managed: !!chrome?.storage?.managed,
-        unlimited: false
+        unlimited: false,
       },
       notifications: {
         basic: !!chrome?.notifications,
         rich: !!chrome?.notifications,
         actions: !!chrome?.notifications,
-        images: !!chrome?.notifications
+        images: !!chrome?.notifications,
       },
       windows: {
         create: !!chrome?.windows?.create,
         focus: !!chrome?.windows?.update,
         multiple: true,
-        alwaysOnTop: false
+        alwaysOnTop: false,
       },
       system: {
         clipboard: !!navigator?.clipboard,
         fileSystem: false,
         hardware: true,
-        nativeMenus: false
+        nativeMenus: false,
       },
       background: {
         serviceWorker: true,
         persistentPages: false,
-        alarms: !!chrome?.alarms
-      }
+        alarms: !!chrome?.alarms,
+      },
     };
   }
 
   isSupported(feature: string): boolean {
     const capabilities = this.getCapabilities();
     const parts = feature.split('.');
-    
+
     let current: any = capabilities;
     for (const part of parts) {
       if (current[part] === undefined) return false;
       current = current[part];
     }
-    
+
     return Boolean(current);
   }
 
@@ -625,7 +629,7 @@ export class ChromePlatformAPI implements PlatformAPI {
       message,
       platform: this.type,
       feature,
-      originalError
+      originalError,
     };
 
     this.errorListeners.forEach(callback => callback(error));
@@ -646,7 +650,5 @@ export class ChromePlatformAPI implements PlatformAPI {
 
 // Check if Chrome extension APIs are available
 export const isChromePlatformAvailable = (): boolean => {
-  return typeof chrome !== 'undefined' && 
-         !!chrome.runtime && 
-         !!chrome.runtime.id;
+  return typeof chrome !== 'undefined' && !!chrome.runtime && !!chrome.runtime.id;
 };

@@ -4,12 +4,12 @@ import { initializeStores } from './stores';
 import './stores/simpleTest'; // Load store test functions
 
 // Import platform abstraction
-import { 
-  getPlatformAPI, 
-  detectPlatform, 
+import {
+  getPlatformAPI,
+  detectPlatform,
   onPlatformError,
   type PlatformAPI,
-  type PlatformDetectionResult 
+  type PlatformDetectionResult,
 } from './platform';
 
 // Import component test
@@ -35,16 +35,24 @@ interface PlatformInfo {
   error: string | null;
 }
 
-type AppView = 'home' | 'component-test' | 'panel-test' | 'layout-test' | 'drag-drop-test' | 'resize-test' | 'panel-management-test' | 'dashboard';
+type AppView =
+  | 'home'
+  | 'component-test'
+  | 'panel-test'
+  | 'layout-test'
+  | 'drag-drop-test'
+  | 'resize-test'
+  | 'panel-management-test'
+  | 'dashboard';
 
 // Initialize default panels for the dashboard
 const initializeDefaultPanels = () => {
   const { panels, addPanel } = useLayoutStore.getState();
-  
+
   // Only add default panels if none exist
   if (panels.length === 0) {
     console.log('Initializing default dashboard panels...');
-    
+
     // Add SmartHub in top-left
     addPanel({
       component: PanelComponent.SmartHub,
@@ -54,10 +62,10 @@ const initializeDefaultPanels = () => {
       visible: true,
       constraints: {
         minSize: { width: 300, height: 200 },
-        maxSize: { width: 800, height: 600 }
-      }
+        maxSize: { width: 800, height: 600 },
+      },
     });
-    
+
     // Add AI Chat in top-right
     addPanel({
       component: PanelComponent.AIChat,
@@ -67,10 +75,10 @@ const initializeDefaultPanels = () => {
       visible: true,
       constraints: {
         minSize: { width: 300, height: 200 },
-        maxSize: { width: 800, height: 600 }
-      }
+        maxSize: { width: 800, height: 600 },
+      },
     });
-    
+
     // Add Task Manager in bottom-left
     addPanel({
       component: PanelComponent.TaskManager,
@@ -80,10 +88,10 @@ const initializeDefaultPanels = () => {
       visible: true,
       constraints: {
         minSize: { width: 300, height: 200 },
-        maxSize: { width: 800, height: 600 }
-      }
+        maxSize: { width: 800, height: 600 },
+      },
     });
-    
+
     // Add Productivity in bottom-right
     addPanel({
       component: PanelComponent.Productivity,
@@ -93,10 +101,10 @@ const initializeDefaultPanels = () => {
       visible: true,
       constraints: {
         minSize: { width: 300, height: 200 },
-        maxSize: { width: 800, height: 600 }
-      }
+        maxSize: { width: 800, height: 600 },
+      },
     });
-    
+
     console.log('Default dashboard panels initialized');
   }
 };
@@ -108,12 +116,12 @@ function App() {
     api: null,
     capabilities: null,
     systemInfo: null,
-    error: null
+    error: null,
   });
 
   useEffect(() => {
     // Initialize stores on app startup
-    initializeStores().then((result) => {
+    initializeStores().then(result => {
       console.log('Stores initialized:', result);
     });
 
@@ -121,7 +129,7 @@ function App() {
     initializePlatform();
 
     // Setup platform error handling
-    const removeErrorHandler = onPlatformError((error) => {
+    const removeErrorHandler = onPlatformError(error => {
       console.error('Platform error:', error);
       setPlatformInfo(prev => ({ ...prev, error: error.message }));
     });
@@ -141,15 +149,15 @@ function App() {
         api,
         capabilities,
         systemInfo,
-        error: null
+        error: null,
       });
 
       console.log('Platform initialized:', { detection, capabilities, systemInfo });
     } catch (error) {
       console.error('Failed to initialize platform:', error);
-      setPlatformInfo(prev => ({ 
-        ...prev, 
-        error: error instanceof Error ? error.message : 'Platform initialization failed' 
+      setPlatformInfo(prev => ({
+        ...prev,
+        error: error instanceof Error ? error.message : 'Platform initialization failed',
       }));
     }
   };
@@ -164,7 +172,7 @@ function App() {
       // Test storage
       const testKey = 'platform-test-' + Date.now();
       const testData = { message: 'Platform integration test', timestamp: Date.now() };
-      
+
       await platformInfo.api.storage.set(testKey, testData);
       const retrieved = await platformInfo.api.storage.get(testKey);
       console.log('Storage test:', { stored: testData, retrieved });
@@ -174,7 +182,7 @@ function App() {
         const notificationId = await platformInfo.api.notifications.create({
           title: 'Lucaverse Hub',
           message: 'Platform integration successful!',
-          iconUrl: '/assets/icon-48.png'
+          iconUrl: '/assets/icon-48.png',
         });
         console.log('Notification test:', notificationId);
 
@@ -188,7 +196,7 @@ function App() {
 
       // Cleanup test data
       await platformInfo.api.storage.remove(testKey);
-      
+
       alert('Platform test completed! Check console for details.');
     } catch (error) {
       console.error('Platform test failed:', error);
@@ -200,7 +208,7 @@ function App() {
   if (currentView === 'component-test') {
     return (
       <div className="h-full relative">
-        <button 
+        <button
           className="absolute top-4 left-4 z-50 glass-button px-4 py-2 glow-hover text-sm"
           onClick={() => setCurrentView('home')}
         >
@@ -214,7 +222,7 @@ function App() {
   if (currentView === 'panel-test') {
     return (
       <div className="h-full relative">
-        <button 
+        <button
           className="absolute top-4 left-4 z-50 glass-button px-4 py-2 glow-hover text-sm"
           onClick={() => setCurrentView('home')}
         >
@@ -228,7 +236,7 @@ function App() {
   if (currentView === 'layout-test') {
     return (
       <div className="h-full relative">
-        <button 
+        <button
           className="absolute top-4 left-4 z-50 glass-button px-4 py-2 glow-hover text-sm"
           onClick={() => setCurrentView('home')}
         >
@@ -242,7 +250,7 @@ function App() {
   if (currentView === 'drag-drop-test') {
     return (
       <div className="h-full relative">
-        <button 
+        <button
           className="absolute top-4 left-4 z-50 glass-button px-4 py-2 glow-hover text-sm"
           onClick={() => setCurrentView('home')}
         >
@@ -256,7 +264,7 @@ function App() {
   if (currentView === 'resize-test') {
     return (
       <div className="h-full relative">
-        <button 
+        <button
           className="absolute top-4 left-4 z-50 glass-button px-4 py-2 glow-hover text-sm"
           onClick={() => setCurrentView('home')}
         >
@@ -270,7 +278,7 @@ function App() {
   if (currentView === 'panel-management-test') {
     return (
       <div className="h-full relative">
-        <button 
+        <button
           className="absolute top-4 left-4 z-50 glass-button px-4 py-2 glow-hover text-sm"
           onClick={() => setCurrentView('home')}
         >
@@ -291,7 +299,7 @@ function App() {
   if (currentView === 'dashboard') {
     return (
       <div className="h-full relative">
-        <button 
+        <button
           className="absolute top-4 left-4 z-50 glass-button px-4 py-2 glow-hover text-sm"
           onClick={() => setCurrentView('home')}
         >
@@ -311,14 +319,14 @@ function App() {
         <p className="text-white/80 text-center mb-6">
           Cross-platform productivity dashboard with React TypeScript + Platform Abstraction
         </p>
-        
+
         {platformInfo.error && (
           <div className="glass-panel p-4 mb-4 border border-red-500/30 bg-red-500/10">
             <div className="text-sm text-red-300 mb-1">Platform Error</div>
             <div className="text-red-200 font-medium">{platformInfo.error}</div>
           </div>
         )}
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div className="glass-panel p-4">
             <div className="text-sm text-white/70 mb-1">Platform Type</div>
@@ -329,21 +337,19 @@ function App() {
               </span>
             </div>
           </div>
-          
+
           <div className="glass-panel p-4">
             <div className="text-sm text-white/70 mb-1">Build Mode</div>
-            <div className="text-white font-medium">
-              {import.meta.env.MODE}
-            </div>
+            <div className="text-white font-medium">{import.meta.env.MODE}</div>
           </div>
-          
+
           <div className="glass-panel p-4">
             <div className="text-sm text-white/70 mb-1">Environment</div>
             <div className="text-white font-medium">
               {import.meta.env.DEV ? 'Development' : 'Production'}
             </div>
           </div>
-          
+
           <div className="glass-panel p-4">
             <div className="text-sm text-white/70 mb-1">API Status</div>
             <div className="text-white font-medium">
@@ -381,25 +387,43 @@ function App() {
             <div className="text-sm text-white/70 mb-2">Platform Capabilities</div>
             <div className="grid grid-cols-2 gap-2 text-xs">
               <div className="flex items-center">
-                <span className={platformInfo.capabilities.storage?.local ? 'text-green-400' : 'text-red-400'}>
+                <span
+                  className={
+                    platformInfo.capabilities.storage?.local ? 'text-green-400' : 'text-red-400'
+                  }
+                >
                   {platformInfo.capabilities.storage?.local ? '✅' : '❌'}
                 </span>
                 <span className="text-white/80 ml-2">Local Storage</span>
               </div>
               <div className="flex items-center">
-                <span className={platformInfo.capabilities.notifications?.basic ? 'text-green-400' : 'text-red-400'}>
+                <span
+                  className={
+                    platformInfo.capabilities.notifications?.basic
+                      ? 'text-green-400'
+                      : 'text-red-400'
+                  }
+                >
                   {platformInfo.capabilities.notifications?.basic ? '✅' : '❌'}
                 </span>
                 <span className="text-white/80 ml-2">Notifications</span>
               </div>
               <div className="flex items-center">
-                <span className={platformInfo.capabilities.system?.clipboard ? 'text-green-400' : 'text-red-400'}>
+                <span
+                  className={
+                    platformInfo.capabilities.system?.clipboard ? 'text-green-400' : 'text-red-400'
+                  }
+                >
                   {platformInfo.capabilities.system?.clipboard ? '✅' : '❌'}
                 </span>
                 <span className="text-white/80 ml-2">Clipboard</span>
               </div>
               <div className="flex items-center">
-                <span className={platformInfo.capabilities.windows?.create ? 'text-green-400' : 'text-red-400'}>
+                <span
+                  className={
+                    platformInfo.capabilities.windows?.create ? 'text-green-400' : 'text-red-400'
+                  }
+                >
                   {platformInfo.capabilities.windows?.create ? '✅' : '❌'}
                 </span>
                 <span className="text-white/80 ml-2">Window Management</span>
@@ -407,61 +431,71 @@ function App() {
             </div>
           </div>
         )}
-        
+
         <div className="glass-panel p-4 mb-6">
           <div className="text-sm text-white/70 mb-1">Development Tools</div>
           <div className="text-white/80 text-sm space-y-1">
-            <div>• Console: <code className="bg-black/20 px-1 rounded">window.__testStores__()</code> - Test Zustand stores</div>
-            <div>• Console: <code className="bg-black/20 px-1 rounded">testPlatformAPIs()</code> - Test platform APIs</div>
-            <div>• Console: <code className="bg-black/20 px-1 rounded">window.platformDev.logInfo()</code> - Platform info</div>
+            <div>
+              • Console: <code className="bg-black/20 px-1 rounded">window.__testStores__()</code> -
+              Test Zustand stores
+            </div>
+            <div>
+              • Console: <code className="bg-black/20 px-1 rounded">testPlatformAPIs()</code> - Test
+              platform APIs
+            </div>
+            <div>
+              • Console:{' '}
+              <code className="bg-black/20 px-1 rounded">window.platformDev.logInfo()</code> -
+              Platform info
+            </div>
           </div>
         </div>
-        
+
         <div className="flex gap-3 justify-center flex-wrap">
-          <button 
+          <button
             className="glass-button px-6 py-2 glow-hover"
             onClick={testPlatformFeatures}
             disabled={!platformInfo.api}
           >
             Test Platform Features
           </button>
-          <button 
+          <button
             className="glass-button px-6 py-2 glow-hover"
             onClick={() => setCurrentView('component-test')}
           >
             Component Test Suite
           </button>
-          <button 
+          <button
             className="glass-button px-6 py-2 glow-hover"
             onClick={() => setCurrentView('panel-test')}
           >
             Panel Migration Test
           </button>
-          <button 
+          <button
             className="glass-button px-6 py-2 glow-hover"
             onClick={() => setCurrentView('layout-test')}
           >
             Layout System Test
           </button>
-          <button 
+          <button
             className="glass-button px-6 py-2 glow-hover"
             onClick={() => setCurrentView('drag-drop-test')}
           >
             Drag & Drop Test
           </button>
-          <button 
+          <button
             className="glass-button px-6 py-2 glow-hover"
             onClick={() => setCurrentView('resize-test')}
           >
             Panel Resize Test
           </button>
-          <button 
+          <button
             className="glass-button px-6 py-2 glow-hover"
             onClick={() => setCurrentView('panel-management-test')}
           >
             Panel Management Test
           </button>
-          <button 
+          <button
             className="glass-button px-6 py-2 glow-hover"
             onClick={() => setCurrentView('dashboard')}
           >

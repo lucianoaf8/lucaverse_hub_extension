@@ -17,10 +17,13 @@ export const colorVariants = {
   button: {
     [ComponentVariant.Default]: 'glass-button',
     [ComponentVariant.Primary]: 'btn-primary',
-    [ComponentVariant.Secondary]: 'btn-secondary', 
-    [ComponentVariant.Accent]: 'bg-accent-500 hover:bg-accent-400 text-white border border-accent-400',
-    [ComponentVariant.Ghost]: 'bg-transparent hover:bg-glass-light text-text-primary border border-transparent hover:border-glass-border',
-    [ComponentVariant.Outline]: 'bg-transparent border-2 border-primary-400 text-primary-400 hover:bg-primary-400 hover:text-white',
+    [ComponentVariant.Secondary]: 'btn-secondary',
+    [ComponentVariant.Accent]:
+      'bg-accent-500 hover:bg-accent-400 text-white border border-accent-400',
+    [ComponentVariant.Ghost]:
+      'bg-transparent hover:bg-glass-light text-text-primary border border-transparent hover:border-glass-border',
+    [ComponentVariant.Outline]:
+      'bg-transparent border-2 border-primary-400 text-primary-400 hover:bg-primary-400 hover:text-white',
   },
   panel: {
     [ComponentVariant.Default]: 'glass-panel',
@@ -33,7 +36,8 @@ export const colorVariants = {
   input: {
     [ComponentVariant.Default]: 'glass-input',
     [ComponentVariant.Primary]: 'glass-input focus:border-primary-500 focus:ring-primary-500/30',
-    [ComponentVariant.Secondary]: 'glass-input focus:border-secondary-400 focus:ring-secondary-400/30',
+    [ComponentVariant.Secondary]:
+      'glass-input focus:border-secondary-400 focus:ring-secondary-400/30',
     [ComponentVariant.Accent]: 'glass-input focus:border-accent-500 focus:ring-accent-500/30',
     [ComponentVariant.Ghost]: 'bg-transparent border border-glass-border',
     [ComponentVariant.Outline]: 'bg-transparent border-2 border-primary-400/50',
@@ -41,7 +45,7 @@ export const colorVariants = {
   text: {
     [ComponentVariant.Default]: 'text-text-primary',
     [ComponentVariant.Primary]: 'text-primary-400',
-    [ComponentVariant.Secondary]: 'text-secondary-400', 
+    [ComponentVariant.Secondary]: 'text-secondary-400',
     [ComponentVariant.Accent]: 'text-accent-500',
     [ComponentVariant.Ghost]: 'text-text-muted',
     [ComponentVariant.Outline]: 'text-text-secondary',
@@ -59,7 +63,7 @@ export const sizeVariants = {
   panel: {
     [ComponentSize.Small]: 'p-3',
     [ComponentSize.Medium]: 'p-4',
-    [ComponentSize.Large]: 'p-6', 
+    [ComponentSize.Large]: 'p-6',
     [ComponentSize.ExtraLarge]: 'p-8',
   },
   input: {
@@ -114,11 +118,11 @@ export function calculateGlassOpacity(intensity: number = 1): {
   blur: string;
 } {
   const clampedIntensity = Math.max(0, Math.min(1, intensity));
-  
+
   return {
     background: `rgba(0, 255, 255, ${0.08 * clampedIntensity})`,
     border: `rgba(0, 255, 255, ${0.1 * clampedIntensity})`,
-    blur: `${8 + (8 * clampedIntensity)}px`,
+    blur: `${8 + 8 * clampedIntensity}px`,
   };
 }
 
@@ -187,17 +191,17 @@ export function buttonStyles({
     'inline-flex items-center justify-center font-medium',
     'rounded-lg transition-all duration-200',
     'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-400',
-    
+
     // Variant styles
     colorVariants.button[variant],
-    
+
     // Size styles
     sizeVariants.button[size],
-    
+
     // State modifiers
     disabled && stateModifiers.disabled,
     loading && stateModifiers.loading,
-    
+
     // Custom classes
     className
   );
@@ -221,14 +225,14 @@ export function panelStyles({
   return cn(
     // Base panel styles
     colorVariants.panel[variant],
-    
+
     // Size styles
     sizeVariants.panel[size],
-    
+
     // State modifiers
     selected && stateModifiers.selected,
     dragging && stateModifiers.dragging,
-    
+
     // Custom classes
     className
   );
@@ -252,14 +256,14 @@ export function inputStyles({
   return cn(
     // Base input styles
     colorVariants.input[variant],
-    
+
     // Size styles
     sizeVariants.input[size],
-    
+
     // State modifiers
     error && stateModifiers.error,
     disabled && stateModifiers.disabled,
-    
+
     // Custom classes
     className
   );
@@ -287,11 +291,7 @@ export function resizeHandleStyles(
   direction: 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw',
   className?: string
 ): string {
-  return cn(
-    'resize-handle',
-    `resize-handle-${direction}`,
-    className
-  );
+  return cn('resize-handle', `resize-handle-${direction}`, className);
 }
 
 // Style merging utility for component customization

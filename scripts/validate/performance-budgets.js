@@ -6,7 +6,7 @@
 import { readFileSync, readdirSync, statSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import performanceConfig from '../performance.config.js';
+import performanceConfig from '../../config/performance/performance.config.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

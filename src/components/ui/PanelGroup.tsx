@@ -9,26 +9,26 @@ export interface PanelGroup {
   name: string;
   description?: string;
   panelIds: string[];
-  
+
   // Group properties
   bounds: {
     position: Position;
     size: Size;
   };
-  
+
   // Group state
   isLocked: boolean;
   isMinimized: boolean;
   isCollapsed: boolean;
   zIndex: number;
-  
+
   // Visual properties
   color: string;
   borderStyle: 'solid' | 'dashed' | 'dotted';
   borderWidth: number;
   backgroundColor?: string;
   opacity: number;
-  
+
   // Group behavior
   behavior: {
     maintainRelativePositions: boolean;
@@ -36,7 +36,7 @@ export interface PanelGroup {
     cascadeActions: boolean;
     allowNestedGroups: boolean;
   };
-  
+
   // Metadata
   metadata: {
     createdAt: number;
@@ -48,14 +48,14 @@ export interface PanelGroup {
 }
 
 // Group action types
-export type GroupAction = 
-  | 'move' 
-  | 'resize' 
-  | 'minimize' 
-  | 'maximize' 
-  | 'lock' 
-  | 'unlock' 
-  | 'delete' 
+export type GroupAction =
+  | 'move'
+  | 'resize'
+  | 'minimize'
+  | 'maximize'
+  | 'lock'
+  | 'unlock'
+  | 'delete'
   | 'duplicate'
   | 'bring-to-front'
   | 'send-to-back';
@@ -78,19 +78,19 @@ export interface PanelGroupProps {
   group: PanelGroup;
   panels: PanelLayout[];
   selectedPanelIds: string[];
-  
+
   // Event handlers
   onGroupAction: (groupId: string, action: GroupAction) => void;
   onPanelSelect: (panelIds: string[], addToSelection: boolean) => void;
   onGroupUpdate: (groupId: string, updates: Partial<PanelGroup>) => void;
   onGroupDelete: (groupId: string) => void;
-  
+
   // Interaction settings
   showGroupBounds?: boolean;
   allowResize?: boolean;
   allowMove?: boolean;
   showControls?: boolean;
-  
+
   // Visual settings
   className?: string;
   style?: React.CSSProperties;
@@ -117,7 +117,7 @@ const GroupControls: React.FC<{
       >
         {group.isMinimized ? '📋' : '➖'}
       </button>
-      
+
       <button
         className="w-6 h-6 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/20 rounded text-xs"
         onClick={() => onAction(group.isLocked ? 'unlock' : 'lock')}
@@ -125,7 +125,7 @@ const GroupControls: React.FC<{
       >
         {group.isLocked ? '🔒' : '🔓'}
       </button>
-      
+
       <button
         className="w-6 h-6 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/20 rounded text-xs"
         onClick={() => onAction('bring-to-front')}
@@ -133,7 +133,7 @@ const GroupControls: React.FC<{
       >
         ⬆️
       </button>
-      
+
       <button
         className="w-6 h-6 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/20 rounded text-xs"
         onClick={() => onAction('duplicate')}
@@ -141,7 +141,7 @@ const GroupControls: React.FC<{
       >
         📋
       </button>
-      
+
       <button
         className="w-6 h-6 flex items-center justify-center text-red-400 hover:text-red-300 hover:bg-red-500/20 rounded text-xs"
         onClick={() => onAction('delete')}
@@ -170,14 +170,17 @@ const GroupLabel: React.FC<{
     setIsEditing(false);
   }, [editName, group.name, onNameChange]);
 
-  const handleKeyPress = useCallback((event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      handleNameSubmit();
-    } else if (event.key === 'Escape') {
-      setEditName(group.name);
-      setIsEditing(false);
-    }
-  }, [handleNameSubmit, group.name]);
+  const handleKeyPress = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        handleNameSubmit();
+      } else if (event.key === 'Escape') {
+        setEditName(group.name);
+        setIsEditing(false);
+      }
+    },
+    [handleNameSubmit, group.name]
+  );
 
   React.useEffect(() => {
     if (isEditing && inputRef.current) {
@@ -199,7 +202,7 @@ const GroupLabel: React.FC<{
           ref={inputRef}
           type="text"
           value={editName}
-          onChange={(e) => setEditName(e.target.value)}
+          onChange={e => setEditName(e.target.value)}
           onBlur={handleNameSubmit}
           onKeyDown={handleKeyPress}
           className="bg-transparent border-none outline-none text-white placeholder-white/50 w-32"
@@ -241,14 +244,17 @@ export const PanelGroup: React.FC<PanelGroupProps> = ({
 
   // Get panels that belong to this group
   const groupPanels = panels.filter(panel => group.panelIds.includes(panel.id));
-  
+
   // Calculate group bounds from panel positions
   const calculateBounds = useCallback((): { position: Position; size: Size } => {
     if (groupPanels.length === 0) {
       return { position: { x: 0, y: 0 }, size: { width: 100, height: 100 } };
     }
 
-    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    let minX = Infinity,
+      minY = Infinity,
+      maxX = -Infinity,
+      maxY = -Infinity;
 
     groupPanels.forEach(panel => {
       minX = Math.min(minX, panel.position.x);
@@ -277,82 +283,94 @@ export const PanelGroup: React.FC<PanelGroupProps> = ({
   }, [groupPanels, calculateBounds, group.bounds, group.id, onGroupUpdate]);
 
   // Handle group actions
-  const handleGroupAction = useCallback((action: GroupAction) => {
-    switch (action) {
-      case 'minimize':
-        onGroupUpdate(group.id, { isMinimized: !group.isMinimized });
-        break;
-      case 'lock':
-        onGroupUpdate(group.id, { isLocked: true });
-        break;
-      case 'unlock':
-        onGroupUpdate(group.id, { isLocked: false });
-        break;
-      case 'delete':
-        onGroupDelete(group.id);
-        break;
-      default:
-        onGroupAction(group.id, action);
-    }
-  }, [group.id, group.isMinimized, group.isLocked, onGroupAction, onGroupUpdate, onGroupDelete]);
+  const handleGroupAction = useCallback(
+    (action: GroupAction) => {
+      switch (action) {
+        case 'minimize':
+          onGroupUpdate(group.id, { isMinimized: !group.isMinimized });
+          break;
+        case 'lock':
+          onGroupUpdate(group.id, { isLocked: true });
+          break;
+        case 'unlock':
+          onGroupUpdate(group.id, { isLocked: false });
+          break;
+        case 'delete':
+          onGroupDelete(group.id);
+          break;
+        default:
+          onGroupAction(group.id, action);
+      }
+    },
+    [group.id, group.isMinimized, group.isLocked, onGroupAction, onGroupUpdate, onGroupDelete]
+  );
 
   // Handle mouse down for dragging
-  const handleMouseDown = useCallback((event: React.MouseEvent) => {
-    if (!allowMove || group.isLocked || event.button !== 0) return;
+  const handleMouseDown = useCallback(
+    (event: React.MouseEvent) => {
+      if (!allowMove || group.isLocked || event.button !== 0) return;
 
-    event.preventDefault();
-    event.stopPropagation();
+      event.preventDefault();
+      event.stopPropagation();
 
-    setIsDragging(true);
-    setDragStart({ x: event.clientX, y: event.clientY });
+      setIsDragging(true);
+      setDragStart({ x: event.clientX, y: event.clientY });
 
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!isDragging) return;
+      const handleMouseMove = (e: MouseEvent) => {
+        if (!isDragging) return;
 
-      const deltaX = e.clientX - dragStart.x;
-      const deltaY = e.clientY - dragStart.y;
+        const deltaX = e.clientX - dragStart.x;
+        const deltaY = e.clientY - dragStart.y;
 
-      // Move group bounds
-      const newBounds = {
-        position: {
-          x: group.bounds.position.x + deltaX,
-          y: group.bounds.position.y + deltaY,
-        },
-        size: group.bounds.size,
+        // Move group bounds
+        const newBounds = {
+          position: {
+            x: group.bounds.position.x + deltaX,
+            y: group.bounds.position.y + deltaY,
+          },
+          size: group.bounds.size,
+        };
+
+        onGroupUpdate(group.id, { bounds: newBounds });
+        setDragStart({ x: e.clientX, y: e.clientY });
       };
 
-      onGroupUpdate(group.id, { bounds: newBounds });
-      setDragStart({ x: e.clientX, y: e.clientY });
-    };
+      const handleMouseUp = () => {
+        setIsDragging(false);
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
 
-    const handleMouseUp = () => {
-      setIsDragging(false);
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-  }, [allowMove, group.isLocked, group.bounds, group.id, onGroupUpdate, isDragging, dragStart]);
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    },
+    [allowMove, group.isLocked, group.bounds, group.id, onGroupUpdate, isDragging, dragStart]
+  );
 
   // Handle group name change
-  const handleNameChange = useCallback((newName: string) => {
-    onGroupUpdate(group.id, { 
-      name: newName,
-      metadata: {
-        ...group.metadata,
-        updatedAt: Date.now(),
-      },
-    });
-  }, [group.id, group.metadata, onGroupUpdate]);
+  const handleNameChange = useCallback(
+    (newName: string) => {
+      onGroupUpdate(group.id, {
+        name: newName,
+        metadata: {
+          ...group.metadata,
+          updatedAt: Date.now(),
+        },
+      });
+    },
+    [group.id, group.metadata, onGroupUpdate]
+  );
 
   // Handle group selection
-  const handleGroupSelect = useCallback((event: React.MouseEvent) => {
-    event.stopPropagation();
-    
-    const isMultiSelect = event.ctrlKey || event.metaKey;
-    onPanelSelect(group.panelIds, isMultiSelect);
-  }, [group.panelIds, onPanelSelect]);
+  const handleGroupSelect = useCallback(
+    (event: React.MouseEvent) => {
+      event.stopPropagation();
+
+      const isMultiSelect = event.ctrlKey || event.metaKey;
+      onPanelSelect(group.panelIds, isMultiSelect);
+    },
+    [group.panelIds, onPanelSelect]
+  );
 
   // Check if group is selected (all panels selected)
   const isGroupSelected = group.panelIds.every(id => selectedPanelIds.includes(id));
@@ -396,19 +414,11 @@ export const PanelGroup: React.FC<PanelGroupProps> = ({
       data-group-minimized={group.isMinimized}
     >
       {/* Group label */}
-      <GroupLabel
-        group={group}
-        position={{ x: 0, y: 0 }}
-        onNameChange={handleNameChange}
-      />
+      <GroupLabel group={group} position={{ x: 0, y: 0 }} onNameChange={handleNameChange} />
 
       {/* Group controls */}
       {showControls && (
-        <GroupControls
-          group={group}
-          onAction={handleGroupAction}
-          position={{ x: 0, y: 0 }}
-        />
+        <GroupControls group={group} onAction={handleGroupAction} position={{ x: 0, y: 0 }} />
       )}
 
       {/* Minimized state indicator */}
@@ -451,13 +461,16 @@ export class GroupManager {
     options: Partial<PanelGroup> = {}
   ): PanelGroup {
     const groupPanels = panels.filter(panel => panelIds.includes(panel.id));
-    
+
     if (groupPanels.length === 0) {
       throw new Error('Cannot create group without panels');
     }
 
     // Calculate initial bounds
-    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    let minX = Infinity,
+      minY = Infinity,
+      maxX = -Infinity,
+      maxY = -Infinity;
     groupPanels.forEach(panel => {
       minX = Math.min(minX, panel.position.x);
       minY = Math.min(minY, panel.position.y);
@@ -539,8 +552,8 @@ export class GroupManager {
         return {
           ...panel,
           position: {
-            x: newBounds.position.x + (relativeX * scaleX),
-            y: newBounds.position.y + (relativeY * scaleY),
+            x: newBounds.position.x + relativeX * scaleX,
+            y: newBounds.position.y + relativeY * scaleY,
           },
           size: {
             width: panel.size.width * scaleX,
@@ -554,7 +567,7 @@ export class GroupManager {
 
   static saveGroupTemplate(group: PanelGroup, panels: PanelLayout[]): GroupTemplate {
     const groupPanels = panels.filter(panel => group.panelIds.includes(panel.id));
-    
+
     const relativePositions = groupPanels.map(panel => ({
       panelId: panel.id,
       relativePosition: {

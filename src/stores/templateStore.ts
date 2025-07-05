@@ -10,7 +10,7 @@ export interface PanelTemplate {
   description: string;
   category: TemplateCategory;
   tags: string[];
-  
+
   // Template data
   panels: PanelLayout[];
   metadata: {
@@ -22,7 +22,7 @@ export interface PanelTemplate {
     rating?: number;
     thumbnail?: string;
   };
-  
+
   // Template configuration
   settings: {
     autoResize: boolean;
@@ -30,7 +30,7 @@ export interface PanelTemplate {
     allowOverlap: boolean;
     snapToGrid: boolean;
   };
-  
+
   // Validation and compatibility
   validation: {
     minPanels: number;
@@ -56,47 +56,52 @@ interface TemplateState {
   // Templates data
   templates: PanelTemplate[];
   categories: TemplateCategory[];
-  
+
   // Current state
   activeTemplateId: string | null;
   isLoading: boolean;
   error: string | null;
-  
+
   // Filter and search
   searchQuery: string;
   selectedCategory: TemplateCategory | null;
   selectedTags: string[];
-  
+
   // CRUD operations
-  createTemplate: (name: string, description: string, panels: PanelLayout[], category: TemplateCategory) => string;
+  createTemplate: (
+    name: string,
+    description: string,
+    panels: PanelLayout[],
+    category: TemplateCategory
+  ) => string;
   updateTemplate: (id: string, updates: Partial<PanelTemplate>) => void;
   deleteTemplate: (id: string) => void;
   duplicateTemplate: (id: string, newName?: string) => string;
-  
+
   // Template operations
   loadTemplate: (id: string) => PanelTemplate | null;
   applyTemplate: (id: string) => PanelLayout[];
   generateThumbnail: (id: string) => Promise<string>;
-  
+
   // Search and filter
   searchTemplates: (query: string) => void;
   filterByCategory: (category: TemplateCategory | null) => void;
   filterByTags: (tags: string[]) => void;
   getFilteredTemplates: () => PanelTemplate[];
-  
+
   // Import/Export
   exportTemplate: (id: string) => string;
   importTemplate: (templateData: string) => Promise<string>;
   exportAllTemplates: () => string;
   importTemplates: (templatesData: string) => Promise<number>;
-  
+
   // Predefined templates
   createPredefinedTemplates: () => void;
   resetTemplates: () => void;
-  
+
   // Validation
   validateTemplate: (template: Partial<PanelTemplate>) => { isValid: boolean; errors: string[] };
-  
+
   // Statistics
   getTemplateStats: () => {
     totalTemplates: number;
@@ -104,7 +109,7 @@ interface TemplateState {
     mostUsed: PanelTemplate[];
     recentlyCreated: PanelTemplate[];
   };
-  
+
   // Auto-save and recovery
   enableAutoSave: (enabled: boolean) => void;
   recoverUnsavedChanges: () => PanelTemplate[];
@@ -293,7 +298,7 @@ export const useTemplateStore = create<TemplateState>()(
         createTemplate: (name, description, panels, category) => {
           const id = `template-${nanoid()}`;
           const now = Date.now();
-          
+
           const template: PanelTemplate = {
             id,
             name,
@@ -348,7 +353,7 @@ export const useTemplateStore = create<TemplateState>()(
           }));
         },
 
-        deleteTemplate: (id) => {
+        deleteTemplate: id => {
           set(state => ({
             templates: state.templates.filter(template => template.id !== id),
             activeTemplateId: state.activeTemplateId === id ? null : state.activeTemplateId,
@@ -361,7 +366,7 @@ export const useTemplateStore = create<TemplateState>()(
 
           const newId = `template-${nanoid()}`;
           const now = Date.now();
-          
+
           const duplicatedTemplate: PanelTemplate = {
             ...template,
             id: newId,
@@ -386,11 +391,11 @@ export const useTemplateStore = create<TemplateState>()(
         },
 
         // Template operations
-        loadTemplate: (id) => {
+        loadTemplate: id => {
           return get().templates.find(template => template.id === id) || null;
         },
 
-        applyTemplate: (id) => {
+        applyTemplate: id => {
           const template = get().loadTemplate(id);
           if (!template) return [];
 
@@ -405,38 +410,38 @@ export const useTemplateStore = create<TemplateState>()(
           return template.panels;
         },
 
-        generateThumbnail: async (id) => {
+        generateThumbnail: async id => {
           // Mock thumbnail generation - in real implementation this would capture the layout
           const template = get().loadTemplate(id);
           if (!template) return '';
-          
+
           // Generate a simple thumbnail based on panel layout
           const canvas = document.createElement('canvas');
           canvas.width = 200;
           canvas.height = 150;
           const ctx = canvas.getContext('2d');
-          
+
           if (ctx) {
             // Draw background
             ctx.fillStyle = '#1f2937';
             ctx.fillRect(0, 0, 200, 150);
-            
+
             // Draw simplified panel representations
             template.panels.forEach((panel, index) => {
               const colors = ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6'];
               ctx.fillStyle = colors[index % colors.length];
-              
+
               const x = (panel.position.x / 1000) * 180 + 10;
               const y = (panel.position.y / 600) * 130 + 10;
               const w = Math.max(20, (panel.size.width / 1000) * 180);
               const h = Math.max(15, (panel.size.height / 600) * 130);
-              
+
               ctx.fillRect(x, y, w, h);
             });
           }
-          
+
           const thumbnail = canvas.toDataURL();
-          
+
           // Update template with thumbnail
           get().updateTemplate(id, {
             metadata: {
@@ -444,69 +449,72 @@ export const useTemplateStore = create<TemplateState>()(
               thumbnail,
             },
           });
-          
+
           return thumbnail;
         },
 
         // Search and filter
-        searchTemplates: (query) => {
+        searchTemplates: query => {
           set({ searchQuery: query });
         },
 
-        filterByCategory: (category) => {
+        filterByCategory: category => {
           set({ selectedCategory: category });
         },
 
-        filterByTags: (tags) => {
+        filterByTags: tags => {
           set({ selectedTags: tags });
         },
 
         getFilteredTemplates: () => {
           const { templates, searchQuery, selectedCategory, selectedTags } = get();
-          
+
           return templates.filter(template => {
             // Search query filter
-            if (searchQuery && !template.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-                !template.description.toLowerCase().includes(searchQuery.toLowerCase())) {
+            if (
+              searchQuery &&
+              !template.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+              !template.description.toLowerCase().includes(searchQuery.toLowerCase())
+            ) {
               return false;
             }
-            
+
             // Category filter
             if (selectedCategory && template.category !== selectedCategory) {
               return false;
             }
-            
+
             // Tags filter
             if (selectedTags.length > 0 && !selectedTags.some(tag => template.tags.includes(tag))) {
               return false;
             }
-            
+
             return true;
           });
         },
 
         // Import/Export
-        exportTemplate: (id) => {
+        exportTemplate: id => {
           const template = get().loadTemplate(id);
           if (!template) return '';
-          
+
           return JSON.stringify(template, null, 2);
         },
 
-        importTemplate: async (templateData) => {
+        importTemplate: async templateData => {
           try {
             const template = JSON.parse(templateData) as PanelTemplate;
-            
+
             // Validate template
             const validation = get().validateTemplate(template);
             if (!validation.isValid) {
               throw new Error(`Invalid template: ${validation.errors.join(', ')}`);
             }
-            
+
             // Generate new ID and update metadata
             const newId = `template-${nanoid()}`;
             const now = Date.now();
-            
+
             const importedTemplate: PanelTemplate = {
               ...template,
               id: newId,
@@ -517,14 +525,16 @@ export const useTemplateStore = create<TemplateState>()(
                 usageCount: 0,
               },
             };
-            
+
             set(state => ({
               templates: [...state.templates, importedTemplate],
             }));
-            
+
             return newId;
           } catch (error) {
-            set({ error: `Failed to import template: ${error instanceof Error ? error.message : 'Unknown error'}` });
+            set({
+              error: `Failed to import template: ${error instanceof Error ? error.message : 'Unknown error'}`,
+            });
             throw error;
           }
         },
@@ -534,11 +544,11 @@ export const useTemplateStore = create<TemplateState>()(
           return JSON.stringify(templates, null, 2);
         },
 
-        importTemplates: async (templatesData) => {
+        importTemplates: async templatesData => {
           try {
             const templates = JSON.parse(templatesData) as PanelTemplate[];
             let importedCount = 0;
-            
+
             for (const template of templates) {
               try {
                 await get().importTemplate(JSON.stringify(template));
@@ -547,10 +557,12 @@ export const useTemplateStore = create<TemplateState>()(
                 console.warn(`Failed to import template ${template.name}:`, error);
               }
             }
-            
+
             return importedCount;
           } catch (error) {
-            set({ error: `Failed to import templates: ${error instanceof Error ? error.message : 'Unknown error'}` });
+            set({
+              error: `Failed to import templates: ${error instanceof Error ? error.message : 'Unknown error'}`,
+            });
             throw error;
           }
         },
@@ -559,7 +571,7 @@ export const useTemplateStore = create<TemplateState>()(
         createPredefinedTemplates: () => {
           const existingTemplates = get().templates;
           const now = Date.now();
-          
+
           const predefinedTemplates: PanelTemplate[] = PREDEFINED_TEMPLATES.map(template => ({
             ...template,
             id: `template-${nanoid()}`,
@@ -572,7 +584,7 @@ export const useTemplateStore = create<TemplateState>()(
               thumbnail: '',
             },
           }));
-          
+
           set({
             templates: [...existingTemplates, ...predefinedTemplates],
           });
@@ -590,29 +602,39 @@ export const useTemplateStore = create<TemplateState>()(
         },
 
         // Validation
-        validateTemplate: (template) => {
+        validateTemplate: template => {
           const errors: string[] = [];
-          
+
           if (!template.name?.trim()) {
             errors.push('Template name is required');
           }
-          
+
           if (!template.description?.trim()) {
             errors.push('Template description is required');
           }
-          
+
           if (!template.panels || template.panels.length === 0) {
             errors.push('Template must contain at least one panel');
           }
-          
-          if (template.validation?.minPanels && template.panels && template.panels.length < template.validation.minPanels) {
+
+          if (
+            template.validation?.minPanels &&
+            template.panels &&
+            template.panels.length < template.validation.minPanels
+          ) {
             errors.push(`Template must contain at least ${template.validation.minPanels} panels`);
           }
-          
-          if (template.validation?.maxPanels && template.panels && template.panels.length > template.validation.maxPanels) {
-            errors.push(`Template cannot contain more than ${template.validation.maxPanels} panels`);
+
+          if (
+            template.validation?.maxPanels &&
+            template.panels &&
+            template.panels.length > template.validation.maxPanels
+          ) {
+            errors.push(
+              `Template cannot contain more than ${template.validation.maxPanels} panels`
+            );
           }
-          
+
           return {
             isValid: errors.length === 0,
             errors,
@@ -622,7 +644,7 @@ export const useTemplateStore = create<TemplateState>()(
         // Statistics
         getTemplateStats: () => {
           const { templates } = get();
-          
+
           const categoryCounts = Object.values(TemplateCategory).reduce(
             (acc, category) => ({
               ...acc,
@@ -630,15 +652,15 @@ export const useTemplateStore = create<TemplateState>()(
             }),
             {} as Record<TemplateCategory, number>
           );
-          
+
           const mostUsed = templates
             .sort((a, b) => b.metadata.usageCount - a.metadata.usageCount)
             .slice(0, 5);
-          
+
           const recentlyCreated = templates
             .sort((a, b) => b.metadata.createdAt - a.metadata.createdAt)
             .slice(0, 5);
-          
+
           return {
             totalTemplates: templates.length,
             categoryCounts,
@@ -648,7 +670,7 @@ export const useTemplateStore = create<TemplateState>()(
         },
 
         // Auto-save and recovery
-        enableAutoSave: (enabled) => {
+        enableAutoSave: enabled => {
           // Implementation would depend on specific requirements
           console.log('Auto-save', enabled ? 'enabled' : 'disabled');
         },

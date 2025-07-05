@@ -20,7 +20,9 @@ const ExtensionOptions: React.FC = () => {
 
   const [storageInfo, setStorageInfo] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'general' | 'sync' | 'storage' | 'advanced'>('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'sync' | 'storage' | 'advanced'>(
+    'general'
+  );
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
   const { templates, resetTemplates } = useTemplateStore();
@@ -47,7 +49,7 @@ const ExtensionOptions: React.FC = () => {
     try {
       const bytesInUse = await chrome.storage.local.getBytesInUse();
       const allData = await chrome.storage.local.get();
-      
+
       setStorageInfo({
         localBytesInUse: bytesInUse,
         localItemCount: Object.keys(allData).length,
@@ -76,7 +78,9 @@ const ExtensionOptions: React.FC = () => {
   };
 
   const clearAllData = async () => {
-    if (confirm('Are you sure you want to clear all extension data? This action cannot be undone.')) {
+    if (
+      confirm('Are you sure you want to clear all extension data? This action cannot be undone.')
+    ) {
       try {
         await chrome.storage.local.clear();
         await chrome.storage.sync.clear();
@@ -93,17 +97,17 @@ const ExtensionOptions: React.FC = () => {
     try {
       const allData = await chrome.storage.local.get();
       const syncData = await chrome.storage.sync.get();
-      
+
       const exportObject = {
         localData: allData,
         syncData: syncData,
         exportedAt: new Date().toISOString(),
         version: '2.0.0',
       };
-      
+
       const blob = new Blob([JSON.stringify(exportObject, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
-      
+
       const a = document.createElement('a');
       a.href = url;
       a.download = `lucaverse-hub-data-${new Date().toISOString().split('T')[0]}.json`;
@@ -111,7 +115,6 @@ const ExtensionOptions: React.FC = () => {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      
     } catch (error) {
       console.error('Failed to export data:', error);
       alert('Failed to export data. Please try again.');
@@ -125,18 +128,18 @@ const ExtensionOptions: React.FC = () => {
     try {
       const text = await file.text();
       const importData = JSON.parse(text);
-      
+
       if (importData.localData && importData.syncData) {
         if (confirm('This will replace all current data. Are you sure?')) {
           await chrome.storage.local.clear();
           await chrome.storage.sync.clear();
-          
+
           await chrome.storage.local.set(importData.localData);
           await chrome.storage.sync.set(importData.syncData);
-          
+
           await loadSettings();
           await loadStorageInfo();
-          
+
           alert('Data imported successfully. Please reload the extension.');
         }
       } else {
@@ -176,7 +179,7 @@ const ExtensionOptions: React.FC = () => {
               { id: 'sync', label: '🔄 Sync & Backup', tab: 'sync' },
               { id: 'storage', label: '💾 Storage', tab: 'storage' },
               { id: 'advanced', label: '⚙️ Advanced', tab: 'advanced' },
-            ].map((item) => (
+            ].map(item => (
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.tab as any)}
@@ -202,12 +205,14 @@ const ExtensionOptions: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium">Override New Tab Page</div>
-                    <div className="text-sm text-gray-400">Replace Chrome's new tab with Lucaverse Hub dashboard</div>
+                    <div className="text-sm text-gray-400">
+                      Replace Chrome's new tab with Lucaverse Hub dashboard
+                    </div>
                   </div>
                   <input
                     type="checkbox"
                     checked={settings.newTabOverride}
-                    onChange={(e) => updateSetting('newTabOverride', e.target.checked)}
+                    onChange={e => updateSetting('newTabOverride', e.target.checked)}
                     className="rounded"
                   />
                 </div>
@@ -215,12 +220,14 @@ const ExtensionOptions: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium">Enable Notifications</div>
-                    <div className="text-sm text-gray-400">Show desktop notifications for tasks and updates</div>
+                    <div className="text-sm text-gray-400">
+                      Show desktop notifications for tasks and updates
+                    </div>
                   </div>
                   <input
                     type="checkbox"
                     checked={settings.notificationsEnabled}
-                    onChange={(e) => updateSetting('notificationsEnabled', e.target.checked)}
+                    onChange={e => updateSetting('notificationsEnabled', e.target.checked)}
                     className="rounded"
                   />
                 </div>
@@ -229,7 +236,7 @@ const ExtensionOptions: React.FC = () => {
                   <label className="block font-medium mb-2">Theme</label>
                   <select
                     value={settings.theme}
-                    onChange={(e) => updateSetting('theme', e.target.value)}
+                    onChange={e => updateSetting('theme', e.target.value)}
                     className="bg-gray-700 text-white border border-gray-600 rounded px-3 py-2 w-48"
                   >
                     <option value="dark">Dark</option>
@@ -249,12 +256,14 @@ const ExtensionOptions: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium">Auto Sync</div>
-                    <div className="text-sm text-gray-400">Automatically sync data across devices</div>
+                    <div className="text-sm text-gray-400">
+                      Automatically sync data across devices
+                    </div>
                   </div>
                   <input
                     type="checkbox"
                     checked={settings.autoSyncEnabled}
-                    onChange={(e) => updateSetting('autoSyncEnabled', e.target.checked)}
+                    onChange={e => updateSetting('autoSyncEnabled', e.target.checked)}
                     className="rounded"
                   />
                 </div>
@@ -263,7 +272,7 @@ const ExtensionOptions: React.FC = () => {
                   <label className="block font-medium mb-2">Sync Interval</label>
                   <select
                     value={settings.syncInterval}
-                    onChange={(e) => updateSetting('syncInterval', parseInt(e.target.value))}
+                    onChange={e => updateSetting('syncInterval', parseInt(e.target.value))}
                     className="bg-gray-700 text-white border border-gray-600 rounded px-3 py-2 w-48"
                   >
                     <option value={60000}>1 minute</option>
@@ -283,15 +292,10 @@ const ExtensionOptions: React.FC = () => {
                     >
                       📤 Export Data
                     </button>
-                    
+
                     <label className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded transition-colors cursor-pointer">
                       📥 Import Data
-                      <input
-                        type="file"
-                        accept=".json"
-                        onChange={importData}
-                        className="hidden"
-                      />
+                      <input type="file" accept=".json" onChange={importData} className="hidden" />
                     </label>
                   </div>
                 </div>
@@ -316,7 +320,7 @@ const ExtensionOptions: React.FC = () => {
                       ></div>
                     </div>
                     <div className="text-sm text-gray-400 mt-1">
-                      {(storageInfo.localBytesInUse / 1024 / 1024).toFixed(2)} MB / 
+                      {(storageInfo.localBytesInUse / 1024 / 1024).toFixed(2)} MB /
                       {(storageInfo.quotaBytes / 1024 / 1024).toFixed(0)} MB
                     </div>
                   </div>
@@ -341,7 +345,7 @@ const ExtensionOptions: React.FC = () => {
                       >
                         🗜️ Optimize Storage
                       </button>
-                      
+
                       <button
                         onClick={clearAllData}
                         className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded transition-colors"
@@ -363,12 +367,14 @@ const ExtensionOptions: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium">Debug Mode</div>
-                    <div className="text-sm text-gray-400">Enable detailed logging for troubleshooting</div>
+                    <div className="text-sm text-gray-400">
+                      Enable detailed logging for troubleshooting
+                    </div>
                   </div>
                   <input
                     type="checkbox"
                     checked={settings.debugMode}
-                    onChange={(e) => updateSetting('debugMode', e.target.checked)}
+                    onChange={e => updateSetting('debugMode', e.target.checked)}
                     className="rounded"
                   />
                 </div>
@@ -392,10 +398,10 @@ const ExtensionOptions: React.FC = () => {
                     >
                       🔧 Extension Management
                     </button>
-                    
+
                     <button
                       onClick={() => {
-                        chrome.runtime.sendMessage({ action: 'ping' }, (response) => {
+                        chrome.runtime.sendMessage({ action: 'ping' }, response => {
                           alert(`Background script response: ${JSON.stringify(response)}`);
                         });
                       }}
@@ -418,10 +424,10 @@ const ExtensionOptions: React.FC = () => {
                 saveStatus === 'saved'
                   ? 'bg-green-600 text-white'
                   : saveStatus === 'error'
-                  ? 'bg-red-600 text-white'
-                  : saveStatus === 'saving'
-                  ? 'bg-gray-600 text-white'
-                  : 'bg-blue-600 hover:bg-blue-700 text-white'
+                    ? 'bg-red-600 text-white'
+                    : saveStatus === 'saving'
+                      ? 'bg-gray-600 text-white'
+                      : 'bg-blue-600 hover:bg-blue-700 text-white'
               }`}
             >
               {saveStatus === 'saving' && '⏳ Saving...'}

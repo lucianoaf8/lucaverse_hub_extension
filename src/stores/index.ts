@@ -46,7 +46,7 @@ export async function initializeStores(): Promise<StoreInitializationState> {
 
     if (migrationResult.success) {
       console.log('Legacy state migration completed successfully');
-      
+
       // Apply migrated state to stores
       if (migrationResult.panels.length > 0) {
         const layoutStore = useLayoutStore.getState();
@@ -98,12 +98,11 @@ export async function initializeStores(): Promise<StoreInitializationState> {
 
     // Emit initialization complete event
     emitStoreEvent('stores:initialized', initializationState);
-
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     initializationState.errors.push(`Store initialization failed: ${errorMessage}`);
     initializationState.isHydrating = false;
-    
+
     console.error('Store initialization failed:', error);
   }
 
@@ -118,8 +117,8 @@ function setupCrossStoreEventListeners(): void {
 
   // Listen for layout changes to update auto-save
   useLayoutStore.subscribe(
-    (state) => state.panels,
-    (panels) => {
+    state => state.panels,
+    panels => {
       if (appStore.preferences.autoSave) {
         appStore.updateLastSaved();
         emitStoreEvent('layout:changed', { panelCount: panels.length });
@@ -129,16 +128,16 @@ function setupCrossStoreEventListeners(): void {
 
   // Listen for selection changes to emit events
   useLayoutStore.subscribe(
-    (state) => state.selectedPanelIds,
-    (selectedIds) => {
+    state => state.selectedPanelIds,
+    selectedIds => {
       emitStoreEvent('layout:selection-changed', { selectedIds });
     }
   );
 
   // Listen for theme changes to apply to DOM
   useAppStore.subscribe(
-    (state) => state.theme,
-    (theme) => {
+    state => state.theme,
+    theme => {
       if (typeof document !== 'undefined') {
         document.documentElement.setAttribute('data-theme', theme);
         emitStoreEvent('app:theme-changed', { theme });
@@ -148,8 +147,8 @@ function setupCrossStoreEventListeners(): void {
 
   // Listen for debug mode changes
   useAppStore.subscribe(
-    (state) => state.preferences.debugMode,
-    (debugMode) => {
+    state => state.preferences.debugMode,
+    debugMode => {
       if (typeof window !== 'undefined') {
         (window as any).__LUCAVERSE_DEBUG__ = debugMode;
         emitStoreEvent('app:debug-mode-changed', { debugMode });
@@ -165,13 +164,13 @@ function setupCrossStoreEventListeners(): void {
  */
 function setupAutoSave(): void {
   const appStore = useAppStore.getState();
-  
+
   if (!appStore.preferences.autoSave) {
     return;
   }
 
   const interval = appStore.performance.autoSaveInterval;
-  
+
   setInterval(() => {
     const currentAppStore = useAppStore.getState();
     if (currentAppStore.preferences.autoSave) {
@@ -209,10 +208,10 @@ export function subscribeToStoreEvent(
   if (!storeEventListeners.has(eventType)) {
     storeEventListeners.set(eventType, new Set());
   }
-  
+
   const listeners = storeEventListeners.get(eventType)!;
   listeners.add(listener);
-  
+
   // Return unsubscribe function
   return () => {
     listeners.delete(listener);
@@ -227,15 +226,15 @@ export function subscribeToStoreEvent(
  */
 export function resetAllStores(): void {
   console.log('Resetting all stores to default state...');
-  
+
   const layoutStore = useLayoutStore.getState();
   const appStore = useAppStore.getState();
-  
+
   layoutStore.resetLayout();
   appStore.resetToDefaults();
-  
+
   emitStoreEvent('stores:reset', { timestamp: Date.now() });
-  
+
   console.log('All stores reset to default state');
 }
 
@@ -303,9 +302,10 @@ export function validateStoreState(): {
     }
 
     console.log('Store state validation completed');
-
   } catch (error) {
-    errors.push(`Store validation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    errors.push(
+      `Store validation failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 
   return {
@@ -344,11 +344,11 @@ export const devtools = (() => {
 
     // Log store state changes
     enableStateLogging: () => {
-      useLayoutStore.subscribe((state) => {
+      useLayoutStore.subscribe(state => {
         console.log('Layout store state changed:', state);
       });
 
-      useAppStore.subscribe((state) => {
+      useAppStore.subscribe(state => {
         console.log('App store state changed:', state);
       });
 

@@ -22,10 +22,10 @@ export interface CollisionResult {
 
 // Collision resolution strategies
 export enum CollisionResolution {
-  PREVENT = 'prevent',      // Don't allow the move
-  PUSH_AWAY = 'push_away',  // Push other panels away
-  SNAP_BACK = 'snap_back',  // Snap to previous position
-  ALLOW = 'allow'           // Allow overlap
+  PREVENT = 'prevent', // Don't allow the move
+  PUSH_AWAY = 'push_away', // Push other panels away
+  SNAP_BACK = 'snap_back', // Snap to previous position
+  ALLOW = 'allow', // Allow overlap
 }
 
 /**
@@ -53,10 +53,10 @@ export const createRectangle = (position: Position, size: Size): Rectangle => ({
  */
 export const checkCollision = (rect1: Rectangle, rect2: Rectangle): boolean => {
   return !(
-    rect1.x + rect1.width <= rect2.x ||   // rect1 is to the left of rect2
-    rect1.x >= rect2.x + rect2.width ||   // rect1 is to the right of rect2
-    rect1.y + rect1.height <= rect2.y ||  // rect1 is above rect2
-    rect1.y >= rect2.y + rect2.height     // rect1 is below rect2
+    rect1.x + rect1.width <= rect2.x || // rect1 is to the left of rect2
+    rect1.x >= rect2.x + rect2.width || // rect1 is to the right of rect2
+    rect1.y + rect1.height <= rect2.y || // rect1 is above rect2
+    rect1.y >= rect2.y + rect2.height // rect1 is below rect2
   );
 };
 
@@ -77,7 +77,7 @@ export const calculateOverlap = (rect1: Rectangle, rect2: Rectangle): Rectangle 
     x: left,
     y: top,
     width: right - left,
-    height: bottom - top
+    height: bottom - top,
   };
 };
 
@@ -89,9 +89,10 @@ export const findCollisions = (
   targetPanel: PanelLayout | { position: Position; size: Size },
   excludeId?: string
 ): CollisionResult => {
-  const targetRect = 'id' in targetPanel 
-    ? panelToRectangle(targetPanel)
-    : createRectangle(targetPanel.position, targetPanel.size);
+  const targetRect =
+    'id' in targetPanel
+      ? panelToRectangle(targetPanel)
+      : createRectangle(targetPanel.position, targetPanel.size);
 
   const collidingPanels: PanelLayout[] = [];
   const overlaps: Rectangle[] = [];
@@ -102,10 +103,10 @@ export const findCollisions = (
     if ('id' in targetPanel && panel.id === targetPanel.id) continue;
 
     const panelRect = panelToRectangle(panel);
-    
+
     if (checkCollision(targetRect, panelRect)) {
       collidingPanels.push(panel);
-      
+
       const overlap = calculateOverlap(targetRect, panelRect);
       if (overlap) {
         overlaps.push(overlap);
@@ -116,7 +117,7 @@ export const findCollisions = (
   return {
     colliding: collidingPanels.length > 0,
     panels: collidingPanels,
-    overlaps
+    overlaps,
   };
 };
 
@@ -132,10 +133,12 @@ export const isValidPosition = (
 ): boolean => {
   // Check viewport bounds if provided
   if (bounds) {
-    if (position.x < bounds.x ||
-        position.y < bounds.y ||
-        position.x + size.width > bounds.x + bounds.width ||
-        position.y + size.height > bounds.y + bounds.height) {
+    if (
+      position.x < bounds.x ||
+      position.y < bounds.y ||
+      position.x + size.width > bounds.x + bounds.width ||
+      position.y + size.height > bounds.y + bounds.height
+    ) {
       return false;
     }
   }
@@ -169,7 +172,7 @@ export const preventOverlap = (
       const rad = (angle * Math.PI) / 180;
       const testPosition: Position = {
         x: position.x + Math.cos(rad) * radius,
-        y: position.y + Math.sin(rad) * radius
+        y: position.y + Math.sin(rad) * radius,
       };
 
       if (isValidPosition(testPosition, size, existingPanels, excludeId, bounds)) {
@@ -181,16 +184,16 @@ export const preventOverlap = (
   // If no valid position found in search radius, try cardinal directions with larger steps
   const directions = [
     { x: 0, y: -1 }, // Up
-    { x: 1, y: 0 },  // Right
-    { x: 0, y: 1 },  // Down
-    { x: -1, y: 0 }  // Left
+    { x: 1, y: 0 }, // Right
+    { x: 0, y: 1 }, // Down
+    { x: -1, y: 0 }, // Left
   ];
 
   for (const direction of directions) {
     for (let distance = searchRadius; distance <= searchRadius * 3; distance += step * 2) {
       const testPosition: Position = {
         x: position.x + direction.x * distance,
-        y: position.y + direction.y * distance
+        y: position.y + direction.y * distance,
       };
 
       if (isValidPosition(testPosition, size, existingPanels, excludeId, bounds)) {
@@ -217,7 +220,7 @@ export const pushAwayOverlapping = (
   for (const collidingPanel of collisionResult.panels) {
     const movedRect = panelToRectangle(movedPanel);
     const collidingRect = panelToRectangle(collidingPanel);
-    
+
     // Calculate push direction based on overlap
     const overlap = calculateOverlap(movedRect, collidingRect);
     if (!overlap) continue;
@@ -227,7 +230,7 @@ export const pushAwayOverlapping = (
       right: movedRect.x + movedRect.width - collidingRect.x,
       left: collidingRect.x + collidingRect.width - movedRect.x,
       down: movedRect.y + movedRect.height - collidingRect.y,
-      up: collidingRect.y + collidingRect.height - movedRect.y
+      up: collidingRect.y + collidingRect.height - movedRect.y,
     };
 
     // Find direction with minimum push distance
@@ -246,8 +249,14 @@ export const pushAwayOverlapping = (
 
     // Validate new position is within bounds
     if (bounds) {
-      newPosition.x = Math.max(bounds.x, Math.min(newPosition.x, bounds.x + bounds.width - collidingPanel.size.width));
-      newPosition.y = Math.max(bounds.y, Math.min(newPosition.y, bounds.y + bounds.height - collidingPanel.size.height));
+      newPosition.x = Math.max(
+        bounds.x,
+        Math.min(newPosition.x, bounds.x + bounds.width - collidingPanel.size.width)
+      );
+      newPosition.y = Math.max(
+        bounds.y,
+        Math.min(newPosition.y, bounds.y + bounds.height - collidingPanel.size.height)
+      );
     }
 
     // Update panel position
@@ -255,7 +264,7 @@ export const pushAwayOverlapping = (
     if (panelIndex !== -1) {
       updatedPanels[panelIndex] = {
         ...updatedPanels[panelIndex],
-        position: newPosition
+        position: newPosition,
       };
     }
   }
@@ -299,7 +308,7 @@ export class SpatialIndex {
 
   addPanel(panel: PanelLayout): void {
     const cells = this.getPanelCells(panel);
-    
+
     for (const cellKey of cells) {
       if (!this.cells.has(cellKey)) {
         this.cells.set(cellKey, []);
@@ -310,7 +319,7 @@ export class SpatialIndex {
 
   removePanel(panel: PanelLayout): void {
     const cells = this.getPanelCells(panel);
-    
+
     for (const cellKey of cells) {
       const cellPanels = this.cells.get(cellKey);
       if (cellPanels) {
@@ -369,7 +378,7 @@ export const getCollisionPreview = (
   suggestedPosition?: Position;
 } => {
   const collisionResult = findCollisions(panels, { position, size }, excludeId);
-  
+
   let suggestedPosition: Position | undefined;
   if (collisionResult.colliding) {
     suggestedPosition = preventOverlap(position, size, panels, undefined, excludeId);
@@ -378,6 +387,6 @@ export const getCollisionPreview = (
   return {
     isValid: !collisionResult.colliding,
     collisions: collisionResult.panels,
-    suggestedPosition
+    suggestedPosition,
   };
 };

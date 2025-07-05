@@ -12,10 +12,10 @@ export enum ZIndexLayer {
 }
 
 // Z-index operation types
-export type ZIndexOperation = 
-  | 'bring-to-front' 
-  | 'send-to-back' 
-  | 'bring-forward' 
+export type ZIndexOperation =
+  | 'bring-to-front'
+  | 'send-to-back'
+  | 'bring-forward'
   | 'send-backward'
   | 'set-layer'
   | 'auto-arrange';
@@ -74,8 +74,8 @@ export class ZIndexManager {
    * Bring panel to front (highest z-index in its layer)
    */
   bringToFront(
-    panelId: string, 
-    panels: PanelLayout[], 
+    panelId: string,
+    panels: PanelLayout[],
     layer: ZIndexLayer = ZIndexLayer.Panel
   ): PanelLayout[] {
     const panel = panels.find(p => p.id === panelId);
@@ -100,8 +100,8 @@ export class ZIndexManager {
    * Send panel to back (lowest z-index in its layer)
    */
   sendToBack(
-    panelId: string, 
-    panels: PanelLayout[], 
+    panelId: string,
+    panels: PanelLayout[],
     layer: ZIndexLayer = ZIndexLayer.Panel
   ): PanelLayout[] {
     const panel = panels.find(p => p.id === panelId);
@@ -183,18 +183,15 @@ export class ZIndexManager {
   /**
    * Set panel to specific layer
    */
-  setToLayer(
-    panelId: string, 
-    panels: PanelLayout[], 
-    targetLayer: ZIndexLayer
-  ): PanelLayout[] {
+  setToLayer(panelId: string, panels: PanelLayout[], targetLayer: ZIndexLayer): PanelLayout[] {
     const panel = panels.find(p => p.id === panelId);
     if (!panel) return panels;
 
     const layerPanels = panels.filter(p => this.getPanelLayer(p.zIndex) === targetLayer);
-    const newZIndex = layerPanels.length > 0 
-      ? Math.max(...layerPanels.map(p => p.zIndex)) + this.layerSpacing
-      : targetLayer + this.layerSpacing;
+    const newZIndex =
+      layerPanels.length > 0
+        ? Math.max(...layerPanels.map(p => p.zIndex)) + this.layerSpacing
+        : targetLayer + this.layerSpacing;
 
     this.addToHistory({
       operation: 'set-layer',
@@ -224,12 +221,12 @@ export class ZIndexManager {
     // Reorganize each layer
     Object.entries(layerGroups).forEach(([layer, layerPanels]) => {
       const layerValue = parseInt(layer) as ZIndexLayer;
-      
+
       // Sort panels and reassign z-indices with proper spacing
       const sortedPanels = layerPanels.sort((a, b) => a.zIndex - b.zIndex);
-      
+
       sortedPanels.forEach((panel, index) => {
-        const newZIndex = layerValue + (index * this.layerSpacing);
+        const newZIndex = layerValue + index * this.layerSpacing;
         updatedPanels = this.updatePanelZIndex(updatedPanels, panel.id, newZIndex);
       });
     });
@@ -292,14 +289,14 @@ export class ZIndexManager {
    */
   getLayerInfo(panels: PanelLayout[]): LayerInfo[] {
     const layerGroups = this.groupPanelsByLayer(panels);
-    
+
     return Object.values(ZIndexLayer)
       .filter(layer => typeof layer === 'number')
       .map(layer => {
         const layerValue = layer as ZIndexLayer;
         const layerPanels = layerGroups[layerValue] || [];
         const zIndices = layerPanels.map(p => p.zIndex);
-        
+
         return {
           layer: layerValue,
           name: ZIndexLayer[layerValue],
@@ -346,20 +343,20 @@ export class ZIndexManager {
   optimizeZIndices(panels: PanelLayout[]): PanelLayout[] {
     const MAX_Z_INDEX = 2147483647; // Maximum safe z-index value
     const highestZ = Math.max(...panels.map(p => p.zIndex));
-    
+
     if (highestZ < MAX_Z_INDEX * 0.8) {
       return panels; // No optimization needed
     }
 
     console.log('Optimizing z-indices to prevent overflow');
-    
+
     // Compress z-indices while maintaining relative order
     const sortedPanels = [...panels].sort((a, b) => a.zIndex - b.zIndex);
     let updatedPanels = [...panels];
 
     sortedPanels.forEach((panel, index) => {
       const layer = this.getPanelLayer(panel.zIndex);
-      const newZIndex = layer + (index * this.layerSpacing);
+      const newZIndex = layer + index * this.layerSpacing;
       updatedPanels = this.updatePanelZIndex(updatedPanels, panel.id, newZIndex);
     });
 
@@ -379,10 +376,9 @@ export class ZIndexManager {
    */
   reserveModalLayer(panels: PanelLayout[]): number {
     const modalPanels = panels.filter(p => this.getPanelLayer(p.zIndex) === ZIndexLayer.Modal);
-    const maxModalZ = modalPanels.length > 0 
-      ? Math.max(...modalPanels.map(p => p.zIndex))
-      : ZIndexLayer.Modal;
-    
+    const maxModalZ =
+      modalPanels.length > 0 ? Math.max(...modalPanels.map(p => p.zIndex)) : ZIndexLayer.Modal;
+
     return maxModalZ + this.layerSpacing;
   }
 
@@ -398,9 +394,9 @@ export class ZIndexManager {
    */
   undoLastOperation(panels: PanelLayout[]): PanelLayout[] {
     if (this.history.length === 0) return panels;
-    
+
     const lastEntry = this.history.pop()!;
-    
+
     if (lastEntry.panelId === 'all' || lastEntry.panelId === 'optimization') {
       // Cannot undo bulk operations easily
       console.warn('Cannot undo bulk z-index operations');
@@ -439,13 +435,11 @@ export class ZIndexManager {
   // Private helper methods
 
   private updatePanelZIndex(
-    panels: PanelLayout[], 
-    panelId: string, 
+    panels: PanelLayout[],
+    panelId: string,
     newZIndex: number
   ): PanelLayout[] {
-    return panels.map(panel => 
-      panel.id === panelId ? { ...panel, zIndex: newZIndex } : panel
-    );
+    return panels.map(panel => (panel.id === panelId ? { ...panel, zIndex: newZIndex } : panel));
   }
 
   private getPanelLayer(zIndex: number): ZIndexLayer {
@@ -515,16 +509,14 @@ export const zIndexUtils = {
    * Get next available z-index in layer
    */
   getNextZIndex(panels: PanelLayout[], layer: ZIndexLayer = ZIndexLayer.Panel): number {
-    const layerPanels = panels.filter(p => 
-      zIndexManager.getPanelLayer ? 
-        (zIndexManager as any).getPanelLayer(p.zIndex) === layer :
-        p.zIndex >= layer && p.zIndex < layer + 1000
+    const layerPanels = panels.filter(p =>
+      zIndexManager.getPanelLayer
+        ? (zIndexManager as any).getPanelLayer(p.zIndex) === layer
+        : p.zIndex >= layer && p.zIndex < layer + 1000
     );
-    
-    const maxZ = layerPanels.length > 0 
-      ? Math.max(...layerPanels.map(p => p.zIndex))
-      : layer;
-    
+
+    const maxZ = layerPanels.length > 0 ? Math.max(...layerPanels.map(p => p.zIndex)) : layer;
+
     return maxZ + 10;
   },
 
@@ -546,10 +538,10 @@ export const zIndexUtils = {
     const panel = panels.find(p => p.id === panelId);
     if (!panel) return false;
 
-    const layerPanels = panels.filter(p => 
-      p.zIndex >= ZIndexLayer.Panel && p.zIndex < ZIndexLayer.Group
+    const layerPanels = panels.filter(
+      p => p.zIndex >= ZIndexLayer.Panel && p.zIndex < ZIndexLayer.Group
     );
-    
+
     const maxZ = Math.max(...layerPanels.map(p => p.zIndex));
     return panel.zIndex === maxZ;
   },
@@ -558,8 +550,6 @@ export const zIndexUtils = {
    * Get stacking order of panels
    */
   getStackingOrder(panels: PanelLayout[]): string[] {
-    return panels
-      .sort((a, b) => a.zIndex - b.zIndex)
-      .map(p => p.id);
+    return panels.sort((a, b) => a.zIndex - b.zIndex).map(p => p.id);
   },
 };

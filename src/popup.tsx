@@ -10,7 +10,9 @@ import './styles/globals.css';
  * Provides quick access to core Lucaverse Hub functionality
  */
 const ExtensionPopup: React.FC = () => {
-  const [currentView, setCurrentView] = useState<'dashboard' | 'quick-actions' | 'settings'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'quick-actions' | 'settings'>(
+    'dashboard'
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [extensionData, setExtensionData] = useState<any>(null);
   const { templates, getFilteredTemplates } = useTemplateStore();
@@ -63,7 +65,7 @@ const ExtensionPopup: React.FC = () => {
             },
           },
         });
-        
+
         // Show success feedback
         const button = document.getElementById('quick-save-btn');
         if (button) {
@@ -86,7 +88,7 @@ const ExtensionPopup: React.FC = () => {
         action: 'loadTemplate',
         data: { templateId },
       });
-      
+
       // Open dashboard to show the loaded template
       openDashboard();
     } catch (error) {
@@ -120,7 +122,7 @@ const ExtensionPopup: React.FC = () => {
           { id: 'dashboard', label: '🏠 Dashboard', view: 'dashboard' },
           { id: 'actions', label: '⚡ Actions', view: 'quick-actions' },
           { id: 'settings', label: '⚙️ Settings', view: 'settings' },
-        ].map((tab) => (
+        ].map(tab => (
           <button
             key={tab.id}
             onClick={() => setCurrentView(tab.view as any)}
@@ -152,7 +154,12 @@ const ExtensionPopup: React.FC = () => {
                 <div className="space-y-1 text-gray-400">
                   <div>Status: {extensionData.isInitialized ? '✅ Ready' : '⏳ Loading'}</div>
                   <div>Active Workspace: {extensionData.activeWorkspace || 'None'}</div>
-                  <div>Last Sync: {extensionData.lastSyncTime ? new Date(extensionData.lastSyncTime).toLocaleTimeString() : 'Never'}</div>
+                  <div>
+                    Last Sync:{' '}
+                    {extensionData.lastSyncTime
+                      ? new Date(extensionData.lastSyncTime).toLocaleTimeString()
+                      : 'Never'}
+                  </div>
                 </div>
               </div>
             )}
@@ -161,16 +168,18 @@ const ExtensionPopup: React.FC = () => {
               <div>
                 <div className="font-medium mb-2 text-sm">Quick Templates</div>
                 <div className="space-y-2">
-                  {getFilteredTemplates().slice(0, 3).map((template) => (
-                    <button
-                      key={template.id}
-                      onClick={() => loadTemplate(template.id)}
-                      className="w-full text-left bg-gray-800 hover:bg-gray-700 p-2 rounded text-xs transition-colors"
-                    >
-                      <div className="font-medium">{template.name}</div>
-                      <div className="text-gray-400">{template.panels.length} panels</div>
-                    </button>
-                  ))}
+                  {getFilteredTemplates()
+                    .slice(0, 3)
+                    .map(template => (
+                      <button
+                        key={template.id}
+                        onClick={() => loadTemplate(template.id)}
+                        className="w-full text-left bg-gray-800 hover:bg-gray-700 p-2 rounded text-xs transition-colors"
+                      >
+                        <div className="font-medium">{template.name}</div>
+                        <div className="text-gray-400">{template.panels.length} panels</div>
+                      </button>
+                    ))}
                 </div>
               </div>
             )}
@@ -241,12 +250,12 @@ const ExtensionPopup: React.FC = () => {
                 <span className="text-sm">New Tab Override</span>
                 <input type="checkbox" className="rounded" defaultChecked />
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <span className="text-sm">Auto Sync</span>
                 <input type="checkbox" className="rounded" defaultChecked />
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <span className="text-sm">Notifications</span>
                 <input type="checkbox" className="rounded" defaultChecked />
@@ -263,9 +272,7 @@ const ExtensionPopup: React.FC = () => {
               </div>
             </div>
 
-            <div className="text-center text-xs text-gray-500">
-              Lucaverse Hub v2.0.0
-            </div>
+            <div className="text-center text-xs text-gray-500">Lucaverse Hub v2.0.0</div>
           </div>
         )}
       </div>

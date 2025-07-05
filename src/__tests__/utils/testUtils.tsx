@@ -15,18 +15,18 @@ export const mockPlatformAPIs = {
     get: jest.fn().mockResolvedValue({}),
     set: jest.fn().mockResolvedValue(undefined),
     remove: jest.fn().mockResolvedValue(undefined),
-    clear: jest.fn().mockResolvedValue(undefined)
+    clear: jest.fn().mockResolvedValue(undefined),
   },
   notifications: {
     create: jest.fn().mockResolvedValue('notification-id'),
-    clear: jest.fn().mockResolvedValue(undefined)
+    clear: jest.fn().mockResolvedValue(undefined),
   },
   system: {
     getInfo: jest.fn().mockResolvedValue({
       platform: 'web',
-      version: '1.0.0'
-    })
-  }
+      version: '1.0.0',
+    }),
+  },
 };
 
 // Mock Chrome APIs for extension testing
@@ -45,10 +45,10 @@ export const mockChromeAPIs = {
         callback && callback();
         return Promise.resolve();
       }),
-      clear: jest.fn().mockImplementation((callback) => {
+      clear: jest.fn().mockImplementation(callback => {
         callback && callback();
         return Promise.resolve();
-      })
+      }),
     },
     sync: {
       get: jest.fn().mockImplementation((keys, callback) => {
@@ -58,14 +58,14 @@ export const mockChromeAPIs = {
       set: jest.fn().mockImplementation((items, callback) => {
         callback && callback();
         return Promise.resolve();
-      })
-    }
+      }),
+    },
   },
   runtime: {
     id: 'test-extension-id',
     getManifest: jest.fn().mockReturnValue({
       manifest_version: 3,
-      name: 'Test Extension'
+      name: 'Test Extension',
     }),
     sendMessage: jest.fn().mockImplementation((message, callback) => {
       callback && callback({ success: true });
@@ -73,8 +73,8 @@ export const mockChromeAPIs = {
     }),
     onMessage: {
       addListener: jest.fn(),
-      removeListener: jest.fn()
-    }
+      removeListener: jest.fn(),
+    },
   },
   tabs: {
     create: jest.fn().mockImplementation((createProperties, callback) => {
@@ -86,7 +86,7 @@ export const mockChromeAPIs = {
       const tabs = [{ id: 1, url: 'http://localhost:3000', active: true }];
       callback && callback(tabs);
       return Promise.resolve(tabs);
-    })
+    }),
   },
   notifications: {
     create: jest.fn().mockImplementation((id, options, callback) => {
@@ -96,15 +96,15 @@ export const mockChromeAPIs = {
     clear: jest.fn().mockImplementation((id, callback) => {
       callback && callback(true);
       return Promise.resolve(true);
-    })
-  }
+    }),
+  },
 };
 
 // Setup global mocks
 export const setupGlobalMocks = () => {
   // Mock Chrome APIs
   (global as any).chrome = mockChromeAPIs;
-  
+
   // Mock ResizeObserver
   global.ResizeObserver = jest.fn().mockImplementation(() => ({
     observe: jest.fn(),
@@ -120,12 +120,12 @@ export const setupGlobalMocks = () => {
   }));
 
   // Mock requestAnimationFrame
-  global.requestAnimationFrame = jest.fn().mockImplementation((cb) => {
+  global.requestAnimationFrame = jest.fn().mockImplementation(cb => {
     return setTimeout(cb, 16);
   });
 
   // Mock cancelAnimationFrame
-  global.cancelAnimationFrame = jest.fn().mockImplementation((id) => {
+  global.cancelAnimationFrame = jest.fn().mockImplementation(id => {
     clearTimeout(id);
   });
 
@@ -135,7 +135,7 @@ export const setupGlobalMocks = () => {
       now: jest.fn(() => Date.now()),
       mark: jest.fn(),
       measure: jest.fn(),
-      getEntriesByType: jest.fn(() => [])
+      getEntriesByType: jest.fn(() => []),
     } as any;
   }
 
@@ -146,10 +146,10 @@ export const setupGlobalMocks = () => {
     removeItem: jest.fn(),
     clear: jest.fn(),
     length: 0,
-    key: jest.fn().mockReturnValue(null)
+    key: jest.fn().mockReturnValue(null),
   };
   Object.defineProperty(window, 'localStorage', {
-    value: localStorageMock
+    value: localStorageMock,
   });
 
   // Mock window.matchMedia
@@ -175,34 +175,30 @@ interface TestProvidersProps {
   initialAppState?: Partial<Parameters<typeof useAppStore.getState>[0]>;
 }
 
-export const TestProviders: React.FC<TestProvidersProps> = ({ 
-  children, 
+export const TestProviders: React.FC<TestProvidersProps> = ({
+  children,
   initialLayoutState,
-  initialAppState 
+  initialAppState,
 }) => {
   // Reset stores to clean state before each test
   React.useEffect(() => {
     const layoutStore = useLayoutStore.getState();
     const appStore = useAppStore.getState();
-    
+
     // Reset layout store
     layoutStore.resetLayout();
-    
+
     // Apply initial state if provided
     if (initialLayoutState) {
       // Apply any initial layout state modifications
     }
-    
+
     if (initialAppState) {
       // Apply any initial app state modifications
     }
   }, [initialLayoutState, initialAppState]);
 
-  return (
-    <DragDropProvider>
-      {children}
-    </DragDropProvider>
-  );
+  return <DragDropProvider>{children}</DragDropProvider>;
 };
 
 // Custom render function with providers
@@ -216,10 +212,7 @@ export const renderWithProviders = (
   const { initialLayoutState, initialAppState, ...renderOptions } = options;
 
   const Wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-    <TestProviders 
-      initialLayoutState={initialLayoutState}
-      initialAppState={initialAppState}
-    >
+    <TestProviders initialLayoutState={initialLayoutState} initialAppState={initialAppState}>
       {children}
     </TestProviders>
   );
@@ -236,16 +229,16 @@ export const generateMockPanel = (overrides = {}) => ({
   zIndex: 1,
   visible: true,
   title: 'Mock Panel',
-  ...overrides
+  ...overrides,
 });
 
 export const generateMockPanels = (count: number, componentType?: string) => {
-  return Array.from({ length: count }, (_, index) => 
+  return Array.from({ length: count }, (_, index) =>
     generateMockPanel({
       id: `mock-panel-${index}`,
       component: componentType || ['SmartHub', 'AIChat', 'TaskManager', 'Productivity'][index % 4],
       position: { x: index * 50, y: index * 30 },
-      title: `Mock Panel ${index + 1}`
+      title: `Mock Panel ${index + 1}`,
     })
   );
 };
@@ -259,7 +252,7 @@ export const generateMockTask = (overrides = {}) => ({
   category: 'general',
   createdAt: Date.now(),
   updatedAt: Date.now(),
-  ...overrides
+  ...overrides,
 });
 
 export const generateMockBookmark = (overrides = {}) => ({
@@ -269,7 +262,7 @@ export const generateMockBookmark = (overrides = {}) => ({
   category: 'development',
   tags: ['test', 'mock'],
   createdAt: Date.now(),
-  ...overrides
+  ...overrides,
 });
 
 export const generateMockChatMessage = (overrides = {}) => ({
@@ -278,7 +271,7 @@ export const generateMockChatMessage = (overrides = {}) => ({
   role: 'user' as const,
   timestamp: Date.now(),
   provider: 'openai',
-  ...overrides
+  ...overrides,
 });
 
 // Test utilities for drag and drop
@@ -292,7 +285,7 @@ export const createMockDragEvent = (dataTransfer = {}) => {
     types: [],
     effectAllowed: 'all',
     dropEffect: 'none',
-    ...dataTransfer
+    ...dataTransfer,
   };
   return event;
 };
@@ -309,7 +302,7 @@ export const createMockDropEvent = (clientX = 0, clientY = 0, dataTransfer = {})
     types: [],
     effectAllowed: 'all',
     dropEffect: 'none',
-    ...dataTransfer
+    ...dataTransfer,
   };
   return event;
 };
@@ -345,16 +338,17 @@ export const checkAccessibility = (element: Element) => {
     hasRoles: element.querySelectorAll('[role]').length > 0,
     hasFocusableElements: element.querySelectorAll('[tabindex]').length > 0,
     hasAltText: Array.from(element.querySelectorAll('img')).every(img => img.hasAttribute('alt')),
-    hasFormLabels: Array.from(element.querySelectorAll('input')).every(input => 
-      input.hasAttribute('aria-label') || 
-      input.hasAttribute('aria-labelledby') ||
-      element.querySelector(`label[for="${input.id}"]`)
-    )
+    hasFormLabels: Array.from(element.querySelectorAll('input')).every(
+      input =>
+        input.hasAttribute('aria-label') ||
+        input.hasAttribute('aria-labelledby') ||
+        element.querySelector(`label[for="${input.id}"]`)
+    ),
   };
 
   return {
     score: Object.values(results).filter(Boolean).length / Object.keys(results).length,
-    details: results
+    details: results,
   };
 };
 
@@ -366,7 +360,7 @@ export const captureElementSnapshot = (element: Element): string => {
     tagName: element.tagName,
     className: element.className,
     childElementCount: element.childElementCount,
-    textContent: element.textContent?.slice(0, 100)
+    textContent: element.textContent?.slice(0, 100),
   });
 };
 
@@ -394,10 +388,10 @@ export const cleanupAfterTest = () => {
   // Reset stores
   useLayoutStore.getState().resetLayout();
   useAppStore.getState().clearAllNotifications();
-  
+
   // Clear timers
   jest.clearAllTimers();
-  
+
   // Clear mocks
   jest.clearAllMocks();
 };
@@ -405,10 +399,10 @@ export const cleanupAfterTest = () => {
 // Test environment configuration
 export const configureTestEnvironment = () => {
   setupGlobalMocks();
-  
+
   // Set test mode flag
   process.env.NODE_ENV = 'test';
-  
+
   // Configure Jest environment
   jest.setTimeout(10000); // 10 second timeout for async tests
 };

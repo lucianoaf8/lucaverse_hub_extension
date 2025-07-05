@@ -193,7 +193,7 @@ export interface PlatformAPI {
   readonly notifications: NotificationAPI;
   readonly windows: WindowAPI;
   readonly system: SystemAPI;
-  
+
   initialize(): Promise<void>;
   getCapabilities(): PlatformCapabilities;
   isSupported(feature: string): boolean;

@@ -21,15 +21,12 @@ export function calculateConstraints(
     minX: Math.max(0, minX),
     maxX: Math.min(containerBounds.width - size.width, maxX),
     minY: Math.max(0, minY),
-    maxY: Math.min(containerBounds.height - size.height, maxY)
+    maxY: Math.min(containerBounds.height - size.height, maxY),
   };
 }
 
 // Grid snapping utility
-export function snapToGrid(
-  position: Position,
-  gridSettings: GridSettings
-): Position {
+export function snapToGrid(position: Position, gridSettings: GridSettings): Position {
   if (!gridSettings.enabled) {
     return position;
   }
@@ -37,25 +34,22 @@ export function snapToGrid(
   const { size } = gridSettings;
   return {
     x: Math.round(position.x / size) * size,
-    y: Math.round(position.y / size) * size
+    y: Math.round(position.y / size) * size,
   };
 }
 
 // Check if position should snap to grid based on threshold
-export function shouldSnapToGrid(
-  position: Position,
-  gridSettings: GridSettings
-): boolean {
+export function shouldSnapToGrid(position: Position, gridSettings: GridSettings): boolean {
   if (!gridSettings.enabled) {
     return false;
   }
 
   const { size, snapThreshold } = gridSettings;
   const snappedPosition = snapToGrid(position, gridSettings);
-  
+
   const distanceX = Math.abs(position.x - snappedPosition.x);
   const distanceY = Math.abs(position.y - snappedPosition.y);
-  
+
   return distanceX <= snapThreshold || distanceY <= snapThreshold;
 }
 
@@ -94,7 +88,7 @@ export function calculateZIndex(panels: PanelLayout[], panelId: string): number 
     selected: 200,
     dragging: 300,
     resizing: 350,
-    floating: 400
+    floating: 400,
   };
 
   const panel = panels.find(p => p.id === panelId);
@@ -102,7 +96,7 @@ export function calculateZIndex(panels: PanelLayout[], panelId: string): number 
 
   // Get all panels with higher z-index
   const higherPanels = panels.filter(p => p.zIndex > panel.zIndex);
-  
+
   // Return next available z-index
   return baseLayers.panel + panels.length + higherPanels.length;
 }
@@ -115,39 +109,36 @@ export function getConstrainedPosition(
   containerBounds = { width: 1920, height: 1080 }
 ): Position {
   const bounds = calculateConstraints(size, constraints, containerBounds);
-  
+
   return {
     x: Math.max(bounds.minX, Math.min(bounds.maxX, position.x)),
-    y: Math.max(bounds.minY, Math.min(bounds.maxY, position.y))
+    y: Math.max(bounds.minY, Math.min(bounds.maxY, position.y)),
   };
 }
 
 // Constrain size within bounds
-export function getConstrainedSize(
-  size: Size,
-  constraints?: PanelConstraints
-): Size {
+export function getConstrainedSize(size: Size, constraints?: PanelConstraints): Size {
   const minSize = constraints?.minSize ?? { width: 200, height: 150 };
   const maxSize = constraints?.maxSize ?? { width: 1920, height: 1080 };
 
   let constrainedSize = {
     width: Math.max(minSize.width, Math.min(maxSize.width, size.width)),
-    height: Math.max(minSize.height, Math.min(maxSize.height, size.height))
+    height: Math.max(minSize.height, Math.min(maxSize.height, size.height)),
   };
 
   // Apply aspect ratio constraints if specified
   if (constraints?.aspectRatio?.locked && constraints.aspectRatio.min) {
     const aspectRatio = constraints.aspectRatio.min;
-    
+
     // Adjust height to maintain aspect ratio
     constrainedSize.height = constrainedSize.width / aspectRatio;
-    
+
     // Re-check constraints after aspect ratio adjustment
     if (constrainedSize.height < minSize.height) {
       constrainedSize.height = minSize.height;
       constrainedSize.width = constrainedSize.height * aspectRatio;
     }
-    
+
     if (constrainedSize.height > maxSize.height) {
       constrainedSize.height = maxSize.height;
       constrainedSize.width = constrainedSize.height * aspectRatio;
@@ -175,7 +166,7 @@ export function calculateSnapZones(
   for (const panel of panels) {
     const panelRight = panel.position.x + panel.size.width;
     const panelBottom = panel.position.y + panel.size.height;
-    
+
     // Horizontal alignment
     if (Math.abs(position.x - panel.position.x) <= snapDistance) {
       snappedPosition.x = panel.position.x;
@@ -287,9 +278,9 @@ export function getResizeCursor(direction: string): string {
     ne: 'nesw-resize',
     sw: 'nesw-resize',
     nw: 'nwse-resize',
-    se: 'nwse-resize'
+    se: 'nwse-resize',
   };
-  
+
   return cursors[direction] || 'default';
 }
 
@@ -299,7 +290,7 @@ export function debounce<T extends (...args: any[]) => any>(
   wait: number
 ): (...args: Parameters<T>) => void {
   let timeout: NodeJS.Timeout;
-  
+
   return (...args: Parameters<T>) => {
     clearTimeout(timeout);
     timeout = setTimeout(() => func(...args), wait);
@@ -312,12 +303,12 @@ export function throttle<T extends (...args: any[]) => any>(
   limit: number
 ): (...args: Parameters<T>) => void {
   let inThrottle: boolean;
-  
+
   return (...args: Parameters<T>) => {
     if (!inThrottle) {
       func(...args);
       inThrottle = true;
-      setTimeout(() => inThrottle = false, limit);
+      setTimeout(() => (inThrottle = false), limit);
     }
   };
 }

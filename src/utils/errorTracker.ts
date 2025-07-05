@@ -876,22 +876,18 @@ export class ErrorBoundary extends React.Component<
     if (this.state.hasError) {
       const FallbackComponent = this.props.fallback;
       if (FallbackComponent && this.state.error) {
-        return <FallbackComponent error={this.state.error} />;
+        return React.createElement(FallbackComponent, { error: this.state.error });
       }
       
-      return (
-        <div className="error-boundary p-6 bg-red-50 border border-red-200 rounded-lg">
-          <h2 className="text-lg font-semibold text-red-800 mb-2">Something went wrong</h2>
-          <p className="text-red-600 mb-4">
-            An error occurred while rendering this component. The error has been logged for analysis.
-          </p>
-          <button
-            onClick={() => this.setState({ hasError: false, error: undefined, errorInfo: undefined })}
-            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-          >
-            Try Again
-          </button>
-        </div>
+      return React.createElement(
+        'div',
+        { className: 'error-boundary p-6 bg-red-50 border border-red-200 rounded-lg' },
+        React.createElement('h2', { className: 'text-lg font-semibold text-red-800 mb-2' }, 'Something went wrong'),
+        React.createElement('p', { className: 'text-red-600 mb-4' }, 'An error occurred while rendering this component. The error has been logged for analysis.'),
+        React.createElement('button', {
+          onClick: () => this.setState({ hasError: false, error: undefined, errorInfo: undefined }),
+          className: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700'
+        }, 'Try Again')
       );
     }
 

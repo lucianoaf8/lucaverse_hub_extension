@@ -12,13 +12,15 @@ export interface UndoRedoActions {
 }
 
 // Utility function to setup keyboard shortcuts
-export function setupUndoRedoKeyboards<T extends UndoRedoActions>(store: { getState: () => T }): () => void {
+export function setupUndoRedoKeyboards<T extends UndoRedoActions>(store: {
+  getState: () => T;
+}): () => void {
   const handleKeydown = (event: KeyboardEvent) => {
     if (event.ctrlKey || event.metaKey) {
       if (event.key === 'z' && !event.shiftKey) {
         event.preventDefault();
         store.getState().undo();
-      } else if ((event.key === 'y') || (event.key === 'z' && event.shiftKey)) {
+      } else if (event.key === 'y' || (event.key === 'z' && event.shiftKey)) {
         event.preventDefault();
         store.getState().redo();
       }
@@ -26,7 +28,7 @@ export function setupUndoRedoKeyboards<T extends UndoRedoActions>(store: { getSt
   };
 
   document.addEventListener('keydown', handleKeydown);
-  
+
   return () => {
     document.removeEventListener('keydown', handleKeydown);
   };
@@ -42,18 +44,18 @@ export function createBasicHistory<T>() {
     push: (state: T) => {
       // Remove any future entries
       history = history.slice(0, currentIndex + 1);
-      
+
       // Add new state
       history.push(state);
       currentIndex = history.length - 1;
-      
+
       // Limit size
       if (history.length > maxSize) {
         history.shift();
         currentIndex--;
       }
     },
-    
+
     undo: (): T | null => {
       if (currentIndex > 0) {
         currentIndex--;
@@ -61,7 +63,7 @@ export function createBasicHistory<T>() {
       }
       return null;
     },
-    
+
     redo: (): T | null => {
       if (currentIndex < history.length - 1) {
         currentIndex++;
@@ -69,10 +71,10 @@ export function createBasicHistory<T>() {
       }
       return null;
     },
-    
+
     canUndo: () => currentIndex > 0,
     canRedo: () => currentIndex < history.length - 1,
-    
+
     clear: () => {
       history = [];
       currentIndex = -1;

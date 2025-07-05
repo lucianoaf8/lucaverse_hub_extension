@@ -1,32 +1,27 @@
-import { StrictMode } from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
+import { StrictMode } from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.tsx';
 
 // Import platform abstraction and testing
-import { 
-  getPlatformAPI, 
-  detectPlatform, 
-  platformDev,
-  initializePlatform
-} from './platform';
+import { getPlatformAPI, detectPlatform, platformDev, initializePlatform } from './platform';
 import { testPlatformAPIs } from './platform/__tests__/platformValidation.ts';
 
 // Platform-specific initialization
 const initializeApp = async () => {
   try {
     // Initialize platform abstraction
-    const factory = initializePlatform({ 
-      autoInitialize: true, 
-      debugMode: import.meta.env.DEV 
+    const factory = initializePlatform({
+      autoInitialize: true,
+      debugMode: import.meta.env.DEV,
     });
-    
+
     const platformAPI = await getPlatformAPI();
     const detection = detectPlatform();
-    
+
     console.log('🚀 Lucaverse Hub Platform Initialized');
     console.log('Platform:', detection.type);
     console.log('Confidence:', `${(detection.confidence * 100).toFixed(1)}%`);
-    
+
     if (detection.warnings.length > 0) {
       console.warn('Platform warnings:', detection.warnings);
     }
@@ -45,7 +40,7 @@ const initializeApp = async () => {
     (window as any).platformAPI = platformAPI;
     (window as any).platformDev = platformDev;
     (window as any).detectPlatform = detectPlatform;
-    
+
     // Quick platform info function
     (window as any).platformInfo = () => {
       platformDev.logInfo();
@@ -59,10 +54,9 @@ const initializeApp = async () => {
     console.log('🧪 Testing functions available:');
     console.log('• testPlatformAPIs() - Run platform validation tests');
     console.log('• platformInfo() - Show all available commands');
-    
   } catch (error) {
     console.error('❌ Platform initialization failed:', error);
-    
+
     // Fallback initialization without platform abstraction
     if (__IS_EXTENSION__) {
       console.log('Fallback: Chrome Extension mode');
@@ -72,38 +66,42 @@ const initializeApp = async () => {
       console.log('Fallback: Web mode');
     }
   }
-}
+};
 
 // Initialize the application
-initializeApp().then(() => {
-  ReactDOM.createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-      <App />
-    </StrictMode>,
-  )
-}).catch((error) => {
-  console.error('Application initialization failed:', error);
-  
-  // Emergency fallback render
-  ReactDOM.createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-      <div style={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center', 
-        height: '100vh',
-        backgroundColor: '#1a1a1a',
-        color: 'white',
-        fontFamily: 'Arial, sans-serif'
-      }}>
-        <div style={{ textAlign: 'center', padding: '2rem' }}>
-          <h1>Lucaverse Hub</h1>
-          <p>Initialization error occurred. Check console for details.</p>
-          <p style={{ fontSize: '0.8em', opacity: 0.7 }}>
-            Error: {error instanceof Error ? error.message : 'Unknown error'}
-          </p>
+initializeApp()
+  .then(() => {
+    ReactDOM.createRoot(document.getElementById('root')!).render(
+      <StrictMode>
+        <App />
+      </StrictMode>
+    );
+  })
+  .catch(error => {
+    console.error('Application initialization failed:', error);
+
+    // Emergency fallback render
+    ReactDOM.createRoot(document.getElementById('root')!).render(
+      <StrictMode>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100vh',
+            backgroundColor: '#1a1a1a',
+            color: 'white',
+            fontFamily: 'Arial, sans-serif',
+          }}
+        >
+          <div style={{ textAlign: 'center', padding: '2rem' }}>
+            <h1>Lucaverse Hub</h1>
+            <p>Initialization error occurred. Check console for details.</p>
+            <p style={{ fontSize: '0.8em', opacity: 0.7 }}>
+              Error: {error instanceof Error ? error.message : 'Unknown error'}
+            </p>
+          </div>
         </div>
-      </div>
-    </StrictMode>,
-  )
-})
+      </StrictMode>
+    );
+  });

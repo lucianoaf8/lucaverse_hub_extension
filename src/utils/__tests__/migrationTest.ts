@@ -3,17 +3,17 @@
  * Comprehensive tests for state migration functionality
  */
 
-import { 
-  migrateVanillaState, 
+import {
+  migrateVanillaState,
   detectLegacyData,
-  validateLegacyData, 
+  validateLegacyData,
   createBackup,
   migrateQuadrantData,
   migrateBookmarks,
   migrateTasks,
   migrateChatHistory,
   migrateTimerSettings,
-  migrateUserPreferences
+  migrateUserPreferences,
 } from '../migrate';
 import { detectVersion, getMigrationPath, executeMigrationPath } from '../versionManager';
 import type { LegacyState } from '../migrate';
@@ -23,11 +23,19 @@ const mockLocalStorage = (() => {
   let store: { [key: string]: string } = {};
   return {
     getItem: (key: string) => store[key] || null,
-    setItem: (key: string, value: string) => { store[key] = value; },
-    removeItem: (key: string) => { delete store[key]; },
-    clear: () => { store = {}; },
-    get length() { return Object.keys(store).length; },
-    key: (index: number) => Object.keys(store)[index] || null
+    setItem: (key: string, value: string) => {
+      store[key] = value;
+    },
+    removeItem: (key: string) => {
+      delete store[key];
+    },
+    clear: () => {
+      store = {};
+    },
+    get length() {
+      return Object.keys(store).length;
+    },
+    key: (index: number) => Object.keys(store)[index] || null,
   };
 })();
 
@@ -43,7 +51,7 @@ const createMockLegacyData = (): LegacyState => ({
       position: { x: 0, y: 0 },
       size: { width: 400, height: 300 },
       visible: true,
-      zIndex: 1
+      zIndex: 1,
     },
     {
       id: 'q2',
@@ -51,7 +59,7 @@ const createMockLegacyData = (): LegacyState => ({
       position: { x: 400, y: 0 },
       size: { width: 400, height: 300 },
       visible: true,
-      zIndex: 2
+      zIndex: 2,
     },
     {
       id: 'q3',
@@ -59,7 +67,7 @@ const createMockLegacyData = (): LegacyState => ({
       position: { x: 0, y: 300 },
       size: { width: 400, height: 300 },
       visible: true,
-      zIndex: 3
+      zIndex: 3,
     },
     {
       id: 'q4',
@@ -67,8 +75,8 @@ const createMockLegacyData = (): LegacyState => ({
       position: { x: 400, y: 300 },
       size: { width: 400, height: 300 },
       visible: true,
-      zIndex: 4
-    }
+      zIndex: 4,
+    },
   ]),
   'lucaverse-bookmarks': JSON.stringify([
     {
@@ -79,7 +87,7 @@ const createMockLegacyData = (): LegacyState => ({
       tags: ['search', 'tools'],
       priority: 1,
       category: 'productivity',
-      createdAt: Date.now() - 86400000
+      createdAt: Date.now() - 86400000,
     },
     {
       id: 'b2',
@@ -89,8 +97,8 @@ const createMockLegacyData = (): LegacyState => ({
       tags: ['development', 'code'],
       priority: 2,
       category: 'development',
-      createdAt: Date.now() - 172800000
-    }
+      createdAt: Date.now() - 172800000,
+    },
   ]),
   'lucaverse-tasks': JSON.stringify([
     {
@@ -103,7 +111,7 @@ const createMockLegacyData = (): LegacyState => ({
       createdAt: Date.now() - 259200000,
       updatedAt: Date.now(),
       tags: ['development', 'urgent'],
-      category: 'work'
+      category: 'work',
     },
     {
       id: 't2',
@@ -114,8 +122,8 @@ const createMockLegacyData = (): LegacyState => ({
       createdAt: Date.now() - 86400000,
       updatedAt: Date.now() - 3600000,
       tags: ['review'],
-      category: 'work'
-    }
+      category: 'work',
+    },
   ]),
   'lucaverse-chat-history': JSON.stringify([
     {
@@ -124,14 +132,14 @@ const createMockLegacyData = (): LegacyState => ({
       type: 'assistant',
       timestamp: Date.now() - 3600000,
       provider: 'openai',
-      model: 'gpt-4'
+      model: 'gpt-4',
     },
     {
       id: 'c2',
       content: 'What is React?',
       type: 'user',
-      timestamp: Date.now() - 3500000
-    }
+      timestamp: Date.now() - 3500000,
+    },
   ]),
   'lucaverse-timer-settings': JSON.stringify({
     workDuration: 25,
@@ -141,7 +149,7 @@ const createMockLegacyData = (): LegacyState => ({
     autoStartBreaks: true,
     autoStartPomodoros: false,
     notifications: true,
-    soundEnabled: true
+    soundEnabled: true,
   }),
   'lucaverse-preferences': JSON.stringify({
     theme: 'dark',
@@ -151,16 +159,16 @@ const createMockLegacyData = (): LegacyState => ({
     animations: true,
     particles: true,
     debugMode: false,
-    language: 'en'
+    language: 'en',
   }),
   'lucaverse-theme': JSON.stringify('dark'),
   'lucaverse-workspace': JSON.stringify({
     name: 'Default Workspace',
-    lastSaved: Date.now() - 3600000
+    lastSaved: Date.now() - 3600000,
   }),
   'lucaverse-state': JSON.stringify({
-    version: '1.2.0'
-  })
+    version: '1.2.0',
+  }),
 });
 
 // Test suites
@@ -177,7 +185,7 @@ describe('Migration System Tests', () => {
       });
 
       const detection = detectLegacyData();
-      
+
       expect(detection.hasLegacyData).toBe(true);
       expect(detection.keys.length).toBeGreaterThan(0);
       expect(detection.version).toBe('1.2.0');
@@ -186,7 +194,7 @@ describe('Migration System Tests', () => {
 
     test('handles no legacy data', () => {
       const detection = detectLegacyData();
-      
+
       expect(detection.hasLegacyData).toBe(false);
       expect(detection.keys.length).toBe(0);
     });
@@ -196,7 +204,7 @@ describe('Migration System Tests', () => {
     test('validates correct legacy data', () => {
       const mockData = createMockLegacyData();
       const validation = validateLegacyData(mockData);
-      
+
       expect(validation.isValid).toBe(true);
       expect(validation.errors.length).toBe(0);
     });
@@ -204,10 +212,10 @@ describe('Migration System Tests', () => {
     test('detects invalid JSON', () => {
       const invalidData = {
         'lucaverse-quadrants': 'invalid json {]',
-        'lucaverse-bookmarks': '[]'
+        'lucaverse-bookmarks': '[]',
       };
       const validation = validateLegacyData(invalidData);
-      
+
       expect(validation.isValid).toBe(false);
       expect(validation.errors.length).toBeGreaterThan(0);
     });
@@ -215,7 +223,7 @@ describe('Migration System Tests', () => {
     test('warns about missing data', () => {
       const emptyData = {};
       const validation = validateLegacyData(emptyData);
-      
+
       expect(validation.warnings.length).toBeGreaterThan(0);
     });
   });
@@ -224,7 +232,7 @@ describe('Migration System Tests', () => {
     test('creates backup successfully', async () => {
       const mockData = createMockLegacyData();
       const backup = await createBackup(mockData);
-      
+
       expect(backup).not.toBeNull();
       expect(backup?.timestamp).toBeDefined();
       expect(backup?.version).toBe('1.2.0');
@@ -244,7 +252,7 @@ describe('Migration System Tests', () => {
 
       const mockData = createMockLegacyData();
       const backup = await createBackup(mockData);
-      
+
       // Should handle gracefully
       expect(backup).toBeDefined();
     });
@@ -255,13 +263,13 @@ describe('Migration System Tests', () => {
       const mockData = createMockLegacyData();
       const quadrants = mockData['lucaverse-quadrants']!;
       const panels = migrateQuadrantData(quadrants);
-      
+
       expect(panels.length).toBe(4);
       expect(panels[0].component).toBe('SmartHub');
       expect(panels[1].component).toBe('AIChat');
       expect(panels[2].component).toBe('TaskManager');
       expect(panels[3].component).toBe('Productivity');
-      
+
       panels.forEach(panel => {
         expect(panel.id).toBeDefined();
         expect(panel.position).toBeDefined();
@@ -274,7 +282,7 @@ describe('Migration System Tests', () => {
       const mockData = createMockLegacyData();
       const bookmarksData = mockData['lucaverse-bookmarks']!;
       const bookmarks = migrateBookmarks(bookmarksData);
-      
+
       expect(bookmarks.length).toBe(2);
       expect(bookmarks[0].title).toBe('Google');
       expect(bookmarks[1].title).toBe('GitHub');
@@ -285,7 +293,7 @@ describe('Migration System Tests', () => {
       const mockData = createMockLegacyData();
       const tasksData = mockData['lucaverse-tasks']!;
       const tasks = migrateTasks(tasksData);
-      
+
       expect(tasks.length).toBe(2);
       expect(tasks[0].text).toBe('Complete React migration');
       expect(tasks[0].completed).toBe(false);
@@ -297,7 +305,7 @@ describe('Migration System Tests', () => {
       const mockData = createMockLegacyData();
       const chatData = mockData['lucaverse-chat-history']!;
       const chats = migrateChatHistory(chatData);
-      
+
       expect(chats.length).toBe(2);
       expect(chats[0].role).toBe('assistant');
       expect(chats[1].role).toBe('user');
@@ -308,7 +316,7 @@ describe('Migration System Tests', () => {
       const mockData = createMockLegacyData();
       const timerData = mockData['lucaverse-timer-settings']!;
       const timer = migrateTimerSettings(timerData);
-      
+
       expect(timer.workDuration).toBe(25);
       expect(timer.shortBreakDuration).toBe(5);
       expect(timer.autoStartBreaks).toBe(true);
@@ -319,7 +327,7 @@ describe('Migration System Tests', () => {
       const mockData = createMockLegacyData();
       const prefsData = mockData['lucaverse-preferences']!;
       const prefs = migrateUserPreferences(prefsData);
-      
+
       expect(prefs.language).toBe('en');
       expect(prefs.autoSave).toBe(true);
       expect(prefs.debugMode).toBe(false);
@@ -334,7 +342,7 @@ describe('Migration System Tests', () => {
       });
 
       const result = await migrateVanillaState();
-      
+
       expect(result.success).toBe(true);
       expect(result.errors.length).toBe(0);
       expect(result.data.panels.length).toBe(4);
@@ -349,16 +357,16 @@ describe('Migration System Tests', () => {
     test('handles migration with errors gracefully', async () => {
       // Set invalid data
       mockLocalStorage.setItem('lucaverse-quadrants', 'invalid json');
-      
+
       const result = await migrateVanillaState();
-      
+
       expect(result.success).toBe(true); // Should still succeed with partial data
       expect(result.warnings.length).toBeGreaterThan(0);
     });
 
     test('handles no legacy data', async () => {
       const result = await migrateVanillaState();
-      
+
       expect(result.success).toBe(true);
       expect(result.warnings).toContain('No legacy data found - using defaults');
       expect(result.data.panels.length).toBe(0);
@@ -369,13 +377,13 @@ describe('Migration System Tests', () => {
     test('detects version correctly', () => {
       const mockData = createMockLegacyData();
       const version = detectVersion(mockData);
-      
+
       expect(version).toBe('1.2.0');
     });
 
     test('calculates migration path', () => {
       const path = getMigrationPath('1.0.0', '2.0.0');
-      
+
       expect(path.from).toBe('1.0.0');
       expect(path.to).toBe('2.0.0');
       expect(path.steps.length).toBeGreaterThan(0);
@@ -384,9 +392,9 @@ describe('Migration System Tests', () => {
     test('executes migration path', async () => {
       const mockData = createMockLegacyData();
       const path = getMigrationPath('1.1.0', '2.0.0');
-      
+
       const result = await executeMigrationPath(mockData, path);
-      
+
       expect(result.success).toBe(true);
       expect(result.errors.length).toBe(0);
     });
@@ -396,21 +404,22 @@ describe('Migration System Tests', () => {
     test('handles corrupted data', async () => {
       mockLocalStorage.setItem('lucaverse-quadrants', '{"corrupted": }');
       mockLocalStorage.setItem('lucaverse-bookmarks', '[]');
-      
+
       const result = await migrateVanillaState();
-      
+
       expect(result.success).toBe(true);
       expect(result.data.bookmarks.length).toBe(0);
     });
 
     test('handles partial data', async () => {
       // Only set some keys
-      mockLocalStorage.setItem('lucaverse-bookmarks', JSON.stringify([
-        { title: 'Test', url: 'https://test.com' }
-      ]));
-      
+      mockLocalStorage.setItem(
+        'lucaverse-bookmarks',
+        JSON.stringify([{ title: 'Test', url: 'https://test.com' }])
+      );
+
       const result = await migrateVanillaState();
-      
+
       expect(result.success).toBe(true);
       expect(result.data.bookmarks.length).toBe(1);
       expect(result.data.panels.length).toBe(0);
@@ -421,13 +430,13 @@ describe('Migration System Tests', () => {
         id: 'test',
         title: 'Test bookmark with very long title that takes up space',
         url: 'https://example.com/very/long/url/path/that/takes/up/space',
-        tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5']
+        tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'],
       });
-      
+
       mockLocalStorage.setItem('lucaverse-bookmarks', JSON.stringify(hugeArray));
-      
+
       const result = await migrateVanillaState();
-      
+
       expect(result.success).toBe(true);
       expect(result.data.bookmarks.length).toBe(10000);
     });
@@ -437,9 +446,9 @@ describe('Migration System Tests', () => {
 // Export test runner
 export async function runMigrationTests() {
   console.log('🧪 Running Migration Tests...\n');
-  
+
   const testResults: { [key: string]: boolean } = {};
-  
+
   try {
     // Test 1: Legacy data detection
     console.log('1. Testing legacy data detection...');
@@ -451,19 +460,19 @@ export async function runMigrationTests() {
     const detection = detectLegacyData();
     testResults['Legacy Detection'] = detection.hasLegacyData;
     console.log(`   ✅ Legacy data detected: ${detection.keys.length} keys found`);
-    
+
     // Test 2: Data validation
     console.log('\n2. Testing data validation...');
     const validation = validateLegacyData(mockData);
     testResults['Data Validation'] = validation.isValid;
     console.log(`   ✅ Data validation: ${validation.isValid ? 'Passed' : 'Failed'}`);
-    
+
     // Test 3: Backup creation
     console.log('\n3. Testing backup creation...');
     const backup = await createBackup(mockData);
     testResults['Backup Creation'] = backup !== null;
     console.log(`   ✅ Backup created: ${backup ? 'Success' : 'Failed'}`);
-    
+
     // Test 4: Component migrations
     console.log('\n4. Testing component migrations...');
     const panels = migrateQuadrantData(mockData['lucaverse-quadrants']!);
@@ -475,15 +484,17 @@ export async function runMigrationTests() {
     console.log(`   ✅ Bookmarks migrated: ${bookmarks.length}`);
     console.log(`   ✅ Tasks migrated: ${tasks.length}`);
     console.log(`   ✅ Chats migrated: ${chats.length}`);
-    
+
     // Test 5: Full migration
     console.log('\n5. Testing full migration...');
     const result = await migrateVanillaState();
     testResults['Full Migration'] = result.success;
     console.log(`   ✅ Migration result: ${result.success ? 'Success' : 'Failed'}`);
-    console.log(`   📊 Report: ${result.report.migratedItems}/${result.report.totalItems} items migrated`);
+    console.log(
+      `   📊 Report: ${result.report.migratedItems}/${result.report.totalItems} items migrated`
+    );
     console.log(`   ⏱️ Duration: ${result.report.duration}ms`);
-    
+
     // Test 6: Edge cases
     console.log('\n6. Testing edge cases...');
     mockLocalStorage.clear();
@@ -491,19 +502,18 @@ export async function runMigrationTests() {
     const edgeResult = await migrateVanillaState();
     testResults['Edge Cases'] = edgeResult.success;
     console.log(`   ✅ Handles corrupted data: ${edgeResult.success ? 'Yes' : 'No'}`);
-    
+
     // Summary
     console.log('\n📊 Test Summary:');
     console.log('================');
     Object.entries(testResults).forEach(([test, passed]) => {
       console.log(`${passed ? '✅' : '❌'} ${test}`);
     });
-    
+
     const allPassed = Object.values(testResults).every(result => result);
     console.log(`\n${allPassed ? '✅ All tests passed!' : '❌ Some tests failed!'}`);
-    
+
     return allPassed;
-    
   } catch (error) {
     console.error('❌ Test suite failed:', error);
     return false;

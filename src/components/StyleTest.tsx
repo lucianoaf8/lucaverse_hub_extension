@@ -4,14 +4,14 @@
  */
 
 import React from 'react';
-import { 
+import {
   buttonStyles,
   panelStyles,
   inputStyles,
   priorityBadgeStyles,
   dragHandleStyles,
   resizeHandleStyles,
-  cn 
+  cn,
 } from '@/utils/styleUtils';
 import { ComponentVariant, ComponentSize } from '@/types/components';
 
@@ -32,7 +32,6 @@ export const StyleTest: React.FC = () => {
       <section className="space-y-6">
         <h2 className="text-2xl font-semibold text-accent-400 mb-4">Glass Panels</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          
           {/* Default Panel */}
           <div className={panelStyles({ variant: ComponentVariant.Default })}>
             <h3 className="text-lg font-medium text-primary-400 mb-2">Default Panel</h3>
@@ -48,9 +47,7 @@ export const StyleTest: React.FC = () => {
           {/* Card Panel */}
           <div className={panelStyles({ variant: ComponentVariant.Primary })}>
             <h3 className="text-lg font-medium text-secondary-400 mb-2">Card Panel</h3>
-            <p className="text-text-secondary text-sm">
-              Enhanced glass card with medium opacity
-            </p>
+            <p className="text-text-secondary text-sm">Enhanced glass card with medium opacity</p>
             <div className="mt-4">
               <div className={priorityBadgeStyles(2)}>High Priority</div>
             </div>
@@ -67,9 +64,7 @@ export const StyleTest: React.FC = () => {
           {/* Overlay Panel */}
           <div className={panelStyles({ variant: ComponentVariant.Accent })}>
             <h3 className="text-lg font-medium text-info mb-2">Overlay Panel</h3>
-            <p className="text-text-secondary text-sm">
-              Dark glass overlay for prominent content
-            </p>
+            <p className="text-text-secondary text-sm">Dark glass overlay for prominent content</p>
           </div>
         </div>
       </section>
@@ -77,54 +72,60 @@ export const StyleTest: React.FC = () => {
       {/* Button Variants */}
       <section className="space-y-6">
         <h2 className="text-2xl font-semibold text-accent-400 mb-4">Button Variants</h2>
-        
+
         <div className="space-y-4">
           {/* Primary Buttons */}
           <div className="flex flex-wrap gap-4">
-            <button className={buttonStyles({ variant: ComponentVariant.Primary, size: ComponentSize.Small })}>
+            <button
+              className={buttonStyles({
+                variant: ComponentVariant.Primary,
+                size: ComponentSize.Small,
+              })}
+            >
               Small Primary
             </button>
-            <button className={buttonStyles({ variant: ComponentVariant.Primary, size: ComponentSize.Medium })}>
+            <button
+              className={buttonStyles({
+                variant: ComponentVariant.Primary,
+                size: ComponentSize.Medium,
+              })}
+            >
               Medium Primary
             </button>
-            <button className={buttonStyles({ variant: ComponentVariant.Primary, size: ComponentSize.Large })}>
+            <button
+              className={buttonStyles({
+                variant: ComponentVariant.Primary,
+                size: ComponentSize.Large,
+              })}
+            >
               Large Primary
             </button>
-            <button className={buttonStyles({ variant: ComponentVariant.Primary, size: ComponentSize.ExtraLarge })}>
+            <button
+              className={buttonStyles({
+                variant: ComponentVariant.Primary,
+                size: ComponentSize.ExtraLarge,
+              })}
+            >
               XL Primary
             </button>
           </div>
 
           {/* Variant Types */}
           <div className="flex flex-wrap gap-4">
-            <button className={buttonStyles({ variant: ComponentVariant.Default })}>
-              Default
-            </button>
+            <button className={buttonStyles({ variant: ComponentVariant.Default })}>Default</button>
             <button className={buttonStyles({ variant: ComponentVariant.Secondary })}>
               Secondary
             </button>
-            <button className={buttonStyles({ variant: ComponentVariant.Accent })}>
-              Accent
-            </button>
-            <button className={buttonStyles({ variant: ComponentVariant.Ghost })}>
-              Ghost
-            </button>
-            <button className={buttonStyles({ variant: ComponentVariant.Outline })}>
-              Outline
-            </button>
+            <button className={buttonStyles({ variant: ComponentVariant.Accent })}>Accent</button>
+            <button className={buttonStyles({ variant: ComponentVariant.Ghost })}>Ghost</button>
+            <button className={buttonStyles({ variant: ComponentVariant.Outline })}>Outline</button>
           </div>
 
           {/* State Variants */}
           <div className="flex flex-wrap gap-4">
-            <button className={buttonStyles({ disabled: true })}>
-              Disabled
-            </button>
-            <button className={buttonStyles({ loading: true })}>
-              Loading
-            </button>
-            <button className={cn(buttonStyles(), 'state-focused')}>
-              Focused
-            </button>
+            <button className={buttonStyles({ disabled: true })}>Disabled</button>
+            <button className={buttonStyles({ loading: true })}>Loading</button>
+            <button className={cn(buttonStyles(), 'state-focused')}>Focused</button>
           </div>
         </div>
       </section>
@@ -132,39 +133,31 @@ export const StyleTest: React.FC = () => {
       {/* Input Components */}
       <section className="space-y-6">
         <h2 className="text-2xl font-semibold text-accent-400 mb-4">Input Components</h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
-            <input 
-              type="text" 
-              placeholder="Default input"
-              className={inputStyles()}
-            />
-            <input 
-              type="text" 
+            <input type="text" placeholder="Default input" className={inputStyles()} />
+            <input
+              type="text"
               placeholder="Primary input"
               className={inputStyles({ variant: ComponentVariant.Primary })}
             />
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="Error state"
               className={inputStyles({ error: true })}
               defaultValue="Invalid input"
             />
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="Disabled input"
               className={inputStyles({ disabled: true })}
               disabled
             />
           </div>
-          
+
           <div className="space-y-4">
-            <textarea 
-              placeholder="Glass textarea"
-              className="glass-textarea"
-              rows={4}
-            />
+            <textarea placeholder="Glass textarea" className="glass-textarea" rows={4} />
             <select className="glass-select">
               <option>Select option</option>
               <option>Option 1</option>
@@ -177,7 +170,7 @@ export const StyleTest: React.FC = () => {
       {/* Priority Indicators */}
       <section className="space-y-6">
         <h2 className="text-2xl font-semibold text-accent-400 mb-4">Priority System</h2>
-        
+
         <div className="flex flex-wrap gap-4">
           <div className={priorityBadgeStyles(1)}>Critical</div>
           <div className={priorityBadgeStyles(2)}>High</div>
@@ -185,7 +178,7 @@ export const StyleTest: React.FC = () => {
           <div className={priorityBadgeStyles(4)}>Low</div>
           <div className={priorityBadgeStyles(5)}>Minimal</div>
         </div>
-        
+
         <div className="flex flex-wrap gap-2">
           <div className="priority-indicator priority-1" title="Critical" />
           <div className="priority-indicator priority-2" title="High" />
@@ -198,7 +191,7 @@ export const StyleTest: React.FC = () => {
       {/* Typography Scale */}
       <section className="space-y-6">
         <h2 className="text-2xl font-semibold text-accent-400 mb-4">Typography Scale</h2>
-        
+
         <div className="space-y-3">
           <div className="text-4xl font-primary text-primary-400">Header Title (4xl)</div>
           <div className="text-3xl font-primary text-secondary-400">3XL Primary Font</div>
@@ -209,7 +202,7 @@ export const StyleTest: React.FC = () => {
           <div className="text-sm text-text-muted">Small Text</div>
           <div className="text-xs text-text-muted">Extra Small Text</div>
         </div>
-        
+
         <div className="space-y-2">
           <div className="font-mono text-lg text-accent-400">Monospace Font (JetBrains Mono)</div>
           <div className="text-glow text-primary-400">Glowing Text Effect</div>
@@ -220,7 +213,7 @@ export const StyleTest: React.FC = () => {
       {/* Animation States */}
       <section className="space-y-6">
         <h2 className="text-2xl font-semibold text-accent-400 mb-4">Animation States</h2>
-        
+
         <div className="flex flex-wrap gap-4">
           <div className={cn(panelStyles(), 'animate-appear')}>
             <div className="p-4 text-center">Appear Animation</div>
@@ -237,7 +230,7 @@ export const StyleTest: React.FC = () => {
       {/* Neural Network Background */}
       <section className="space-y-6">
         <h2 className="text-2xl font-semibold text-accent-400 mb-4">Neural Background</h2>
-        
+
         <div className="neural-bg h-32 rounded-lg border border-glass-border relative overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center">
             <span className="text-white text-lg font-medium z-10">Neural Network Background</span>
@@ -248,7 +241,7 @@ export const StyleTest: React.FC = () => {
       {/* State Modifiers */}
       <section className="space-y-6">
         <h2 className="text-2xl font-semibold text-accent-400 mb-4">Interactive States</h2>
-        
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className={cn(panelStyles(), 'state-selected')}>
             <div className="p-4 text-center text-sm">Selected</div>
@@ -268,7 +261,7 @@ export const StyleTest: React.FC = () => {
       {/* Timer Components */}
       <section className="space-y-6">
         <h2 className="text-2xl font-semibold text-accent-400 mb-4">Timer Components</h2>
-        
+
         <div className={panelStyles()}>
           <div className="p-6 text-center space-y-4">
             <div className="timer-display">25:00</div>

@@ -3,12 +3,12 @@ import { useDroppable } from '@dnd-kit/core';
 import { useDragDropContext } from '../providers/DragDropProvider';
 import clsx from 'clsx';
 
-export type DropZoneType = 
-  | 'workspace' 
-  | 'panel-snap' 
-  | 'dock-area' 
-  | 'grid-slot' 
-  | 'trash' 
+export type DropZoneType =
+  | 'workspace'
+  | 'panel-snap'
+  | 'dock-area'
+  | 'grid-slot'
+  | 'trash'
   | 'custom';
 
 export interface DropZoneProps {
@@ -20,21 +20,21 @@ export interface DropZoneProps {
   acceptTypes?: string[]; // Types of draggable items this zone accepts
   disabled?: boolean;
   snapDistance?: number; // Distance for magnetic snap behavior
-  
+
   // Visual styling options
   highlight?: {
     color?: string;
     thickness?: number;
     style?: 'solid' | 'dashed' | 'dotted';
   };
-  
+
   // Zone-specific configurations
   grid?: {
     rows: number;
     cols: number;
     gap: number;
   };
-  
+
   // Event handlers
   onDropAccept?: (draggedId: string, dropZoneId: string) => void;
   onDropReject?: (draggedId: string, dropZoneId: string) => void;
@@ -43,12 +43,9 @@ export interface DropZoneProps {
 }
 
 // Utility function to check if dropped item is accepted
-const isAcceptableType = (
-  draggedData: any,
-  acceptTypes?: string[]
-): boolean => {
+const isAcceptableType = (draggedData: any, acceptTypes?: string[]): boolean => {
   if (!acceptTypes || acceptTypes.length === 0) return true;
-  
+
   const draggedType = draggedData?.type || 'unknown';
   return acceptTypes.includes(draggedType);
 };
@@ -62,7 +59,7 @@ const getZoneStyles = (
   highlight?: DropZoneProps['highlight']
 ) => {
   const baseStyles = 'transition-all duration-200 ease-in-out';
-  
+
   // Type-specific base styles
   const typeStyles = {
     workspace: 'min-h-full border-2 border-transparent',
@@ -75,7 +72,7 @@ const getZoneStyles = (
 
   // State-based styles
   let stateStyles = '';
-  
+
   if (disabled) {
     stateStyles = 'opacity-50 cursor-not-allowed';
   } else if (isOver && canDrop) {
@@ -83,7 +80,7 @@ const getZoneStyles = (
     const color = highlight?.color || 'emerald';
     const thickness = highlight?.thickness || 2;
     const style = highlight?.style || 'solid';
-    
+
     stateStyles = `
       border-${color}-400 
       bg-${color}-400/20 
@@ -96,7 +93,7 @@ const getZoneStyles = (
     // Invalid drop target
     stateStyles = 'border-red-400 bg-red-400/20 shadow-lg shadow-red-400/25';
   }
-  
+
   return clsx(baseStyles, typeStyles[type], stateStyles);
 };
 
@@ -117,13 +114,9 @@ export const DropZone: React.FC<DropZoneProps> = ({
   onHoverEnd,
 }) => {
   const { dragState } = useDragDropContext();
-  
+
   // Setup droppable functionality
-  const {
-    setNodeRef,
-    isOver,
-    active,
-  } = useDroppable({
+  const { setNodeRef, isOver, active } = useDroppable({
     id,
     disabled,
     data: {
@@ -135,10 +128,10 @@ export const DropZone: React.FC<DropZoneProps> = ({
 
   // Check if current dragged item can be dropped here
   const canDrop = active ? isAcceptableType(active.data.current, acceptTypes) : false;
-  
+
   // Track hover state for callbacks
   const wasOver = React.useRef(false);
-  
+
   React.useEffect(() => {
     if (isOver && !wasOver.current && active) {
       wasOver.current = true;
@@ -151,17 +144,17 @@ export const DropZone: React.FC<DropZoneProps> = ({
 
   // Generate dynamic styles
   const zoneClasses = getZoneStyles(type, isOver, canDrop, disabled, highlight);
-  
+
   // Combine with custom className
   const finalClassName = clsx(zoneClasses, className);
-  
+
   // Grid overlay for grid-slot type
   const renderGridOverlay = () => {
     if (type !== 'grid-slot' || !grid || !isOver) return null;
-    
+
     const { rows, cols, gap } = grid;
     const slots = [];
-    
+
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < cols; col++) {
         slots.push(
@@ -176,7 +169,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
         );
       }
     }
-    
+
     return (
       <div
         className="absolute inset-0 pointer-events-none"
@@ -196,7 +189,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
   // Magnetic snap visualization
   const renderSnapLines = () => {
     if (!isOver || type === 'workspace') return null;
-    
+
     return (
       <div className="absolute inset-0 pointer-events-none">
         {/* Vertical center line */}
@@ -214,7 +207,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
         {children}
         {renderGridOverlay()}
         {renderSnapLines()}
-        
+
         {/* Drop instruction overlay */}
         {isOver && canDrop && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -223,7 +216,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
             </div>
           </div>
         )}
-        
+
         {/* Invalid drop overlay */}
         {isOver && !canDrop && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -248,9 +241,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
       aria-label={`Drop zone: ${type}`}
       role="region"
     >
-      <div className="relative w-full h-full">
-        {renderZoneContent()}
-      </div>
+      <div className="relative w-full h-full">{renderZoneContent()}</div>
     </div>
   );
 };

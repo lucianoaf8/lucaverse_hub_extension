@@ -11,24 +11,30 @@ export const createMockChromeAPIs = () => {
       quotaBytes: 10 * 1024 * 1024, // 10MB
       usedBytes: 0,
 
-      get: jest.fn().mockImplementation((keys: string | string[] | null, callback?: (result: any) => void) => {
-        const keysArray = keys === null ? Array.from(mockStorage.local.data.keys()) : 
-                         Array.isArray(keys) ? keys : [keys];
-        
-        const result: any = {};
-        keysArray.forEach(key => {
-          if (mockStorage.local.data.has(key)) {
-            result[key] = mockStorage.local.data.get(key);
-          }
-        });
+      get: jest
+        .fn()
+        .mockImplementation((keys: string | string[] | null, callback?: (result: any) => void) => {
+          const keysArray =
+            keys === null
+              ? Array.from(mockStorage.local.data.keys())
+              : Array.isArray(keys)
+                ? keys
+                : [keys];
 
-        if (callback) callback(result);
-        return Promise.resolve(result);
-      }),
+          const result: any = {};
+          keysArray.forEach(key => {
+            if (mockStorage.local.data.has(key)) {
+              result[key] = mockStorage.local.data.get(key);
+            }
+          });
+
+          if (callback) callback(result);
+          return Promise.resolve(result);
+        }),
 
       set: jest.fn().mockImplementation((items: Record<string, any>, callback?: () => void) => {
         const dataSize = JSON.stringify(items).length;
-        
+
         if (mockStorage.local.usedBytes + dataSize > mockStorage.local.quotaBytes) {
           const error = new Error('QUOTA_EXCEEDED_ERR');
           if (callback) callback();
@@ -38,16 +44,16 @@ export const createMockChromeAPIs = () => {
         Object.entries(items).forEach(([key, value]) => {
           mockStorage.local.data.set(key, value);
         });
-        
+
         mockStorage.local.usedBytes += dataSize;
-        
+
         if (callback) callback();
         return Promise.resolve();
       }),
 
       remove: jest.fn().mockImplementation((keys: string | string[], callback?: () => void) => {
         const keysArray = Array.isArray(keys) ? keys : [keys];
-        
+
         keysArray.forEach(key => {
           if (mockStorage.local.data.has(key)) {
             const value = mockStorage.local.data.get(key);
@@ -68,10 +74,12 @@ export const createMockChromeAPIs = () => {
         return Promise.resolve();
       }),
 
-      getBytesInUse: jest.fn().mockImplementation((keys?: string | string[], callback?: (bytesInUse: number) => void) => {
-        if (callback) callback(mockStorage.local.usedBytes);
-        return Promise.resolve(mockStorage.local.usedBytes);
-      })
+      getBytesInUse: jest
+        .fn()
+        .mockImplementation((keys?: string | string[], callback?: (bytesInUse: number) => void) => {
+          if (callback) callback(mockStorage.local.usedBytes);
+          return Promise.resolve(mockStorage.local.usedBytes);
+        }),
     },
 
     sync: {
@@ -79,24 +87,30 @@ export const createMockChromeAPIs = () => {
       quotaBytes: 100 * 1024, // 100KB
       usedBytes: 0,
 
-      get: jest.fn().mockImplementation((keys: string | string[] | null, callback?: (result: any) => void) => {
-        const keysArray = keys === null ? Array.from(mockStorage.sync.data.keys()) : 
-                         Array.isArray(keys) ? keys : [keys];
-        
-        const result: any = {};
-        keysArray.forEach(key => {
-          if (mockStorage.sync.data.has(key)) {
-            result[key] = mockStorage.sync.data.get(key);
-          }
-        });
+      get: jest
+        .fn()
+        .mockImplementation((keys: string | string[] | null, callback?: (result: any) => void) => {
+          const keysArray =
+            keys === null
+              ? Array.from(mockStorage.sync.data.keys())
+              : Array.isArray(keys)
+                ? keys
+                : [keys];
 
-        if (callback) callback(result);
-        return Promise.resolve(result);
-      }),
+          const result: any = {};
+          keysArray.forEach(key => {
+            if (mockStorage.sync.data.has(key)) {
+              result[key] = mockStorage.sync.data.get(key);
+            }
+          });
+
+          if (callback) callback(result);
+          return Promise.resolve(result);
+        }),
 
       set: jest.fn().mockImplementation((items: Record<string, any>, callback?: () => void) => {
         const dataSize = JSON.stringify(items).length;
-        
+
         if (mockStorage.sync.usedBytes + dataSize > mockStorage.sync.quotaBytes) {
           const error = new Error('QUOTA_EXCEEDED_ERR');
           if (callback) callback();
@@ -106,52 +120,61 @@ export const createMockChromeAPIs = () => {
         Object.entries(items).forEach(([key, value]) => {
           mockStorage.sync.data.set(key, value);
         });
-        
+
         mockStorage.sync.usedBytes += dataSize;
-        
+
         if (callback) callback();
         return Promise.resolve();
-      })
+      }),
     },
 
     onChanged: {
       addListener: jest.fn(),
       removeListener: jest.fn(),
-      hasListener: jest.fn()
-    }
+      hasListener: jest.fn(),
+    },
   };
 
   const mockRuntime = {
     id: 'test-extension-id',
-    
+
     getManifest: jest.fn().mockReturnValue({
       manifest_version: 3,
       name: 'Lucaverse Hub Extension',
       version: '2.0.0',
       permissions: ['storage', 'notifications', 'tabs'],
       content_security_policy: {
-        extension_pages: "script-src 'self'; object-src 'self'"
-      }
+        extension_pages: "script-src 'self'; object-src 'self'",
+      },
     }),
 
-    sendMessage: jest.fn().mockImplementation((extensionId?: string, message?: any, options?: any, callback?: (response: any) => void) => {
-      const response = { success: true, data: message };
-      if (callback) callback(response);
-      return Promise.resolve(response);
-    }),
+    sendMessage: jest
+      .fn()
+      .mockImplementation(
+        (
+          extensionId?: string,
+          message?: any,
+          options?: any,
+          callback?: (response: any) => void
+        ) => {
+          const response = { success: true, data: message };
+          if (callback) callback(response);
+          return Promise.resolve(response);
+        }
+      ),
 
     onMessage: {
       addListener: jest.fn(),
       removeListener: jest.fn(),
-      hasListener: jest.fn()
+      hasListener: jest.fn(),
     },
 
     onInstalled: {
       addListener: jest.fn(),
-      removeListener: jest.fn()
+      removeListener: jest.fn(),
     },
 
-    getURL: jest.fn().mockImplementation((path: string) => `chrome-extension://test-id/${path}`)
+    getURL: jest.fn().mockImplementation((path: string) => `chrome-extension://test-id/${path}`),
   };
 
   const mockTabs = {
@@ -161,7 +184,7 @@ export const createMockChromeAPIs = () => {
         url: createProperties.url,
         active: createProperties.active ?? true,
         index: 0,
-        windowId: 1
+        windowId: 1,
       };
       if (callback) callback(tab);
       return Promise.resolve(tab);
@@ -174,43 +197,53 @@ export const createMockChromeAPIs = () => {
           url: 'https://example.com',
           active: queryInfo.active ?? true,
           index: 0,
-          windowId: 1
-        }
+          windowId: 1,
+        },
       ];
       if (callback) callback(tabs);
       return Promise.resolve(tabs);
     }),
 
-    update: jest.fn().mockImplementation((tabId?: number, updateProperties?: any, callback?: (tab: any) => void) => {
-      const tab = {
-        id: tabId || 1,
-        url: updateProperties?.url || 'https://example.com',
-        active: true,
-        index: 0,
-        windowId: 1
-      };
-      if (callback) callback(tab);
-      return Promise.resolve(tab);
-    })
+    update: jest
+      .fn()
+      .mockImplementation(
+        (tabId?: number, updateProperties?: any, callback?: (tab: any) => void) => {
+          const tab = {
+            id: tabId || 1,
+            url: updateProperties?.url || 'https://example.com',
+            active: true,
+            index: 0,
+            windowId: 1,
+          };
+          if (callback) callback(tab);
+          return Promise.resolve(tab);
+        }
+      ),
   };
 
   const mockNotifications = {
-    create: jest.fn().mockImplementation((notificationId?: string, options?: any, callback?: (notificationId: string) => void) => {
-      const id = notificationId || `notification-${Date.now()}`;
-      if (callback) callback(id);
-      return Promise.resolve(id);
-    }),
+    create: jest
+      .fn()
+      .mockImplementation(
+        (notificationId?: string, options?: any, callback?: (notificationId: string) => void) => {
+          const id = notificationId || `notification-${Date.now()}`;
+          if (callback) callback(id);
+          return Promise.resolve(id);
+        }
+      ),
 
-    clear: jest.fn().mockImplementation((notificationId: string, callback?: (wasCleared: boolean) => void) => {
-      if (callback) callback(true);
-      return Promise.resolve(true);
-    }),
+    clear: jest
+      .fn()
+      .mockImplementation((notificationId: string, callback?: (wasCleared: boolean) => void) => {
+        if (callback) callback(true);
+        return Promise.resolve(true);
+      }),
 
     getAll: jest.fn().mockImplementation((callback?: (notifications: any) => void) => {
       const notifications = {};
       if (callback) callback(notifications);
       return Promise.resolve(notifications);
-    })
+    }),
   };
 
   const mockAction = {
@@ -231,20 +264,24 @@ export const createMockChromeAPIs = () => {
 
     onClicked: {
       addListener: jest.fn(),
-      removeListener: jest.fn()
-    }
+      removeListener: jest.fn(),
+    },
   };
 
   const mockAlarms = {
-    create: jest.fn().mockImplementation((name?: string, alarmInfo?: any, callback?: () => void) => {
-      if (callback) callback();
-      return Promise.resolve();
-    }),
+    create: jest
+      .fn()
+      .mockImplementation((name?: string, alarmInfo?: any, callback?: () => void) => {
+        if (callback) callback();
+        return Promise.resolve();
+      }),
 
-    clear: jest.fn().mockImplementation((name?: string, callback?: (wasCleared: boolean) => void) => {
-      if (callback) callback(true);
-      return Promise.resolve(true);
-    }),
+    clear: jest
+      .fn()
+      .mockImplementation((name?: string, callback?: (wasCleared: boolean) => void) => {
+        if (callback) callback(true);
+        return Promise.resolve(true);
+      }),
 
     clearAll: jest.fn().mockImplementation((callback?: (wasCleared: boolean) => void) => {
       if (callback) callback(true);
@@ -263,8 +300,8 @@ export const createMockChromeAPIs = () => {
 
     onAlarm: {
       addListener: jest.fn(),
-      removeListener: jest.fn()
-    }
+      removeListener: jest.fn(),
+    },
   };
 
   return {
@@ -274,7 +311,7 @@ export const createMockChromeAPIs = () => {
     notifications: mockNotifications,
     action: mockAction,
     alarms: mockAlarms,
-    
+
     // Helper methods for testing
     _getMockStorage: () => mockStorage,
     _setStorageQuota: (local: number, sync: number) => {
@@ -289,21 +326,21 @@ export const createMockChromeAPIs = () => {
     },
     _getStorageUsage: () => ({
       local: mockStorage.local.usedBytes,
-      sync: mockStorage.sync.usedBytes
-    })
+      sync: mockStorage.sync.usedBytes,
+    }),
   };
 };
 
 // Extension testing environment setup
 export const setupExtensionTestEnvironment = () => {
   const mockChrome = createMockChromeAPIs();
-  
+
   // Set up global chrome object
   (global as any).chrome = mockChrome;
-  
+
   // Mock extension-specific globals
   (global as any).browser = mockChrome; // For WebExtensions API compatibility
-  
+
   return mockChrome;
 };
 
@@ -330,7 +367,9 @@ export const validateManifestV3 = (manifest: any) => {
   // Service worker validation
   if (manifest.background) {
     if (manifest.background.scripts) {
-      errors.push('background.scripts is not allowed in Manifest V3, use background.service_worker');
+      errors.push(
+        'background.scripts is not allowed in Manifest V3, use background.service_worker'
+      );
     }
     if (!manifest.background.service_worker) {
       warnings.push('No service_worker specified in background');
@@ -355,7 +394,9 @@ export const validateManifestV3 = (manifest: any) => {
   // Permissions validation
   if (manifest.permissions) {
     const deprecatedPermissions = ['tabs', 'cookies', 'webRequest'];
-    const usedDeprecated = manifest.permissions.filter((p: string) => deprecatedPermissions.includes(p));
+    const usedDeprecated = manifest.permissions.filter((p: string) =>
+      deprecatedPermissions.includes(p)
+    );
     if (usedDeprecated.length > 0) {
       warnings.push(`Deprecated permissions used: ${usedDeprecated.join(', ')}`);
     }
@@ -364,7 +405,7 @@ export const validateManifestV3 = (manifest: any) => {
   return {
     isValid: errors.length === 0,
     errors,
-    warnings
+    warnings,
   };
 };
 
@@ -402,7 +443,7 @@ export const testStorageQuota = async (chrome: any) => {
     localStorageWorks: false,
     syncStorageWorks: false,
     quotaEnforced: false,
-    cleanupWorks: false
+    cleanupWorks: false,
   };
 
   try {
@@ -430,7 +471,6 @@ export const testStorageQuota = async (chrome: any) => {
     await chrome.storage.sync.remove(['syncTestKey']);
     const cleanupCheck = await chrome.storage.local.get(['testKey']);
     results.cleanupWorks = !cleanupCheck.testKey;
-
   } catch (error) {
     console.error('Storage quota test error:', error);
   }
@@ -447,8 +487,8 @@ export const loadExtensionForTesting = async () => {
     version: '2.0.0',
     permissions: ['storage', 'notifications'],
     background: {
-      service_worker: 'background.js'
-    }
+      service_worker: 'background.js',
+    },
   };
 
   const chrome = setupExtensionTestEnvironment();
@@ -470,7 +510,7 @@ export const testPermissions = async (chrome: any, requiredPermissions: string[]
   const results = {
     hasAllPermissions: false,
     missingPermissions: [] as string[],
-    extraPermissions: [] as string[]
+    extraPermissions: [] as string[],
   };
 
   const manifest = chrome.runtime.getManifest();
@@ -496,14 +536,14 @@ export const testExtensionPerformance = async () => {
   const metrics = {
     startupTime: 0,
     memoryUsage: 0,
-    backgroundScriptIdle: false
+    backgroundScriptIdle: false,
   };
 
   const startTime = performance.now();
-  
+
   // Simulate extension startup
   await loadExtensionForTesting();
-  
+
   metrics.startupTime = performance.now() - startTime;
 
   // Check memory usage
@@ -526,5 +566,5 @@ export const extensionTestUtils = {
   testStorageQuota,
   loadExtensionForTesting,
   testPermissions,
-  testExtensionPerformance
+  testExtensionPerformance,
 };

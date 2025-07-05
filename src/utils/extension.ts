@@ -58,7 +58,11 @@ export class ExtensionMessaging {
   /**
    * Send message to content script
    */
-  async sendToContent(tabId: number, action: MessageAction, data?: any): Promise<ExtensionResponse> {
+  async sendToContent(
+    tabId: number,
+    action: MessageAction,
+    data?: any
+  ): Promise<ExtensionResponse> {
     try {
       const message: ExtensionMessage = {
         action,
@@ -120,7 +124,9 @@ export class ExtensionMessaging {
   /**
    * Setup message listener
    */
-  onMessage(callback: (message: ExtensionMessage, sender: any, sendResponse: Function) => void | boolean): void {
+  onMessage(
+    callback: (message: ExtensionMessage, sender: any, sendResponse: Function) => void | boolean
+  ): void {
     chrome.runtime.onMessage.addListener(callback);
   }
 
@@ -128,22 +134,25 @@ export class ExtensionMessaging {
    * Detect current extension context
    */
   private detectContext(): 'popup' | 'options' | 'content' | 'background' | 'newtab' {
-    if (typeof chrome.extension.getBackgroundPage === 'function' && chrome.extension.getBackgroundPage() === window) {
+    if (
+      typeof chrome.extension.getBackgroundPage === 'function' &&
+      chrome.extension.getBackgroundPage() === window
+    ) {
       return 'background';
     }
-    
+
     if (window.location.pathname.includes('popup.html')) {
       return 'popup';
     }
-    
+
     if (window.location.pathname.includes('options.html')) {
       return 'options';
     }
-    
+
     if (window.location.pathname.includes('newtab.html')) {
       return 'newtab';
     }
-    
+
     return 'content';
   }
 }
@@ -273,7 +282,12 @@ export class ExtensionStorage {
   /**
    * Get storage usage information
    */
-  async getUsage(): Promise<{ local: number; sync: number; localQuota: number; syncQuota: number }> {
+  async getUsage(): Promise<{
+    local: number;
+    sync: number;
+    localQuota: number;
+    syncQuota: number;
+  }> {
     try {
       const [localUsage, syncUsage] = await Promise.all([
         chrome.storage.local.getBytesInUse(),
@@ -295,13 +309,15 @@ export class ExtensionStorage {
   /**
    * Watch for storage changes
    */
-  watchChanges(callback: (changes: Record<string, chrome.storage.StorageChange>, areaName: string) => void): () => void {
+  watchChanges(
+    callback: (changes: Record<string, chrome.storage.StorageChange>, areaName: string) => void
+  ): () => void {
     const listener = (changes: Record<string, chrome.storage.StorageChange>, areaName: string) => {
       callback(changes, areaName);
     };
 
     chrome.storage.onChanged.addListener(listener);
-    
+
     return () => {
       chrome.storage.onChanged.removeListener(listener);
     };
@@ -488,7 +504,10 @@ export class ExtensionTabs {
   /**
    * Update tab
    */
-  async updateTab(tabId: number, updateProperties: chrome.tabs.UpdateProperties): Promise<chrome.tabs.Tab | null> {
+  async updateTab(
+    tabId: number,
+    updateProperties: chrome.tabs.UpdateProperties
+  ): Promise<chrome.tabs.Tab | null> {
     try {
       return await chrome.tabs.update(tabId, updateProperties);
     } catch (error) {
@@ -659,14 +678,14 @@ export class ExtensionErrorHandler {
    */
   private setupGlobalErrorHandlers(): void {
     // Handle unhandled promise rejections
-    window.addEventListener('unhandledrejection', (event) => {
+    window.addEventListener('unhandledrejection', event => {
       this.logError(event.reason, 'unhandledrejection', {
         promise: event.promise,
       });
     });
 
     // Handle runtime errors
-    window.addEventListener('error', (event) => {
+    window.addEventListener('error', event => {
       this.logError(event.error || event.message, 'runtime', {
         filename: event.filename,
         lineno: event.lineno,
@@ -699,13 +718,7 @@ export class ExtensionDebugger {
     const permissions = ExtensionPermissions.getInstance();
     const errors = ExtensionErrorHandler.getInstance();
 
-    const [
-      manifest,
-      allPermissions,
-      storageUsage,
-      settings,
-      errorList,
-    ] = await Promise.all([
+    const [manifest, allPermissions, storageUsage, settings, errorList] = await Promise.all([
       chrome.runtime.getManifest(),
       permissions.getAllPermissions(),
       storage.getUsage(),
@@ -840,7 +853,7 @@ export const extensionDebugger = ExtensionDebugger.getInstance();
 if (typeof window !== 'undefined') {
   // Initialize error handler
   extensionErrorHandler;
-  
+
   // Expose debug utilities in development
   if (process.env.NODE_ENV === 'development') {
     (window as any).__LUCAVERSE_EXTENSION_DEBUG__ = {

@@ -11,23 +11,47 @@
     /* Complex background gradients */
     --bg-primary: linear-gradient(145deg, #0a0f1a 0%, #0f1419 30%, #050b12 70%, #0a0f1a 100%);
     --bg-glass: linear-gradient(135deg, rgba(0, 255, 255, 0.08) 0%, rgba(0, 188, 212, 0.02) 100%);
-    --bg-overlay: linear-gradient(45deg, transparent 30%, rgba(0, 229, 255, 0.02) 50%, transparent 70%);
-    
+    --bg-overlay: linear-gradient(
+      45deg,
+      transparent 30%,
+      rgba(0, 229, 255, 0.02) 50%,
+      transparent 70%
+    );
+
     /* Neural network and particle system gradients */
-    --neural-gradient: radial-gradient(circle at 20% 80%, rgba(0, 40, 60, 0.4) 0%, transparent 50%),
-                       radial-gradient(circle at 80% 20%, rgba(0, 60, 80, 0.3) 0%, transparent 50%);
-    
+    --neural-gradient:
+      radial-gradient(circle at 20% 80%, rgba(0, 40, 60, 0.4) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(0, 60, 80, 0.3) 0%, transparent 50%);
+
     /* Grid pattern for background */
-    --grid-pattern: linear-gradient(0deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
-    
+    --grid-pattern:
+      linear-gradient(0deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+
     /* Glassmorphism gradients */
-    --glass-border-gradient: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.6), transparent);
-    --glass-radial-hover: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 255, 255, 0.06), transparent 40%);
-    
+    --glass-border-gradient: linear-gradient(
+      90deg,
+      transparent,
+      rgba(0, 255, 255, 0.6),
+      transparent
+    );
+    --glass-radial-hover: radial-gradient(
+      600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(0, 255, 255, 0.06),
+      transparent 40%
+    );
+
     /* Scrollbar gradients */
-    --scrollbar-thumb: linear-gradient(135deg, rgba(0, 255, 255, 0.3) 0%, rgba(0, 188, 212, 0.3) 100%);
-    --scrollbar-thumb-hover: linear-gradient(135deg, rgba(0, 255, 255, 0.5) 0%, rgba(0, 188, 212, 0.5) 100%);
+    --scrollbar-thumb: linear-gradient(
+      135deg,
+      rgba(0, 255, 255, 0.3) 0%,
+      rgba(0, 188, 212, 0.3) 100%
+    );
+    --scrollbar-thumb-hover: linear-gradient(
+      135deg,
+      rgba(0, 255, 255, 0.5) 0%,
+      rgba(0, 188, 212, 0.5) 100%
+    );
   }
 }
 
@@ -36,32 +60,34 @@
   * {
     @apply m-0 p-0 box-border;
   }
-  
+
   *::before,
   *::after {
     @apply box-border;
   }
-  
+
   html {
     @apply h-full;
     font-size: 18px; /* Increased from 16px for better readability */
     line-height: 1.6;
     scroll-behavior: smooth;
   }
-  
+
   body {
     @apply h-full font-primary text-text-primary;
     @apply antialiased overflow-hidden relative m-0 p-0;
-    background: 
-      var(--grid-pattern),
-      var(--neural-gradient),
-      var(--bg-primary);
-    background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100%, 100% 100%;
+    background: var(--grid-pattern), var(--neural-gradient), var(--bg-primary);
+    background-size:
+      40px 40px,
+      40px 40px,
+      100% 100%,
+      100% 100%,
+      100% 100%;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  
+
   #root {
     @apply h-full;
   }
@@ -73,7 +99,7 @@
     background: rgba(0, 255, 255, 0.3);
     color: theme('colors.text.primary');
   }
-  
+
   ::-moz-selection {
     background: rgba(0, 255, 255, 0.3);
     color: theme('colors.text.primary');
@@ -85,22 +111,22 @@
   ::-webkit-scrollbar {
     @apply w-1.5 h-1.5;
   }
-  
+
   ::-webkit-scrollbar-track {
     background: rgba(0, 255, 255, 0.02);
     border-radius: theme('borderRadius.sm');
   }
-  
+
   ::-webkit-scrollbar-thumb {
     background: var(--scrollbar-thumb);
     border-radius: theme('borderRadius.sm');
     border: 1px solid rgba(0, 255, 255, 0.1);
   }
-  
+
   ::-webkit-scrollbar-thumb:hover {
     background: var(--scrollbar-thumb-hover);
   }
-  
+
   ::-webkit-scrollbar-corner {
     @apply bg-transparent;
   }
@@ -110,7 +136,7 @@
   :focus {
     @apply outline-none;
   }
-  
+
   :focus-visible {
     outline: 2px solid theme('colors.success');
     outline-offset: 2px;
@@ -122,7 +148,7 @@
   .particles-container {
     @apply fixed inset-0 w-full h-full pointer-events-none z-background;
   }
-  
+
   .particle {
     @apply absolute w-0.5 h-0.5 rounded-full;
     background: rgba(0, 255, 255, 0.3);
@@ -135,11 +161,11 @@
   .neural-network {
     @apply absolute inset-0 w-full h-full pointer-events-none z-neural;
   }
-  
+
   .neural-bg {
     @apply relative;
   }
-  
+
   .neural-bg::before {
     content: '';
     @apply absolute inset-0;
@@ -154,23 +180,23 @@
   .text-shadow {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
-  
+
   .text-shadow-sm {
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   }
-  
+
   .text-shadow-lg {
     text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   }
-  
+
   .text-glow {
     text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
   }
-  
+
   .text-glow-sm {
     text-shadow: 0 0 5px rgba(0, 255, 255, 0.4);
   }
-  
+
   .text-glow-lg {
     text-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
   }
@@ -181,23 +207,23 @@
   .glow {
     box-shadow: theme('boxShadow.glass-glow');
   }
-  
+
   .glow-sm {
     box-shadow: theme('boxShadow.glass-sm');
   }
-  
+
   .glow-md {
     box-shadow: theme('boxShadow.glass-md');
   }
-  
+
   .glow-lg {
     box-shadow: theme('boxShadow.glass-lg');
   }
-  
+
   .glow-hover:hover {
     box-shadow: theme('boxShadow.glass-hover');
   }
-  
+
   .glow-pulse {
     animation: theme('animation.glow-pulse');
   }
@@ -205,15 +231,19 @@
 
 /* =================== INPUT STYLES =================== */
 @layer base {
-  input, textarea, select {
+  input,
+  textarea,
+  select {
     @apply bg-glass-light border border-glass-border rounded-md;
     @apply text-text-primary placeholder-text-muted;
     @apply transition-all duration-normal;
     @apply focus:border-primary-400 focus:ring-2 focus:ring-primary-400/20;
     backdrop-filter: blur(8px);
   }
-  
-  input:focus, textarea:focus, select:focus {
+
+  input:focus,
+  textarea:focus,
+  select:focus {
     @apply outline-none;
     box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.2);
   }

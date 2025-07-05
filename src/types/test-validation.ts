@@ -8,30 +8,21 @@ import { PanelComponent } from './panel';
 import type { LayoutState, GridSettings, WorkspaceConfig, DragState, ResizeState } from './layout';
 import type { PlatformAPI, StorageAPI, NotificationAPI, WindowAPI } from './platform';
 import type { PanelProps, DragHandleProps, ResizeHandleProps, ThemeConfig } from './components';
-import type { 
-  PanelId, 
-  WorkspaceId,
-  DeepPartial,
-  ActionResult,
-  ValidationResult 
-} from './utils';
+import type { PanelId, WorkspaceId, DeepPartial, ActionResult, ValidationResult } from './utils';
 
-import { 
-  createPanelId, 
-  createWorkspaceId 
-} from './utils';
+import { createPanelId, createWorkspaceId } from './utils';
 
 // Test basic types compile correctly
 export function validateTypeCompilation(): void {
   // Test panel types
   const testPosition: Position = {
     x: 100,
-    y: 50
+    y: 50,
   };
 
   const testSize: Size = {
     width: 400,
-    height: 300
+    height: 300,
   };
 
   const testConstraints: PanelConstraints = {
@@ -41,8 +32,8 @@ export function validateTypeCompilation(): void {
       left: 0,
       top: 0,
       right: 1920,
-      bottom: 1080
-    }
+      bottom: 1080,
+    },
   };
 
   const testPanel: PanelLayout = {
@@ -57,8 +48,8 @@ export function validateTypeCompilation(): void {
       title: 'Smart Hub',
       description: 'Central productivity dashboard',
       icon: 'dashboard',
-      color: '#3b82f6'
-    }
+      color: '#3b82f6',
+    },
   };
 
   // Test utility types
@@ -67,12 +58,12 @@ export function validateTypeCompilation(): void {
 
   const partialPanel: DeepPartial<PanelLayout> = {
     position: { x: 200 },
-    metadata: { title: 'Updated Title' }
+    metadata: { title: 'Updated Title' },
   };
 
   const actionResult: ActionResult<PanelLayout> = {
     success: true,
-    data: testPanel
+    data: testPanel,
   };
 
   const validationResult: ValidationResult = {
@@ -81,9 +72,9 @@ export function validateTypeCompilation(): void {
       {
         field: 'position.x',
         message: 'X coordinate must be positive',
-        code: 'INVALID_POSITION'
-      }
-    ]
+        code: 'INVALID_POSITION',
+      },
+    ],
   };
 
   // Use variables to prevent unused warnings
@@ -93,7 +84,7 @@ export function validateTypeCompilation(): void {
     workspaceId,
     partialPanel,
     actionResult,
-    validationResult
+    validationResult,
   });
 }
 
@@ -101,40 +92,40 @@ export function validateTypeCompilation(): void {
 type TypeTests = {
   // Verify Position interface
   position: Position;
-  
-  // Verify Size interface  
+
+  // Verify Size interface
   size: Size;
-  
+
   // Verify PanelLayout interface
   panel: PanelLayout;
-  
+
   // Verify branded types work
   panelId: PanelId;
   workspaceId: WorkspaceId;
-  
+
   // Verify utility types work
   partialPanel: DeepPartial<PanelLayout>;
   actionResult: ActionResult<string>;
   validation: ValidationResult;
-  
+
   // Verify component prop interfaces compile
   panelProps: PanelProps;
   dragProps: DragHandleProps;
   resizeProps: ResizeHandleProps;
-  
+
   // Verify platform interfaces compile
   platformAPI: PlatformAPI;
   storageAPI: StorageAPI;
   notificationAPI: NotificationAPI;
   windowAPI: WindowAPI;
-  
+
   // Verify layout interfaces compile
   layoutState: LayoutState;
   gridSettings: GridSettings;
   workspaceConfig: WorkspaceConfig;
   dragState: DragState;
   resizeState: ResizeState;
-  
+
   // Verify theme interfaces compile
   themeConfig: ThemeConfig;
 };

@@ -54,14 +54,14 @@ class HealthMonitor {
       enableAlerts: true,
       alertThresholds: {
         degradedCount: 2,
-        unhealthyCount: 1
+        unhealthyCount: 1,
       },
-      ...config
+      ...config,
     };
 
     this.startTime = Date.now();
     this.healthStatus = this.createInitialStatus();
-    
+
     this.registerDefaultHealthChecks();
     this.startHealthChecks();
   }
@@ -98,7 +98,7 @@ class HealthMonitor {
         status: 'unhealthy',
         message: 'Health check execution failed',
         error: error instanceof Error ? error.message : 'Unknown error',
-        lastCheck: Date.now()
+        lastCheck: Date.now(),
       };
     }
   }
@@ -142,7 +142,7 @@ class HealthMonitor {
       checksTotal: this.healthStatus.summary.total,
       checksHealthy: this.healthStatus.summary.healthy,
       memory: this.getMemoryUsage(),
-      performance: this.getPerformanceMetrics()
+      performance: this.getPerformanceMetrics(),
     };
   }
 
@@ -158,8 +158,8 @@ class HealthMonitor {
         total: 0,
         healthy: 0,
         degraded: 0,
-        unhealthy: 0
-      }
+        unhealthy: 0,
+      },
     };
   }
 
@@ -188,8 +188,8 @@ class HealthMonitor {
         lastCheck: Date.now(),
         metadata: {
           usageMB: memoryUsageMB,
-          limitMB: memoryLimitMB
-        }
+          limitMB: memoryLimitMB,
+        },
       };
     });
 
@@ -198,7 +198,7 @@ class HealthMonitor {
       try {
         const testKey = '__health_check_test__';
         const testValue = 'test';
-        
+
         localStorage.setItem(testKey, testValue);
         const retrieved = localStorage.getItem(testKey);
         localStorage.removeItem(testKey);
@@ -208,14 +208,14 @@ class HealthMonitor {
             name: 'storage',
             status: 'healthy',
             message: 'Local storage is accessible',
-            lastCheck: Date.now()
+            lastCheck: Date.now(),
           };
         } else {
           return {
             name: 'storage',
             status: 'unhealthy',
             message: 'Local storage read/write failed',
-            lastCheck: Date.now()
+            lastCheck: Date.now(),
           };
         }
       } catch (error) {
@@ -224,7 +224,7 @@ class HealthMonitor {
           status: 'unhealthy',
           message: 'Local storage is not available',
           error: error instanceof Error ? error.message : 'Unknown error',
-          lastCheck: Date.now()
+          lastCheck: Date.now(),
         };
       }
     });
@@ -237,7 +237,7 @@ class HealthMonitor {
           name: 'api',
           status: 'degraded',
           message: 'API URL not configured',
-          lastCheck: Date.now()
+          lastCheck: Date.now(),
         };
       }
 
@@ -245,7 +245,7 @@ class HealthMonitor {
         const startTime = performance.now();
         const response = await fetch(`${apiBaseUrl}/health`, {
           method: 'GET',
-          timeout: this.config.timeout
+          timeout: this.config.timeout,
         } as RequestInit);
         const latency = performance.now() - startTime;
 
@@ -263,7 +263,7 @@ class HealthMonitor {
             status,
             message,
             latency,
-            lastCheck: Date.now()
+            lastCheck: Date.now(),
           };
         } else {
           return {
@@ -271,7 +271,7 @@ class HealthMonitor {
             status: 'unhealthy',
             message: `API returned ${response.status}`,
             latency,
-            lastCheck: Date.now()
+            lastCheck: Date.now(),
           };
         }
       } catch (error) {
@@ -280,7 +280,7 @@ class HealthMonitor {
           status: 'unhealthy',
           message: 'API is not reachable',
           error: error instanceof Error ? error.message : 'Unknown error',
-          lastCheck: Date.now()
+          lastCheck: Date.now(),
         };
       }
     });
@@ -288,7 +288,7 @@ class HealthMonitor {
     // Performance check
     this.registerHealthCheck('performance', async () => {
       const performanceMetrics = this.getPerformanceMetrics();
-      
+
       let status: HealthCheck['status'] = 'healthy';
       let message = 'Performance is good';
 
@@ -309,7 +309,7 @@ class HealthMonitor {
         status,
         message,
         lastCheck: Date.now(),
-        metadata: performanceMetrics
+        metadata: performanceMetrics,
       };
     });
   }
@@ -332,7 +332,7 @@ class HealthMonitor {
             status: 'unhealthy',
             message: 'Health check failed',
             error: error instanceof Error ? error.message : 'Unknown error',
-            lastCheck: Date.now()
+            lastCheck: Date.now(),
           };
           summary.total++;
           summary.unhealthy++;
@@ -356,7 +356,7 @@ class HealthMonitor {
       timestamp: Date.now(),
       uptime: this.getUptime(),
       checks,
-      summary
+      summary,
     };
 
     // Trigger alerts if necessary
@@ -365,7 +365,9 @@ class HealthMonitor {
     }
   }
 
-  private async executeHealthCheck(checkFunction: () => Promise<HealthCheck>): Promise<HealthCheck> {
+  private async executeHealthCheck(
+    checkFunction: () => Promise<HealthCheck>
+  ): Promise<HealthCheck> {
     let attempts = 0;
     let lastError: Error | null = null;
 
@@ -373,15 +375,15 @@ class HealthMonitor {
       try {
         const result = await Promise.race([
           checkFunction(),
-          new Promise<never>((_, reject) => 
+          new Promise<never>((_, reject) =>
             setTimeout(() => reject(new Error('Health check timeout')), this.config.timeout)
-          )
+          ),
         ]);
         return result;
       } catch (error) {
         lastError = error instanceof Error ? error : new Error('Unknown error');
         attempts++;
-        
+
         if (attempts < this.config.retryCount) {
           // Wait before retry
           await new Promise(resolve => setTimeout(resolve, 1000));
@@ -420,8 +422,8 @@ class HealthMonitor {
           status,
           summary,
           timestamp: Date.now(),
-          platform: this.detectPlatform()
-        })
+          platform: this.detectPlatform(),
+        }),
       }).catch(error => {
         console.error('Failed to send health alert:', error);
       });
@@ -444,7 +446,7 @@ class HealthMonitor {
     return {
       fps: 60,
       averageRenderTime: 10,
-      memoryUsage: this.getMemoryUsage()
+      memoryUsage: this.getMemoryUsage(),
     };
   }
 

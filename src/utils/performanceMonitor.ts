@@ -74,7 +74,7 @@ export class PerformanceMonitor {
     maxMemoryGrowth: 50 * 1024 * 1024, // 50MB
     minFPS: 30,
     maxDragLatency: 32, // 2 frames at 60fps
-    maxComponentRenderTime: 10
+    maxComponentRenderTime: 10,
   };
 
   constructor() {
@@ -125,21 +125,23 @@ export class PerformanceMonitor {
   trackComponentRender(componentName: string, renderTime: number): void {
     this.metrics.renderCount++;
     this.metrics.lastRenderTime = renderTime;
-    this.metrics.averageRenderTime = (this.metrics.averageRenderTime * (this.metrics.renderCount - 1) + renderTime) / this.metrics.renderCount;
+    this.metrics.averageRenderTime =
+      (this.metrics.averageRenderTime * (this.metrics.renderCount - 1) + renderTime) /
+      this.metrics.renderCount;
     this.metrics.maxRenderTime = Math.max(this.metrics.maxRenderTime, renderTime);
 
     // Track per-component metrics
     const existingTimes = this.componentTimings.get(componentName) || [];
     existingTimes.push(renderTime);
-    
+
     // Keep only last 100 renders per component
     if (existingTimes.length > 100) {
       existingTimes.shift();
     }
-    
+
     this.componentTimings.set(componentName, existingTimes);
     this.metrics.componentRenderCounts.set(
-      componentName, 
+      componentName,
       (this.metrics.componentRenderCounts.get(componentName) || 0) + 1
     );
 
@@ -155,8 +157,8 @@ export class PerformanceMonitor {
         suggestions: [
           'Consider memoizing expensive calculations',
           'Break down large components into smaller ones',
-          'Use React.memo for pure components'
-        ]
+          'Use React.memo for pure components',
+        ],
       });
     }
 
@@ -170,7 +172,7 @@ export class PerformanceMonitor {
   trackDragOperation(startTime: number, endTime: number): void {
     const duration = endTime - startTime;
     const responsiveness = Math.max(0, 100 - (duration / this.thresholds.maxDragLatency) * 100);
-    
+
     this.metrics.dragResponsiveness = (this.metrics.dragResponsiveness + responsiveness) / 2;
 
     if (duration > this.thresholds.maxDragLatency) {
@@ -184,8 +186,8 @@ export class PerformanceMonitor {
         suggestions: [
           'Optimize drag event handlers',
           'Reduce DOM manipulations during drag',
-          'Consider using transform instead of position changes'
-        ]
+          'Consider using transform instead of position changes',
+        ],
       });
     }
   }
@@ -196,14 +198,18 @@ export class PerformanceMonitor {
   trackResizeOperation(startTime: number, endTime: number): void {
     const duration = endTime - startTime;
     const responsiveness = Math.max(0, 100 - (duration / this.thresholds.maxDragLatency) * 100);
-    
+
     this.metrics.resizeResponsiveness = (this.metrics.resizeResponsiveness + responsiveness) / 2;
   }
 
   /**
    * Run performance benchmark
    */
-  async runBenchmark(name: string, operation: () => Promise<void> | void, iterations = 1000): Promise<PerformanceBenchmark> {
+  async runBenchmark(
+    name: string,
+    operation: () => Promise<void> | void,
+    iterations = 1000
+  ): Promise<PerformanceBenchmark> {
     const startTime = performance.now();
     const startMemory = this.getCurrentMemoryUsage();
 
@@ -213,7 +219,7 @@ export class PerformanceMonitor {
 
     const endTime = performance.now();
     const endMemory = this.getCurrentMemoryUsage();
-    
+
     const duration = endTime - startTime;
     const memoryUsed = endMemory - startMemory;
     const opsPerSecond = (iterations / duration) * 1000;
@@ -224,11 +230,11 @@ export class PerformanceMonitor {
       operations: iterations,
       opsPerSecond,
       memoryUsed,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     this.benchmarks.push(benchmark);
-    
+
     // Keep only last 50 benchmarks
     if (this.benchmarks.length > 50) {
       this.benchmarks.shift();
@@ -287,13 +293,13 @@ export class PerformanceMonitor {
         overallHealth: this.calculateOverallHealth(),
         renderPerformance: this.metrics.averageRenderTime,
         memoryUsage: this.metrics.memoryUsage,
-        fps: this.metrics.fps
+        fps: this.metrics.fps,
       },
       metrics: this.metrics,
       alerts: this.alerts,
       recommendations: this.generateRecommendations(),
       topSlowComponents: this.getTopSlowComponents(),
-      benchmarks: this.benchmarks.slice(-10) // Last 10 benchmarks
+      benchmarks: this.benchmarks.slice(-10), // Last 10 benchmarks
     };
 
     return JSON.stringify(report, this.serializeMap, 2);
@@ -338,7 +344,7 @@ export class PerformanceMonitor {
       lazyLoadedChunks: 0,
       cacheHitRate: 0,
       componentRenderCounts: new Map(),
-      slowComponents: []
+      slowComponents: [],
     };
   }
 
@@ -346,7 +352,7 @@ export class PerformanceMonitor {
     // Performance observer for measuring paint and layout
     if (typeof PerformanceObserver !== 'undefined') {
       try {
-        this.renderObserver = new PerformanceObserver((list) => {
+        this.renderObserver = new PerformanceObserver(list => {
           const entries = list.getEntries();
           entries.forEach(entry => {
             if (entry.entryType === 'measure' || entry.entryType === 'paint') {
@@ -355,8 +361,8 @@ export class PerformanceMonitor {
           });
         });
 
-        this.renderObserver.observe({ 
-          entryTypes: ['measure', 'paint', 'navigation'] 
+        this.renderObserver.observe({
+          entryTypes: ['measure', 'paint', 'navigation'],
         });
       } catch (error) {
         console.warn('Performance Observer not supported:', error);
@@ -370,19 +376,19 @@ export class PerformanceMonitor {
 
       this.frameCount++;
       const frameTime = currentTime - this.lastFrameTime;
-      
+
       if (frameTime > 0) {
         this.metrics.frameTime = frameTime;
-        
+
         // Calculate FPS over last second
         if (this.frameCount % 60 === 0) {
           const totalTime = currentTime - this.startTime;
           this.metrics.fps = (this.frameCount / totalTime) * 1000;
-          
+
           // Check for dropped frames
           const expectedFrames = Math.floor(totalTime / 16.67); // 60fps
           this.metrics.droppedFrames = Math.max(0, expectedFrames - this.frameCount);
-          
+
           if (this.metrics.fps < this.thresholds.minFPS) {
             this.addAlert({
               type: 'warning',
@@ -394,8 +400,8 @@ export class PerformanceMonitor {
               suggestions: [
                 'Reduce DOM manipulations',
                 'Optimize expensive calculations',
-                'Consider virtualization for large lists'
-              ]
+                'Consider virtualization for large lists',
+              ],
             });
           }
         }
@@ -414,15 +420,15 @@ export class PerformanceMonitor {
 
       const currentMemory = this.getCurrentMemoryUsage();
       const previousMemory = this.metrics.memoryUsage;
-      
+
       this.metrics.memoryUsage = currentMemory;
       this.metrics.memoryPeak = Math.max(this.metrics.memoryPeak, currentMemory);
-      
+
       if (previousMemory > 0) {
         const timeDelta = 5000; // 5 seconds
         const memoryDelta = currentMemory - previousMemory;
         this.metrics.memoryGrowthRate = (memoryDelta / timeDelta) * 60000; // MB per minute
-        
+
         if (memoryDelta > this.thresholds.maxMemoryGrowth) {
           this.addAlert({
             type: 'critical',
@@ -434,8 +440,8 @@ export class PerformanceMonitor {
             suggestions: [
               'Check for memory leaks',
               'Review component cleanup',
-              'Monitor large data structures'
-            ]
+              'Monitor large data structures',
+            ],
           });
         }
       }
@@ -467,7 +473,7 @@ export class PerformanceMonitor {
 
   private updateSlowComponents(): void {
     const slowComponents: Array<{ name: string; averageTime: number }> = [];
-    
+
     this.componentTimings.forEach((times, componentName) => {
       const averageTime = times.reduce((sum, time) => sum + time, 0) / times.length;
       if (averageTime > this.thresholds.maxComponentRenderTime) {
@@ -481,7 +487,7 @@ export class PerformanceMonitor {
 
   private addAlert(alert: PerformanceAlert): void {
     this.alerts.push(alert);
-    
+
     // Keep only last 100 alerts
     if (this.alerts.length > 100) {
       this.alerts.shift();
@@ -497,56 +503,60 @@ export class PerformanceMonitor {
 
   private calculateOverallHealth(): number {
     let score = 100;
-    
+
     // Deduct for poor render performance
     if (this.metrics.averageRenderTime > this.thresholds.maxRenderTime) {
       score -= 20;
     }
-    
+
     // Deduct for low FPS
     if (this.metrics.fps < this.thresholds.minFPS) {
       score -= 15;
     }
-    
+
     // Deduct for high memory usage
     if (this.metrics.memoryGrowthRate > 10) {
       score -= 25;
     }
-    
+
     // Deduct for alerts
     this.alerts.forEach(alert => {
       score -= alert.type === 'critical' ? 10 : 5;
     });
-    
+
     return Math.max(0, Math.min(100, score));
   }
 
   private generateRecommendations(): string[] {
     const recommendations: string[] = [];
-    
+
     if (this.metrics.averageRenderTime > this.thresholds.maxRenderTime) {
       recommendations.push('Optimize component render times');
     }
-    
+
     if (this.metrics.fps < this.thresholds.minFPS) {
       recommendations.push('Improve frame rate performance');
     }
-    
+
     if (this.metrics.memoryGrowthRate > 5) {
       recommendations.push('Address potential memory leaks');
     }
-    
+
     if (this.metrics.slowComponents.length > 0) {
       recommendations.push(`Optimize slow components: ${this.metrics.slowComponents[0].name}`);
     }
-    
+
     return recommendations;
   }
 
-  private getTopSlowComponents(): Array<{ name: string; averageTime: number; renderCount: number }> {
+  private getTopSlowComponents(): Array<{
+    name: string;
+    averageTime: number;
+    renderCount: number;
+  }> {
     return this.metrics.slowComponents.slice(0, 5).map(component => ({
       ...component,
-      renderCount: this.metrics.componentRenderCounts.get(component.name) || 0
+      renderCount: this.metrics.componentRenderCounts.get(component.name) || 0,
     }));
   }
 
@@ -561,12 +571,12 @@ export class PerformanceMonitor {
 // React hook for performance monitoring
 export const usePerformanceMonitor = () => {
   const [monitor] = React.useState(() => new PerformanceMonitor());
-  
+
   React.useEffect(() => {
     monitor.startProfiling();
     return () => monitor.stopProfiling();
   }, [monitor]);
-  
+
   return monitor;
 };
 

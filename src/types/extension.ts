@@ -201,7 +201,9 @@ export interface ExtensionError {
 export interface ChromeRuntime {
   sendMessage: (message: ExtensionMessage) => Promise<ExtensionResponse>;
   onMessage: {
-    addListener: (callback: (message: ExtensionMessage, sender: any, sendResponse: Function) => void) => void;
+    addListener: (
+      callback: (message: ExtensionMessage, sender: any, sendResponse: Function) => void
+    ) => void;
   };
   openOptionsPage: () => void;
   getManifest: () => chrome.runtime.Manifest;
@@ -226,7 +228,9 @@ export interface ChromeStorage {
     QUOTA_BYTES: number;
   };
   onChanged: {
-    addListener: (callback: (changes: Record<string, chrome.storage.StorageChange>, areaName: string) => void) => void;
+    addListener: (
+      callback: (changes: Record<string, chrome.storage.StorageChange>, areaName: string) => void
+    ) => void;
   };
 }
 
@@ -234,16 +238,24 @@ export interface ChromeStorage {
 export interface ChromeTabs {
   query: (queryInfo: chrome.tabs.QueryInfo) => Promise<chrome.tabs.Tab[]>;
   create: (createProperties: chrome.tabs.CreateProperties) => Promise<chrome.tabs.Tab>;
-  update: (tabId?: number, updateProperties?: chrome.tabs.UpdateProperties) => Promise<chrome.tabs.Tab>;
+  update: (
+    tabId?: number,
+    updateProperties?: chrome.tabs.UpdateProperties
+  ) => Promise<chrome.tabs.Tab>;
   remove: (tabIds: number | number[]) => Promise<void>;
   onUpdated: {
-    addListener: (callback: (tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) => void) => void;
+    addListener: (
+      callback: (tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) => void
+    ) => void;
   };
 }
 
 // Chrome notifications types
 export interface ChromeNotifications {
-  create: (notificationId?: string, options?: chrome.notifications.NotificationOptions) => Promise<string>;
+  create: (
+    notificationId?: string,
+    options?: chrome.notifications.NotificationOptions
+  ) => Promise<string>;
   clear: (notificationId: string) => Promise<boolean>;
   getAll: () => Promise<Record<string, chrome.notifications.NotificationOptions>>;
   onClicked: {
@@ -269,11 +281,16 @@ export interface ChromeAlarms {
 // Chrome context menus types
 export interface ChromeContextMenus {
   create: (createProperties: chrome.contextMenus.CreateProperties) => void;
-  update: (id: string | number, updateProperties: chrome.contextMenus.UpdateProperties) => Promise<void>;
+  update: (
+    id: string | number,
+    updateProperties: chrome.contextMenus.UpdateProperties
+  ) => Promise<void>;
   remove: (menuItemId: string | number) => Promise<void>;
   removeAll: () => Promise<void>;
   onClicked: {
-    addListener: (callback: (info: chrome.contextMenus.OnClickData, tab?: chrome.tabs.Tab) => void) => void;
+    addListener: (
+      callback: (info: chrome.contextMenus.OnClickData, tab?: chrome.tabs.Tab) => void
+    ) => void;
   };
 }
 
@@ -290,7 +307,7 @@ export interface ExtensionAPI {
 }
 
 // Message action types
-export type MessageAction = 
+export type MessageAction =
   | 'ping'
   | 'getStorageData'
   | 'setStorageData'
@@ -377,7 +394,11 @@ export const createExtensionMessage = (action: MessageAction, data?: any): Exten
   };
 };
 
-export const createExtensionResponse = (success: boolean, data?: any, error?: string): ExtensionResponse => {
+export const createExtensionResponse = (
+  success: boolean,
+  data?: any,
+  error?: string
+): ExtensionResponse => {
   return {
     success,
     data,

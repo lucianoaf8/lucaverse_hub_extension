@@ -6,11 +6,11 @@ export interface WorkspaceConfig {
   id: string;
   name: string;
   description?: string;
-  
+
   // Complete layout state
   panels: PanelLayout[];
   selectedPanelIds: string[];
-  
+
   // Layout settings
   gridSettings: {
     enabled: boolean;
@@ -20,7 +20,7 @@ export interface WorkspaceConfig {
     opacity: number;
     snapThreshold: number;
   };
-  
+
   // Application settings
   settings: {
     theme: string;
@@ -30,7 +30,7 @@ export interface WorkspaceConfig {
     showGrid: boolean;
     debugMode: boolean;
   };
-  
+
   // Workspace metadata
   metadata: {
     version: string;
@@ -42,7 +42,7 @@ export interface WorkspaceConfig {
     category?: string;
     thumbnail?: string;
   };
-  
+
   // Workspace statistics
   stats: {
     panelCount: number;
@@ -115,7 +115,7 @@ export class WorkspaceManager {
     try {
       const now = Date.now();
       const workspaceId = `workspace-${nanoid()}`;
-      
+
       // Validate workspace configuration
       const validation = this.validateWorkspace(config);
       if (!validation.isValid) {
@@ -150,7 +150,7 @@ export class WorkspaceManager {
 
       // Store workspace
       this.workspaces.set(workspaceId, workspace);
-      
+
       // Create initial history entry
       this.addToHistory(workspaceId, {
         added: config.panels,
@@ -195,7 +195,7 @@ export class WorkspaceManager {
       this.workspaces.set(workspaceId, workspace);
 
       await this.saveToStorage();
-      
+
       console.log(`Workspace "${workspace.name}" loaded successfully`);
       return workspace;
     } catch (error) {
@@ -268,7 +268,7 @@ export class WorkspaceManager {
       this.backups.delete(workspaceId);
 
       await this.saveToStorage();
-      
+
       console.log(`Workspace ${workspaceId} deleted successfully`);
       return true;
     } catch (error) {
@@ -293,16 +293,15 @@ export class WorkspaceManager {
       }
 
       if (filter.tags && filter.tags.length > 0) {
-        workspaces = workspaces.filter(w => 
+        workspaces = workspaces.filter(w =>
           filter.tags!.some(tag => w.metadata.tags.includes(tag))
         );
       }
 
       if (filter.searchQuery) {
         const query = filter.searchQuery.toLowerCase();
-        workspaces = workspaces.filter(w => 
-          w.name.toLowerCase().includes(query) ||
-          w.description?.toLowerCase().includes(query)
+        workspaces = workspaces.filter(
+          w => w.name.toLowerCase().includes(query) || w.description?.toLowerCase().includes(query)
         );
       }
     }
@@ -313,10 +312,13 @@ export class WorkspaceManager {
   /**
    * Export workspace as JSON
    */
-  exportWorkspace(workspaceId: string, options: {
-    includeHistory?: boolean;
-    compress?: boolean;
-  } = {}): string {
+  exportWorkspace(
+    workspaceId: string,
+    options: {
+      includeHistory?: boolean;
+      compress?: boolean;
+    } = {}
+  ): string {
     const workspace = this.workspaces.get(workspaceId);
     if (!workspace) {
       throw new Error(`Workspace not found: ${workspaceId}`);
@@ -333,7 +335,7 @@ export class WorkspaceManager {
     }
 
     const jsonString = JSON.stringify(exportData, null, options.compress ? 0 : 2);
-    
+
     if (options.compress && this.compressionEnabled) {
       // In a real implementation, you'd use a compression library
       return jsonString;
@@ -354,13 +356,13 @@ export class WorkspaceManager {
   ): Promise<string> {
     try {
       const importData = JSON.parse(workspaceData);
-      
+
       if (!importData.workspace) {
         throw new Error('Invalid workspace data format');
       }
 
       let workspace = importData.workspace as WorkspaceConfig;
-      
+
       // Generate new ID to avoid conflicts
       const newId = `workspace-${nanoid()}`;
       workspace = {
@@ -390,7 +392,7 @@ export class WorkspaceManager {
       }
 
       await this.saveToStorage();
-      
+
       console.log(`Workspace imported with ID: ${newId}`);
       return newId;
     } catch (error) {
@@ -424,7 +426,7 @@ export class WorkspaceManager {
     // Store backup
     const workspaceBackups = this.backups.get(workspaceId) || [];
     workspaceBackups.push(backup);
-    
+
     // Keep only last 10 backups per workspace
     if (workspaceBackups.length > 10) {
       workspaceBackups.sort((a, b) => b.timestamp - a.timestamp);
@@ -509,7 +511,10 @@ export class WorkspaceManager {
   /**
    * Calculate diff between panel states
    */
-  private calculateDiff(oldPanels: PanelLayout[], newPanels: PanelLayout[]): WorkspaceDiff['changes'] {
+  private calculateDiff(
+    oldPanels: PanelLayout[],
+    newPanels: PanelLayout[]
+  ): WorkspaceDiff['changes'] {
     const oldMap = new Map(oldPanels.map(p => [p.id, p]));
     const newMap = new Map(newPanels.map(p => [p.id, p]));
 
@@ -558,7 +563,7 @@ export class WorkspaceManager {
 
     const history = this.history.get(workspaceId) || [];
     history.push(diff);
-    
+
     // Keep only last 50 history entries
     if (history.length > 50) {
       this.history.set(workspaceId, history.slice(-50));
@@ -576,26 +581,26 @@ export class WorkspaceManager {
     canvas.width = 300;
     canvas.height = 200;
     const ctx = canvas.getContext('2d');
-    
+
     if (ctx) {
       // Draw background
       ctx.fillStyle = '#1f2937';
       ctx.fillRect(0, 0, 300, 200);
-      
+
       // Draw panels
       workspace.panels.forEach((panel, index) => {
         const colors = ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6', '#EF4444'];
         ctx.fillStyle = colors[index % colors.length];
-        
+
         const x = (panel.position.x / 1200) * 280 + 10;
         const y = (panel.position.y / 800) * 180 + 10;
         const w = Math.max(30, (panel.size.width / 1200) * 280);
         const h = Math.max(20, (panel.size.height / 800) * 180);
-        
+
         ctx.fillRect(x, y, w, h);
       });
     }
-    
+
     return canvas.toDataURL();
   }
 
@@ -668,18 +673,24 @@ export class WorkspaceManager {
     mostRecentWorkspace?: WorkspaceConfig;
   } {
     const workspaces = Array.from(this.workspaces.values());
-    const totalBackups = Array.from(this.backups.values()).reduce((sum, backups) => sum + backups.length, 0);
-    
-    const storageUsed = 
+    const totalBackups = Array.from(this.backups.values()).reduce(
+      (sum, backups) => sum + backups.length,
+      0
+    );
+
+    const storageUsed =
       JSON.stringify(Object.fromEntries(this.workspaces)).length +
       JSON.stringify(Object.fromEntries(this.history)).length +
       JSON.stringify(Object.fromEntries(this.backups)).length;
 
-    const averagePanelCount = workspaces.length > 0 
-      ? workspaces.reduce((sum, w) => sum + w.panels.length, 0) / workspaces.length 
-      : 0;
+    const averagePanelCount =
+      workspaces.length > 0
+        ? workspaces.reduce((sum, w) => sum + w.panels.length, 0) / workspaces.length
+        : 0;
 
-    const mostRecentWorkspace = workspaces.sort((a, b) => b.metadata.lastAccessed - a.metadata.lastAccessed)[0];
+    const mostRecentWorkspace = workspaces.sort(
+      (a, b) => b.metadata.lastAccessed - a.metadata.lastAccessed
+    )[0];
 
     return {
       totalWorkspaces: workspaces.length,

@@ -8,34 +8,34 @@ export interface PanelToolbarProps {
   position?: 'top' | 'bottom' | 'left' | 'right';
   orientation?: 'horizontal' | 'vertical';
   customizable?: boolean;
-  
+
   // Panel creation
   onCreatePanel?: (type: PanelComponent, position?: { x: number; y: number }) => void;
   availablePanelTypes?: PanelComponent[];
-  
+
   // Workspace management
   onSaveWorkspace?: (name?: string) => void;
   onLoadWorkspace?: (workspaceId?: string) => void;
   onNewWorkspace?: () => void;
   onResetWorkspace?: () => void;
-  
+
   // Layout tools
   onAlignPanels?: (alignment: 'left' | 'center' | 'right' | 'top' | 'middle' | 'bottom') => void;
   onDistributePanels?: (distribution: 'horizontal' | 'vertical') => void;
   onOrganizePanels?: (organization: 'grid' | 'cascade' | 'stack') => void;
-  
+
   // Selection tools
   onSelectAll?: () => void;
   onInvertSelection?: () => void;
   onClearSelection?: () => void;
   selectedCount?: number;
-  
+
   // Grid and snap controls
   gridEnabled?: boolean;
   snapEnabled?: boolean;
   onToggleGrid?: (enabled: boolean) => void;
   onToggleSnap?: (enabled: boolean) => void;
-  
+
   // State
   workspaceName?: string;
   hasUnsavedChanges?: boolean;
@@ -98,20 +98,21 @@ const ToolbarButton: React.FC<{
   onClick,
   className = '',
 }) => {
-  const baseClasses = 'relative inline-flex items-center justify-center transition-all duration-150 rounded-lg';
-  
+  const baseClasses =
+    'relative inline-flex items-center justify-center transition-all duration-150 rounded-lg';
+
   const sizeClasses = {
     sm: 'w-8 h-8 text-xs',
     md: 'w-10 h-10 text-sm',
     lg: 'w-12 h-12 text-base',
   };
-  
+
   const variantClasses = {
     primary: 'bg-blue-600 hover:bg-blue-700 text-white',
     secondary: 'bg-white/10 hover:bg-white/20 text-white border border-white/20',
     ghost: 'hover:bg-white/10 text-white/80 hover:text-white',
   };
-  
+
   return (
     <button
       className={clsx(
@@ -148,14 +149,8 @@ const ButtonGroup: React.FC<{
 }> = ({ children, label, className = '' }) => {
   return (
     <div className={clsx('flex flex-col space-y-1', className)}>
-      {label && (
-        <span className="text-xs text-white/60 uppercase tracking-wide px-1">
-          {label}
-        </span>
-      )}
-      <div className="flex space-x-1">
-        {children}
-      </div>
+      {label && <span className="text-xs text-white/60 uppercase tracking-wide px-1">{label}</span>}
+      <div className="flex space-x-1">{children}</div>
     </div>
   );
 };
@@ -165,7 +160,7 @@ const HelpTooltip: React.FC<{
   shortcuts: Array<{ key: string; action: string }>;
 }> = ({ shortcuts }) => {
   const [isVisible, setIsVisible] = useState(false);
-  
+
   return (
     <div className="relative">
       <ToolbarButton
@@ -175,7 +170,7 @@ const HelpTooltip: React.FC<{
         onClick={() => setIsVisible(!isVisible)}
         active={isVisible}
       />
-      
+
       {isVisible && (
         <div className="absolute top-full left-0 mt-2 w-64 bg-black/90 text-white text-sm rounded-lg p-4 backdrop-blur-sm border border-white/20 z-50">
           <div className="font-semibold mb-2">Keyboard Shortcuts</div>
@@ -199,41 +194,44 @@ export const PanelToolbar: React.FC<PanelToolbarProps> = ({
   position = 'top',
   orientation = 'horizontal',
   customizable = false,
-  
+
   onCreatePanel,
   availablePanelTypes = Object.values(PanelComponent),
-  
+
   onSaveWorkspace,
   onLoadWorkspace,
   onNewWorkspace,
   onResetWorkspace,
-  
+
   onAlignPanels,
   onDistributePanels,
   onOrganizePanels,
-  
+
   onSelectAll,
   onInvertSelection,
   onClearSelection,
   selectedCount = 0,
-  
+
   gridEnabled = false,
   snapEnabled = false,
   onToggleGrid,
   onToggleSnap,
-  
+
   workspaceName,
   hasUnsavedChanges = false,
   isLoading = false,
 }) => {
   // Handle panel creation with default positioning
-  const handleCreatePanel = useCallback((type: PanelComponent) => {
-    const defaultPosition = {
-      x: 100 + Math.random() * 200,
-      y: 100 + Math.random() * 200,
-    };
-    onCreatePanel?.(type, defaultPosition);
-  }, [onCreatePanel]);
+  const handleCreatePanel = useCallback(
+    (type: PanelComponent) => {
+      const defaultPosition = {
+        x: 100 + Math.random() * 200,
+        y: 100 + Math.random() * 200,
+      };
+      onCreatePanel?.(type, defaultPosition);
+    },
+    [onCreatePanel]
+  );
 
   // Keyboard shortcuts
   const shortcuts = [
@@ -314,7 +312,7 @@ export const PanelToolbar: React.FC<PanelToolbarProps> = ({
     <div className={toolbarClasses}>
       {/* Panel Creation */}
       <ButtonGroup label="Create">
-        {availablePanelTypes.map((type) => {
+        {availablePanelTypes.map(type => {
           const config = PANEL_TYPE_CONFIG[type];
           return (
             <ToolbarButton
@@ -443,9 +441,7 @@ export const PanelToolbar: React.FC<PanelToolbarProps> = ({
               {selectedCount} selected
             </span>
           )}
-          {isLoading && (
-            <span className="animate-pulse">Loading...</span>
-          )}
+          {isLoading && <span className="animate-pulse">Loading...</span>}
         </div>
       )}
 

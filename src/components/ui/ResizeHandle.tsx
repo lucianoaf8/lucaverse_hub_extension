@@ -28,7 +28,7 @@ export const ResizeHandle: React.FC<ResizeHandleProps> = ({
   disabled = false,
   size = 8,
   className = '',
-  style = {}
+  style = {},
 }) => {
   const { isResizing, resizeDirection, handleResizeStart } = usePanelResize(panelId);
 
@@ -40,7 +40,7 @@ export const ResizeHandle: React.FC<ResizeHandleProps> = ({
       backgroundColor: 'transparent',
       border: 'none',
       zIndex: 100,
-      ...style
+      ...style,
     };
 
     // Position handles based on direction
@@ -52,7 +52,7 @@ export const ResizeHandle: React.FC<ResizeHandleProps> = ({
           left: size / 2,
           right: size / 2,
           height: size,
-          cursor: disabled ? 'default' : 'ns-resize'
+          cursor: disabled ? 'default' : 'ns-resize',
         };
       case 's':
         return {
@@ -61,7 +61,7 @@ export const ResizeHandle: React.FC<ResizeHandleProps> = ({
           left: size / 2,
           right: size / 2,
           height: size,
-          cursor: disabled ? 'default' : 'ns-resize'
+          cursor: disabled ? 'default' : 'ns-resize',
         };
       case 'e':
         return {
@@ -70,7 +70,7 @@ export const ResizeHandle: React.FC<ResizeHandleProps> = ({
           top: size / 2,
           bottom: size / 2,
           width: size,
-          cursor: disabled ? 'default' : 'ew-resize'
+          cursor: disabled ? 'default' : 'ew-resize',
         };
       case 'w':
         return {
@@ -79,7 +79,7 @@ export const ResizeHandle: React.FC<ResizeHandleProps> = ({
           top: size / 2,
           bottom: size / 2,
           width: size,
-          cursor: disabled ? 'default' : 'ew-resize'
+          cursor: disabled ? 'default' : 'ew-resize',
         };
       case 'ne':
         return {
@@ -88,7 +88,7 @@ export const ResizeHandle: React.FC<ResizeHandleProps> = ({
           right: -size / 2,
           width: size,
           height: size,
-          cursor: disabled ? 'default' : 'nesw-resize'
+          cursor: disabled ? 'default' : 'nesw-resize',
         };
       case 'nw':
         return {
@@ -97,7 +97,7 @@ export const ResizeHandle: React.FC<ResizeHandleProps> = ({
           left: -size / 2,
           width: size,
           height: size,
-          cursor: disabled ? 'default' : 'nwse-resize'
+          cursor: disabled ? 'default' : 'nwse-resize',
         };
       case 'se':
         return {
@@ -106,7 +106,7 @@ export const ResizeHandle: React.FC<ResizeHandleProps> = ({
           right: -size / 2,
           width: size,
           height: size,
-          cursor: disabled ? 'default' : 'nwse-resize'
+          cursor: disabled ? 'default' : 'nwse-resize',
         };
       case 'sw':
         return {
@@ -115,7 +115,7 @@ export const ResizeHandle: React.FC<ResizeHandleProps> = ({
           left: -size / 2,
           width: size,
           height: size,
-          cursor: disabled ? 'default' : 'nesw-resize'
+          cursor: disabled ? 'default' : 'nesw-resize',
         };
       default:
         return baseStyle;
@@ -130,7 +130,7 @@ export const ResizeHandle: React.FC<ResizeHandleProps> = ({
       'duration-150',
       'hover:bg-blue-500',
       'hover:bg-opacity-60',
-      className
+      className,
     ];
 
     if (isResizing && resizeDirection === direction) {
@@ -168,12 +168,12 @@ export const ResizeHandle: React.FC<ResizeHandleProps> = ({
 
   const handleMouseDown = (event: React.MouseEvent) => {
     if (disabled) return;
-    
+
     event.preventDefault();
     event.stopPropagation();
-    
+
     handleResizeStart(event, direction);
-    
+
     // Call custom onResize callback if provided
     if (onResize) {
       onResize(direction, { x: 0, y: 0 });
@@ -194,23 +194,23 @@ export const ResizeHandle: React.FC<ResizeHandleProps> = ({
     >
       {/* Handle indicator (optional visual element) */}
       {!disabled && (
-        <div 
+        <div
           className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-150"
           style={{
             background: 'linear-gradient(45deg, rgba(59, 130, 246, 0.3), rgba(59, 130, 246, 0.6))',
-            borderRadius: 'inherit'
+            borderRadius: 'inherit',
           }}
         />
       )}
-      
+
       {/* Active resize indicator */}
       {isResizing && resizeDirection === direction && (
-        <div 
+        <div
           className="absolute inset-0 animate-pulse"
           style={{
             background: 'rgba(59, 130, 246, 0.8)',
             borderRadius: 'inherit',
-            boxShadow: '0 0 8px rgba(59, 130, 246, 0.6)'
+            boxShadow: '0 0 8px rgba(59, 130, 246, 0.6)',
           }}
         />
       )}
@@ -238,11 +238,11 @@ export const ResizeHandles: React.FC<ResizeHandlesProps> = ({
   size = 8,
   directions = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'],
   className = '',
-  style = {}
+  style = {},
 }) => {
   return (
     <>
-      {directions.map((direction) => (
+      {directions.map(direction => (
         <ResizeHandle
           key={direction}
           direction={direction}

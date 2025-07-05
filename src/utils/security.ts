@@ -36,13 +36,13 @@ class SecurityManager {
         'frame-ancestors': ["'none'"],
         'base-uri': ["'self'"],
         'object-src': ["'none'"],
-        'upgrade-insecure-requests': []
+        'upgrade-insecure-requests': [],
       },
       rateLimitRules: [
         { path: '/api/', maxRequests: 100, windowMs: 60000 },
-        { path: '/auth/', maxRequests: 5, windowMs: 60000 }
+        { path: '/auth/', maxRequests: 5, windowMs: 60000 },
       ],
-      ...config
+      ...config,
     };
 
     this.initializeSecurity();
@@ -127,7 +127,7 @@ class SecurityManager {
 
     removeItem: (key: string): void => {
       localStorage.removeItem(key);
-    }
+    },
   };
 
   /**
@@ -146,7 +146,7 @@ class SecurityManager {
     if (!entry || now > entry.resetTime) {
       this.requestCounts.set(key, {
         count: 1,
-        resetTime: now + rule.windowMs
+        resetTime: now + rule.windowMs,
       });
       return true;
     }
@@ -190,7 +190,7 @@ class SecurityManager {
       { httpEquiv: 'X-Content-Type-Options', content: 'nosniff' },
       { httpEquiv: 'X-Frame-Options', content: 'DENY' },
       { httpEquiv: 'X-XSS-Protection', content: '1; mode=block' },
-      { httpEquiv: 'Referrer-Policy', content: 'strict-origin-when-cross-origin' }
+      { httpEquiv: 'Referrer-Policy', content: 'strict-origin-when-cross-origin' },
     ];
 
     headers.forEach(header => {

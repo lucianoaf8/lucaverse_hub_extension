@@ -31,18 +31,11 @@ export const DragHandle: React.FC<DragHandleProps> = ({
   children,
   showGrabIndicator = true,
   snapToGrid = true,
-  snapDistance = 10
+  snapDistance = 10,
 }) => {
-  const { 
-    isDragging, 
-    handleDragStart, 
-    currentPosition 
-  } = usePanelDrag(panelId);
-  
-  const { 
-    isSelected, 
-    handleSelect 
-  } = usePanelSelection(panelId);
+  const { isDragging, handleDragStart, currentPosition } = usePanelDrag(panelId);
+
+  const { isSelected, handleSelect } = usePanelSelection(panelId);
 
   // Calculate drag handle styling
   const dragHandleStyle = useMemo(() => {
@@ -51,7 +44,7 @@ export const DragHandle: React.FC<DragHandleProps> = ({
       userSelect: 'none',
       WebkitUserSelect: 'none',
       touchAction: 'none',
-      ...style
+      ...style,
     };
 
     // Add visual feedback during drag
@@ -66,18 +59,13 @@ export const DragHandle: React.FC<DragHandleProps> = ({
 
   // Calculate CSS classes for visual states
   const dragHandleClasses = useMemo(() => {
-    const baseClasses = [
-      'drag-handle',
-      'transition-all',
-      'duration-150',
-      className
-    ];
+    const baseClasses = ['drag-handle', 'transition-all', 'duration-150', className];
 
     if (disabled) {
       baseClasses.push('cursor-not-allowed', 'opacity-50');
     } else {
       baseClasses.push('hover:bg-white', 'hover:bg-opacity-10');
-      
+
       if (isDragging) {
         baseClasses.push('bg-white', 'bg-opacity-20', 'shadow-lg');
       } else {
@@ -98,10 +86,10 @@ export const DragHandle: React.FC<DragHandleProps> = ({
 
     // Prevent default to avoid text selection
     event.preventDefault();
-    
+
     // Select panel on interaction
     handleSelect(event.ctrlKey || event.metaKey);
-    
+
     // Start drag operation
     handleDragStart(event);
 
@@ -114,14 +102,14 @@ export const DragHandle: React.FC<DragHandleProps> = ({
   // Handle double-click for potential actions (like minimize/maximize)
   const handleDoubleClick = (event: React.MouseEvent) => {
     if (disabled) return;
-    
+
     event.preventDefault();
     event.stopPropagation();
-    
+
     // Could emit a custom event or call a callback
     // This could be used for panel maximize/minimize functionality
     const customEvent = new CustomEvent('panelDoubleClick', {
-      detail: { panelId }
+      detail: { panelId },
     });
     document.dispatchEvent(customEvent);
   };
@@ -167,20 +155,18 @@ export const DragHandle: React.FC<DragHandleProps> = ({
       )}
 
       {/* Content */}
-      <div className="relative z-10">
-        {children}
-      </div>
+      <div className="relative z-10">{children}</div>
 
       {/* Drag preview overlay (shows during drag) */}
       {isDragging && (
-        <div 
+        <div
           className="absolute inset-0 bg-blue-500 bg-opacity-20 border-2 border-blue-400 border-dashed rounded pointer-events-none animate-pulse"
           style={{ zIndex: 1000 }}
         />
       )}
 
       {/* Focus indicator for keyboard navigation */}
-      <div 
+      <div
         className={`absolute inset-0 rounded ring-2 ring-blue-500 ring-opacity-0 transition-all duration-150 pointer-events-none ${
           isSelected ? 'ring-opacity-50' : 'focus-within:ring-opacity-75'
         }`}
@@ -215,35 +201,21 @@ export const HeaderDragHandle: React.FC<HeaderDragHandleProps> = ({
       'px-3',
       'py-2',
       'rounded-t-lg',
-      className
+      className,
     ].join(' ');
   }, [className]);
 
   return (
-    <DragHandle
-      {...dragHandleProps}
-      className={headerClasses}
-      showGrabIndicator={false}
-    >
+    <DragHandle {...dragHandleProps} className={headerClasses} showGrabIndicator={false}>
       <div className="flex items-center space-x-2 min-w-0 flex-1">
-        {icon && (
-          <div className="flex-shrink-0 w-4 h-4 text-white text-opacity-80">
-            {icon}
-          </div>
-        )}
-        
+        {icon && <div className="flex-shrink-0 w-4 h-4 text-white text-opacity-80">{icon}</div>}
+
         {showTitle && title && (
-          <h3 className="text-sm font-medium text-white text-opacity-90 truncate">
-            {title}
-          </h3>
+          <h3 className="text-sm font-medium text-white text-opacity-90 truncate">{title}</h3>
         )}
       </div>
 
-      {actions && (
-        <div className="flex items-center space-x-1 flex-shrink-0 ml-2">
-          {actions}
-        </div>
-      )}
+      {actions && <div className="flex items-center space-x-1 flex-shrink-0 ml-2">{actions}</div>}
     </DragHandle>
   );
 };

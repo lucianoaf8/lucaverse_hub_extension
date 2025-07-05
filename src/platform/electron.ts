@@ -22,7 +22,7 @@ import {
   HardwareAPI,
   SystemInfo,
   MemoryInfo,
-  FileDialogOptions
+  FileDialogOptions,
 } from './base.ts';
 
 // Electron IPC Communication Patterns
@@ -40,7 +40,7 @@ class ElectronStorageAPI implements StorageAPI {
 
   constructor(ipc: ElectronIPC) {
     this.ipc = ipc;
-    
+
     // Listen for storage changes from main process
     this.ipc.on('storage-changed', (event, changes) => {
       this.listeners.forEach(callback => callback(changes));
@@ -115,7 +115,7 @@ class ElectronNotificationAPI implements NotificationAPI {
 
   constructor(ipc: ElectronIPC) {
     this.ipc = ipc;
-    
+
     // Listen for notification events from main process
     this.ipc.on('notification-clicked', (event, notificationId) => {
       this.clickListeners.forEach(callback => callback(notificationId));
@@ -187,7 +187,7 @@ class ElectronWindowAPI implements WindowAPI {
 
   constructor(ipc: ElectronIPC) {
     this.ipc = ipc;
-    
+
     // Listen for window events from main process
     this.ipc.on('window-created', (event, windowInfo) => {
       this.createListeners.forEach(callback => callback(windowInfo));
@@ -466,7 +466,7 @@ class ElectronSystemAPI implements SystemAPI {
         version: '1.0.0',
         userAgent: navigator.userAgent,
         language: navigator.language,
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       };
     }
   }
@@ -486,10 +486,18 @@ export class ElectronPlatformAPI implements PlatformAPI {
   constructor() {
     // Initialize IPC communication
     this.ipc = (window as any).electronAPI || {
-      invoke: async () => { throw new Error('Electron IPC not available'); },
-      send: () => { throw new Error('Electron IPC not available'); },
-      on: () => { throw new Error('Electron IPC not available'); },
-      removeListener: () => { throw new Error('Electron IPC not available'); }
+      invoke: async () => {
+        throw new Error('Electron IPC not available');
+      },
+      send: () => {
+        throw new Error('Electron IPC not available');
+      },
+      on: () => {
+        throw new Error('Electron IPC not available');
+      },
+      removeListener: () => {
+        throw new Error('Electron IPC not available');
+      },
     };
 
     this.storage = new ElectronStorageAPI(this.ipc);
@@ -526,44 +534,44 @@ export class ElectronPlatformAPI implements PlatformAPI {
         local: true,
         sync: true,
         managed: true,
-        unlimited: true
+        unlimited: true,
       },
       notifications: {
         basic: true,
         rich: true,
         actions: true,
-        images: true
+        images: true,
       },
       windows: {
         create: true,
         focus: true,
         multiple: true,
-        alwaysOnTop: true
+        alwaysOnTop: true,
       },
       system: {
         clipboard: true,
         fileSystem: true,
         hardware: true,
-        nativeMenus: true
+        nativeMenus: true,
       },
       background: {
         serviceWorker: false,
         persistentPages: true,
-        alarms: true
-      }
+        alarms: true,
+      },
     };
   }
 
   isSupported(feature: string): boolean {
     const capabilities = this.getCapabilities();
     const parts = feature.split('.');
-    
+
     let current: any = capabilities;
     for (const part of parts) {
       if (current[part] === undefined) return false;
       current = current[part];
     }
-    
+
     return Boolean(current);
   }
 
@@ -578,7 +586,7 @@ export class ElectronPlatformAPI implements PlatformAPI {
       message,
       platform: this.type,
       feature,
-      originalError
+      originalError,
     };
 
     this.errorListeners.forEach(callback => callback(error));
@@ -587,6 +595,5 @@ export class ElectronPlatformAPI implements PlatformAPI {
 
 // Check if Electron platform is available
 export const isElectronPlatformAvailable = (): boolean => {
-  return typeof window !== 'undefined' && 
-         !!(window as any).electronAPI;
+  return typeof window !== 'undefined' && !!(window as any).electronAPI;
 };

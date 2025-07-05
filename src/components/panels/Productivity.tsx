@@ -55,7 +55,7 @@ export const Productivity: React.FC<ProductivityProps> = ({
   size,
   onMove,
   onResize,
-  className = ''
+  className = '',
 }) => {
   // Timer state
   const [timerStatus, setTimerStatus] = useState<TimerStatus>('idle');
@@ -98,7 +98,7 @@ export const Productivity: React.FC<ProductivityProps> = ({
       break: 5,
       longBreak: 15,
       sessions: 4,
-      description: 'Traditional 25/5 technique'
+      description: 'Traditional 25/5 technique',
     },
     {
       id: 'extended',
@@ -107,7 +107,7 @@ export const Productivity: React.FC<ProductivityProps> = ({
       break: 15,
       longBreak: 30,
       sessions: 3,
-      description: 'Longer work sessions for deep work'
+      description: 'Longer work sessions for deep work',
     },
     {
       id: 'sprint',
@@ -116,7 +116,7 @@ export const Productivity: React.FC<ProductivityProps> = ({
       break: 3,
       longBreak: 10,
       sessions: 6,
-      description: 'Quick bursts for urgent tasks'
+      description: 'Quick bursts for urgent tasks',
     },
     {
       id: 'flow',
@@ -125,8 +125,8 @@ export const Productivity: React.FC<ProductivityProps> = ({
       break: 20,
       longBreak: 45,
       sessions: 2,
-      description: 'Long sessions for creative work'
-    }
+      description: 'Long sessions for creative work',
+    },
   ];
 
   // Load data on mount
@@ -219,7 +219,7 @@ export const Productivity: React.FC<ProductivityProps> = ({
     try {
       localStorage.setItem('lucaverse_pomodoro_sessions', JSON.stringify(sessions));
       localStorage.setItem('lucaverse_productivity_notes', JSON.stringify(savedNotes));
-      
+
       const settings = {
         workDuration,
         breakDuration,
@@ -227,13 +227,23 @@ export const Productivity: React.FC<ProductivityProps> = ({
         sessionsUntilLongBreak,
         autoStartBreaks,
         soundEnabled,
-        selectedTemplate
+        selectedTemplate,
       };
       localStorage.setItem('lucaverse_productivity_settings', JSON.stringify(settings));
     } catch (error) {
       console.error('Failed to save productivity data:', error);
     }
-  }, [sessions, savedNotes, workDuration, breakDuration, longBreakDuration, sessionsUntilLongBreak, autoStartBreaks, soundEnabled, selectedTemplate]);
+  }, [
+    sessions,
+    savedNotes,
+    workDuration,
+    breakDuration,
+    longBreakDuration,
+    sessionsUntilLongBreak,
+    autoStartBreaks,
+    soundEnabled,
+    selectedTemplate,
+  ]);
 
   // Initialize audio for notifications
   const initializeAudio = useCallback(async () => {
@@ -241,21 +251,21 @@ export const Productivity: React.FC<ProductivityProps> = ({
     try {
       const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
       audioRef.current = new Audio();
-      
+
       // Create a simple notification sound using Web Audio API
       const createNotificationSound = (frequency: number, duration: number) => {
         const oscillator = audioContext.createOscillator();
         const gainNode = audioContext.createGain();
-        
+
         oscillator.connect(gainNode);
         gainNode.connect(audioContext.destination);
-        
+
         oscillator.frequency.value = frequency;
         oscillator.type = 'sine';
-        
+
         gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
         gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
-        
+
         oscillator.start(audioContext.currentTime);
         oscillator.stop(audioContext.currentTime + duration);
       };
@@ -275,7 +285,7 @@ export const Productivity: React.FC<ProductivityProps> = ({
   // Handle timer completion
   const handleTimerComplete = useCallback(() => {
     setTimerStatus('idle');
-    
+
     // Play notification sound
     if (audioRef.current && soundEnabled) {
       audioRef.current.play();
@@ -295,11 +305,11 @@ export const Productivity: React.FC<ProductivityProps> = ({
     if (currentMode === 'work') {
       const newSessionCount = sessionCount + 1;
       setSessionCount(newSessionCount);
-      
+
       const nextMode = newSessionCount % sessionsUntilLongBreak === 0 ? 'longBreak' : 'break';
       setCurrentMode(nextMode);
       setTimeLeft((nextMode === 'longBreak' ? longBreakDuration : breakDuration) * 60);
-      
+
       if (autoStartBreaks) {
         setTimeout(() => setTimerStatus('running'), 1000);
       }
@@ -313,33 +323,49 @@ export const Productivity: React.FC<ProductivityProps> = ({
       const modeText = currentMode === 'work' ? 'Work session' : 'Break time';
       new Notification(`Lucaverse Productivity`, {
         body: `${modeText} completed! ${currentMode === 'work' ? 'Time for a break.' : 'Ready to focus?'}`,
-        icon: '/icon.png'
+        icon: '/icon.png',
       });
     }
-  }, [currentMode, sessionCount, sessionsUntilLongBreak, autoStartBreaks, soundEnabled, workDuration, breakDuration, longBreakDuration, currentSessionId, sessions]);
+  }, [
+    currentMode,
+    sessionCount,
+    sessionsUntilLongBreak,
+    autoStartBreaks,
+    soundEnabled,
+    workDuration,
+    breakDuration,
+    longBreakDuration,
+    currentSessionId,
+    sessions,
+  ]);
 
   // Start timer
   const startTimer = useCallback(() => {
     setTimerStatus('running');
-    
+
     // Create new session
     const sessionId = `session_${Date.now()}`;
     const newSession: PomodoroSession = {
       id: sessionId,
       type: currentMode,
-      duration: currentMode === 'work' ? workDuration : currentMode === 'longBreak' ? longBreakDuration : breakDuration,
+      duration:
+        currentMode === 'work'
+          ? workDuration
+          : currentMode === 'longBreak'
+            ? longBreakDuration
+            : breakDuration,
       completed: false,
       startTime: Date.now(),
-      date: new Date().toISOString().split('T')[0]
+      date: new Date().toISOString().split('T')[0],
     };
-    
+
     setSessions(prev => [...prev, newSession]);
     setCurrentSessionId(sessionId);
   }, [currentMode, workDuration, breakDuration, longBreakDuration]);
 
   // Pause/Resume timer
   const toggleTimer = useCallback(() => {
-    setTimerStatus(prev => prev === 'running' ? 'paused' : 'running');
+    setTimerStatus(prev => (prev === 'running' ? 'paused' : 'running'));
   }, []);
 
   // Reset timer
@@ -352,34 +378,37 @@ export const Productivity: React.FC<ProductivityProps> = ({
   }, [workDuration]);
 
   // Apply template
-  const applyTemplate = useCallback((templateId: string) => {
-    const template = focusTemplates.find(t => t.id === templateId);
-    if (template) {
-      setWorkDuration(template.work);
-      setBreakDuration(template.break);
-      setLongBreakDuration(template.longBreak);
-      setSessionsUntilLongBreak(template.sessions);
-      setSelectedTemplate(templateId);
-      
-      // Reset timer with new settings
-      setTimerStatus('idle');
-      setCurrentMode('work');
-      setTimeLeft(template.work * 60);
-      setSessionCount(0);
-    }
-  }, [focusTemplates]);
+  const applyTemplate = useCallback(
+    (templateId: string) => {
+      const template = focusTemplates.find(t => t.id === templateId);
+      if (template) {
+        setWorkDuration(template.work);
+        setBreakDuration(template.break);
+        setLongBreakDuration(template.longBreak);
+        setSessionsUntilLongBreak(template.sessions);
+        setSelectedTemplate(templateId);
+
+        // Reset timer with new settings
+        setTimerStatus('idle');
+        setCurrentMode('work');
+        setTimeLeft(template.work * 60);
+        setSessionCount(0);
+      }
+    },
+    [focusTemplates]
+  );
 
   // Save note
   const saveNote = useCallback(() => {
     if (!currentNote.trim()) return;
-    
+
     const newNote: ProductivityNote = {
       id: `note_${Date.now()}`,
       content: currentNote.trim(),
       timestamp: Date.now(),
-      ...(currentSessionId && { sessionId: currentSessionId })
+      ...(currentSessionId && { sessionId: currentSessionId }),
     };
-    
+
     setSavedNotes(prev => [newNote, ...prev.slice(0, 19)]); // Keep last 20 notes
   }, [currentNote, currentSessionId]);
 
@@ -396,7 +425,17 @@ export const Productivity: React.FC<ProductivityProps> = ({
   // Save data when state changes
   useEffect(() => {
     saveProductivityData();
-  }, [sessions, savedNotes, workDuration, breakDuration, longBreakDuration, sessionsUntilLongBreak, autoStartBreaks, soundEnabled, selectedTemplate]);
+  }, [
+    sessions,
+    savedNotes,
+    workDuration,
+    breakDuration,
+    longBreakDuration,
+    sessionsUntilLongBreak,
+    autoStartBreaks,
+    soundEnabled,
+    selectedTemplate,
+  ]);
 
   // Format time display
   const formatTime = useCallback((seconds: number) => {
@@ -410,7 +449,7 @@ export const Productivity: React.FC<ProductivityProps> = ({
     const modeMap = {
       work: { text: '🔥 Focus Time', color: 'text-red-400 bg-red-500 bg-opacity-20' },
       break: { text: '☕ Break Time', color: 'text-green-400 bg-green-500 bg-opacity-20' },
-      longBreak: { text: '🌟 Long Break', color: 'text-blue-400 bg-blue-500 bg-opacity-20' }
+      longBreak: { text: '🌟 Long Break', color: 'text-blue-400 bg-blue-500 bg-opacity-20' },
     };
     return modeMap[mode];
   }, []);
@@ -419,17 +458,22 @@ export const Productivity: React.FC<ProductivityProps> = ({
   const todayStats = useMemo(() => {
     const today = new Date().toISOString().split('T')[0];
     const todaySessions = sessions.filter(session => session.date === today && session.completed);
-    
+
     const workSessions = todaySessions.filter(s => s.type === 'work').length;
     const totalMinutes = todaySessions.reduce((acc, session) => acc + session.duration, 0);
     const breakSessions = todaySessions.filter(s => s.type !== 'work').length;
-    
+
     return { workSessions, totalMinutes, breakSessions };
   }, [sessions]);
 
   // Get progress percentage
   const progressPercentage = useMemo(() => {
-    const totalDuration = currentMode === 'work' ? workDuration : currentMode === 'longBreak' ? longBreakDuration : breakDuration;
+    const totalDuration =
+      currentMode === 'work'
+        ? workDuration
+        : currentMode === 'longBreak'
+          ? longBreakDuration
+          : breakDuration;
     return ((totalDuration * 60 - timeLeft) / (totalDuration * 60)) * 100;
   }, [currentMode, timeLeft, workDuration, breakDuration, longBreakDuration]);
 
@@ -456,7 +500,7 @@ export const Productivity: React.FC<ProductivityProps> = ({
       className={className}
       constraints={{
         minSize: { width: 400, height: 500 },
-        maxSize: { width: 800, height: 900 }
+        maxSize: { width: 800, height: 900 },
       }}
     >
       <div className="h-full flex flex-col">
@@ -466,7 +510,7 @@ export const Productivity: React.FC<ProductivityProps> = ({
           <div className="mb-4">
             <select
               value={selectedTemplate}
-              onChange={(e) => applyTemplate(e.target.value)}
+              onChange={e => applyTemplate(e.target.value)}
               className="w-full px-3 py-2 bg-white bg-opacity-10 border border-white border-opacity-20 rounded text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               {focusTemplates.map(template => (
@@ -479,7 +523,9 @@ export const Productivity: React.FC<ProductivityProps> = ({
 
           {/* Current Mode */}
           <div className="text-center mb-4">
-            <div className={`inline-block px-4 py-2 rounded-full text-sm font-medium ${modeInfo.color}`}>
+            <div
+              className={`inline-block px-4 py-2 rounded-full text-sm font-medium ${modeInfo.color}`}
+            >
               {modeInfo.text}
             </div>
             <div className="text-white text-opacity-60 text-xs mt-1">
@@ -492,7 +538,7 @@ export const Productivity: React.FC<ProductivityProps> = ({
             <div className="text-6xl font-mono font-bold text-white mb-2">
               {formatTime(timeLeft)}
             </div>
-            
+
             {/* Progress Ring */}
             <div className="relative w-32 h-32 mx-auto mb-4">
               <svg className="w-32 h-32 transform -rotate-90">
@@ -509,7 +555,13 @@ export const Productivity: React.FC<ProductivityProps> = ({
                   cy="64"
                   r="56"
                   fill="none"
-                  stroke={currentMode === 'work' ? '#ef4444' : currentMode === 'longBreak' ? '#3b82f6' : '#10b981'}
+                  stroke={
+                    currentMode === 'work'
+                      ? '#ef4444'
+                      : currentMode === 'longBreak'
+                        ? '#3b82f6'
+                        : '#10b981'
+                  }
                   strokeWidth="8"
                   strokeLinecap="round"
                   strokeDasharray={`${2 * Math.PI * 56}`}
@@ -576,7 +628,9 @@ export const Productivity: React.FC<ProductivityProps> = ({
                   <div className="text-xs text-white text-opacity-60">Minutes</div>
                 </div>
                 <div>
-                  <div className="text-xl font-bold text-yellow-400">{todayStats.breakSessions}</div>
+                  <div className="text-xl font-bold text-yellow-400">
+                    {todayStats.breakSessions}
+                  </div>
                   <div className="text-xs text-white text-opacity-60">Breaks</div>
                 </div>
               </div>
@@ -594,7 +648,7 @@ export const Productivity: React.FC<ProductivityProps> = ({
                   <input
                     type="checkbox"
                     checked={autoStartBreaks}
-                    onChange={(e) => setAutoStartBreaks(e.target.checked)}
+                    onChange={e => setAutoStartBreaks(e.target.checked)}
                     className="rounded"
                   />
                 </label>
@@ -603,7 +657,7 @@ export const Productivity: React.FC<ProductivityProps> = ({
                   <input
                     type="checkbox"
                     checked={soundEnabled}
-                    onChange={(e) => setSoundEnabled(e.target.checked)}
+                    onChange={e => setSoundEnabled(e.target.checked)}
                     className="rounded"
                   />
                 </label>
@@ -634,7 +688,7 @@ export const Productivity: React.FC<ProductivityProps> = ({
                     <textarea
                       ref={notesTextareaRef}
                       value={currentNote}
-                      onChange={(e) => setCurrentNote(e.target.value)}
+                      onChange={e => setCurrentNote(e.target.value)}
                       placeholder="Jot down thoughts, ideas, or session notes..."
                       className="w-full px-3 py-2 bg-white bg-opacity-5 border border-white border-opacity-10 rounded text-white placeholder-white placeholder-opacity-60 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
                       rows={3}
@@ -657,7 +711,9 @@ export const Productivity: React.FC<ProductivityProps> = ({
                   {/* Saved Notes */}
                   {savedNotes.length > 0 && (
                     <div>
-                      <div className="text-white text-opacity-80 text-sm font-medium mb-2">Recent Notes</div>
+                      <div className="text-white text-opacity-80 text-sm font-medium mb-2">
+                        Recent Notes
+                      </div>
                       <div className="space-y-2 max-h-40 overflow-auto">
                         {savedNotes.slice(0, 5).map(note => (
                           <div

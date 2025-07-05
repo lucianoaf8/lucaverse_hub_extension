@@ -9,7 +9,7 @@ import type { GridSettings } from '@/types/layout';
 // Grid configuration interface
 export interface GridConfig extends GridSettings {
   majorGridMultiplier?: number; // Major grid lines every N grid lines
-  magneticRadius?: number;      // Distance within which snapping occurs
+  magneticRadius?: number; // Distance within which snapping occurs
   origin?: 'top-left' | 'center'; // Grid origin point
 }
 
@@ -24,8 +24,8 @@ export interface GridPoint {
  * Snap position to grid based on grid size and magnetic threshold
  */
 export const snapToGrid = (
-  position: Position, 
-  gridSize: number, 
+  position: Position,
+  gridSize: number,
   magneticThreshold = 10
 ): Position => {
   if (gridSize <= 0) return position;
@@ -39,7 +39,7 @@ export const snapToGrid = (
 
   return {
     x: distanceX <= magneticThreshold ? snappedX : position.x,
-    y: distanceY <= magneticThreshold ? snappedY : position.y
+    y: distanceY <= magneticThreshold ? snappedY : position.y,
   };
 };
 
@@ -72,10 +72,7 @@ export const findNearestGridPoint = (
 /**
  * Calculate all grid points within a container
  */
-export const calculateGridPoints = (
-  containerSize: Size,
-  gridConfig: GridConfig
-): GridPoint[] => {
+export const calculateGridPoints = (containerSize: Size, gridConfig: GridConfig): GridPoint[] => {
   const points: GridPoint[] = [];
   const { size: gridSize, majorGridMultiplier = 5 } = gridConfig;
 
@@ -88,11 +85,11 @@ export const calculateGridPoints = (
     for (let y = 0; y <= maxY; y += gridSize) {
       const isMajorX = x % (gridSize * majorGridMultiplier) === 0;
       const isMajorY = y % (gridSize * majorGridMultiplier) === 0;
-      
+
       points.push({
         x,
         y,
-        isMajor: isMajorX && isMajorY
+        isMajor: isMajorX && isMajorY,
       });
     }
   }
@@ -111,10 +108,10 @@ export const calculateGridLines = (
   minor: { horizontal: number[]; vertical: number[] };
 } => {
   const { size: gridSize, majorGridMultiplier = 5 } = gridConfig;
-  
+
   const result = {
     major: { horizontal: [], vertical: [] },
-    minor: { horizontal: [], vertical: [] }
+    minor: { horizontal: [], vertical: [] },
   };
 
   if (gridSize <= 0) return result;
@@ -160,15 +157,14 @@ export const magneticSnapToGrid = (
 
   const nearestGridPoint = findNearestGridPoint(position, gridSize);
   const distance = Math.sqrt(
-    Math.pow(position.x - nearestGridPoint.x, 2) + 
-    Math.pow(position.y - nearestGridPoint.y, 2)
+    Math.pow(position.x - nearestGridPoint.x, 2) + Math.pow(position.y - nearestGridPoint.y, 2)
   );
 
   const snapped = distance <= magneticRadius;
 
   return {
     position: snapped ? nearestGridPoint : position,
-    snapped
+    snapped,
   };
 };
 
@@ -181,7 +177,7 @@ export const alignToGrid = (
 ): Array<{ id: string; position: Position }> => {
   return panels.map(panel => ({
     id: panel.id,
-    position: snapToGrid(panel.position, gridSize, 0) // Force snap with 0 threshold
+    position: snapToGrid(panel.position, gridSize, 0), // Force snap with 0 threshold
   }));
 };
 
@@ -194,10 +190,10 @@ export const calculateOptimalGridSize = (
   targetGridDensity = 20 // Desired number of grid cells across width
 ): number => {
   const baseGridSize = containerSize.width / targetGridDensity;
-  
+
   // Round to nearest multiple of 5 for cleaner grid
   const roundedGridSize = Math.round(baseGridSize / 5) * 5;
-  
+
   // Ensure minimum grid size for usability
   return Math.max(roundedGridSize, 10);
 };
@@ -205,18 +201,16 @@ export const calculateOptimalGridSize = (
 /**
  * Check if position is on grid
  */
-export const isOnGrid = (
-  position: Position,
-  gridSize: number,
-  tolerance = 1
-): boolean => {
+export const isOnGrid = (position: Position, gridSize: number, tolerance = 1): boolean => {
   if (gridSize <= 0) return true;
 
   const remainderX = position.x % gridSize;
   const remainderY = position.y % gridSize;
 
-  return (remainderX <= tolerance || remainderX >= gridSize - tolerance) &&
-         (remainderY <= tolerance || remainderY >= gridSize - tolerance);
+  return (
+    (remainderX <= tolerance || remainderX >= gridSize - tolerance) &&
+    (remainderY <= tolerance || remainderY >= gridSize - tolerance)
+  );
 };
 
 /**
@@ -228,21 +222,17 @@ export const getGridCell = (
 ): { cellX: number; cellY: number } => {
   return {
     cellX: Math.floor(position.x / gridSize),
-    cellY: Math.floor(position.y / gridSize)
+    cellY: Math.floor(position.y / gridSize),
   };
 };
 
 /**
  * Get position from grid cell coordinates
  */
-export const getPositionFromCell = (
-  cellX: number,
-  cellY: number,
-  gridSize: number
-): Position => {
+export const getPositionFromCell = (cellX: number, cellY: number, gridSize: number): Position => {
   return {
     x: cellX * gridSize,
-    y: cellY * gridSize
+    y: cellY * gridSize,
   };
 };
 
@@ -261,34 +251,34 @@ export const snapRectangleToGrid = (
   snapped: boolean;
 } => {
   const snappedPosition = snapToGrid(position, gridSize, magneticThreshold);
-  
+
   let snappedSize = size;
   let sizeSnapped = false;
 
   if (snapSize) {
     const nearestWidthGrid = Math.round(size.width / gridSize) * gridSize;
     const nearestHeightGrid = Math.round(size.height / gridSize) * gridSize;
-    
+
     const widthDistance = Math.abs(size.width - nearestWidthGrid);
     const heightDistance = Math.abs(size.height - nearestHeightGrid);
-    
+
     if (widthDistance <= magneticThreshold || heightDistance <= magneticThreshold) {
       snappedSize = {
         width: widthDistance <= magneticThreshold ? nearestWidthGrid : size.width,
-        height: heightDistance <= magneticThreshold ? nearestHeightGrid : size.height
+        height: heightDistance <= magneticThreshold ? nearestHeightGrid : size.height,
       };
       sizeSnapped = true;
     }
   }
 
-  const positionSnapped = 
+  const positionSnapped =
     Math.abs(position.x - snappedPosition.x) <= magneticThreshold ||
     Math.abs(position.y - snappedPosition.y) <= magneticThreshold;
 
   return {
     position: snappedPosition,
     size: snappedSize,
-    snapped: positionSnapped || sizeSnapped
+    snapped: positionSnapped || sizeSnapped,
   };
 };
 
@@ -306,7 +296,7 @@ export const createGridSubdivision = (
   return {
     majorGrid: baseGridSize,
     minorGrid: baseGridSize / subdivisions,
-    subdivisions
+    subdivisions,
   };
 };
 
@@ -319,10 +309,10 @@ export const generateGridCoordinates = (
   origin: 'top-left' | 'center' | 'bottom-right' = 'top-left'
 ): Position[] => {
   const coordinates: Position[] = [];
-  
+
   let startX = 0;
   let startY = 0;
-  
+
   switch (origin) {
     case 'center':
       startX = -Math.floor(containerSize.width / (2 * gridSize)) * gridSize;
@@ -338,7 +328,7 @@ export const generateGridCoordinates = (
       startY = 0;
       break;
   }
-  
+
   for (let x = startX; x <= containerSize.width; x += gridSize) {
     for (let y = startY; y <= containerSize.height; y += gridSize) {
       if (x >= 0 && y >= 0) {
@@ -346,6 +336,6 @@ export const generateGridCoordinates = (
       }
     }
   }
-  
+
   return coordinates;
 };

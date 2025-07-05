@@ -26,7 +26,7 @@ const ComponentTest: React.FC = () => {
     updateGridSettings,
     dragState,
     resizeState,
-    selectedPanelIds
+    selectedPanelIds,
   } = useLayoutStore();
 
   // Initialize test panels
@@ -43,13 +43,13 @@ const ComponentTest: React.FC = () => {
       visible: true,
       constraints: {
         minSize: { width: 200, height: 150 },
-        maxSize: { width: 800, height: 600 }
+        maxSize: { width: 800, height: 600 },
       },
       metadata: {
         title: 'Test Panel 1',
         description: 'Primary test panel for drag and resize',
-        icon: '🔧'
-      }
+        icon: '🔧',
+      },
     });
 
     addPanel({
@@ -59,13 +59,13 @@ const ComponentTest: React.FC = () => {
       zIndex: 101,
       visible: true,
       constraints: {
-        minSize: { width: 200, height: 150 }
+        minSize: { width: 200, height: 150 },
       },
       metadata: {
         title: 'Test Panel 2',
         description: 'Secondary panel for interaction testing',
-        icon: '🤖'
-      }
+        icon: '🤖',
+      },
     });
 
     addPanel({
@@ -75,13 +75,13 @@ const ComponentTest: React.FC = () => {
       zIndex: 102,
       visible: true,
       constraints: {
-        minSize: { width: 250, height: 180 }
+        minSize: { width: 250, height: 180 },
       },
       metadata: {
         title: 'Test Panel 3',
         description: 'Third panel for multi-panel testing',
-        icon: '📋'
-      }
+        icon: '📋',
+      },
     });
 
     // Configure grid for testing
@@ -91,7 +91,7 @@ const ComponentTest: React.FC = () => {
       size: 20,
       opacity: 0.3,
       color: '#e5e7eb',
-      snapThreshold: 10
+      snapThreshold: 10,
     });
   }, []);
 
@@ -109,13 +109,13 @@ const ComponentTest: React.FC = () => {
       zIndex: 103 + panels.length,
       visible: true,
       constraints: {
-        minSize: { width: 200, height: 150 }
+        minSize: { width: 200, height: 150 },
       },
       metadata: {
         title: `Random Panel ${panels.length + 1}`,
         description: 'Randomly generated test panel',
-        icon: '🎲'
-      }
+        icon: '🎲',
+      },
     });
   };
 
@@ -141,7 +141,7 @@ const ComponentTest: React.FC = () => {
       resizeWorking: resizeState.isResizing || panels.some(p => !!p.size),
       gridVisible: gridSettings.visible && gridSettings.enabled,
       selectionWorking: selectedPanelIds.length > 0,
-      noErrors: true // Will be updated based on error catching
+      noErrors: true, // Will be updated based on error catching
     };
 
     return status;
@@ -152,7 +152,7 @@ const ComponentTest: React.FC = () => {
   return (
     <div className="w-full h-screen relative bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 overflow-hidden">
       {/* Grid Overlay */}
-      <GridOverlay 
+      <GridOverlay
         visible={showGrid}
         gridSize={gridSettings.size}
         opacity={gridSettings.opacity}
@@ -164,26 +164,36 @@ const ComponentTest: React.FC = () => {
       {/* Test Controls */}
       <div className="absolute top-4 left-4 z-50 bg-black bg-opacity-50 p-4 rounded-lg text-white space-y-2">
         <h3 className="text-lg font-bold text-blue-300">Component Test Suite</h3>
-        
+
         {/* Status Indicators */}
         <div className="space-y-1 text-sm">
-          <div className={`flex items-center ${status.panelsRendered ? 'text-green-400' : 'text-red-400'}`}>
+          <div
+            className={`flex items-center ${status.panelsRendered ? 'text-green-400' : 'text-red-400'}`}
+          >
             <span className="mr-2">{status.panelsRendered ? '✅' : '❌'}</span>
             Panels Rendered: {panels.length}
           </div>
-          <div className={`flex items-center ${status.gridVisible ? 'text-green-400' : 'text-yellow-400'}`}>
+          <div
+            className={`flex items-center ${status.gridVisible ? 'text-green-400' : 'text-yellow-400'}`}
+          >
             <span className="mr-2">{status.gridVisible ? '✅' : '⚠️'}</span>
             Grid Overlay: {status.gridVisible ? 'Visible' : 'Hidden'}
           </div>
-          <div className={`flex items-center ${status.selectionWorking ? 'text-green-400' : 'text-gray-400'}`}>
+          <div
+            className={`flex items-center ${status.selectionWorking ? 'text-green-400' : 'text-gray-400'}`}
+          >
             <span className="mr-2">{status.selectionWorking ? '✅' : '⭕'}</span>
             Selected: {selectedPanelIds.length}
           </div>
-          <div className={`flex items-center ${dragState.isDragging ? 'text-blue-400' : 'text-gray-400'}`}>
+          <div
+            className={`flex items-center ${dragState.isDragging ? 'text-blue-400' : 'text-gray-400'}`}
+          >
             <span className="mr-2">{dragState.isDragging ? '🔄' : '⏸️'}</span>
             Dragging: {dragState.isDragging ? 'Active' : 'Idle'}
           </div>
-          <div className={`flex items-center ${resizeState.isResizing ? 'text-purple-400' : 'text-gray-400'}`}>
+          <div
+            className={`flex items-center ${resizeState.isResizing ? 'text-purple-400' : 'text-gray-400'}`}
+          >
             <span className="mr-2">{resizeState.isResizing ? '↔️' : '⏸️'}</span>
             Resizing: {resizeState.isResizing ? 'Active' : 'Idle'}
           </div>
@@ -197,21 +207,21 @@ const ComponentTest: React.FC = () => {
           >
             Add Random Panel
           </button>
-          
+
           <button
             onClick={handleClearPanels}
             className="w-full px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm transition-colors"
           >
             Clear All Panels
           </button>
-          
+
           <button
             onClick={handleToggleGrid}
             className="w-full px-3 py-1 bg-green-600 hover:bg-green-700 rounded text-sm transition-colors"
           >
             {showGrid ? 'Hide' : 'Show'} Grid
           </button>
-          
+
           <div className="flex items-center space-x-2">
             <label className="text-xs">Grid Size:</label>
             <input
@@ -219,7 +229,7 @@ const ComponentTest: React.FC = () => {
               min="10"
               max="50"
               value={gridSettings.size}
-              onChange={(e) => handleGridSizeChange(Number(e.target.value))}
+              onChange={e => handleGridSizeChange(Number(e.target.value))}
               className="flex-1"
             />
             <span className="text-xs w-8">{gridSettings.size}</span>
@@ -238,7 +248,7 @@ const ComponentTest: React.FC = () => {
       </div>
 
       {/* Test Panels from Store */}
-      {panels.map((panel) => (
+      {panels.map(panel => (
         <Panel
           key={panel.id}
           id={panel.id}
@@ -255,7 +265,7 @@ const ComponentTest: React.FC = () => {
           glassmorphism={true}
           headerActions={
             <button
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 removePanel(panel.id);
               }}
@@ -270,11 +280,15 @@ const ComponentTest: React.FC = () => {
             <div className="text-white text-opacity-80 text-sm mb-3">
               {panel.metadata?.description || 'Test panel content'}
             </div>
-            
+
             <div className="space-y-2 text-xs text-white text-opacity-60">
               <div>ID: {panel.id}</div>
-              <div>Position: {panel.position.x}, {panel.position.y}</div>
-              <div>Size: {panel.size.width} × {panel.size.height}</div>
+              <div>
+                Position: {panel.position.x}, {panel.position.y}
+              </div>
+              <div>
+                Size: {panel.size.width} × {panel.size.height}
+              </div>
               <div>Z-Index: {panel.zIndex}</div>
               <div>Component: {panel.component}</div>
             </div>
@@ -286,9 +300,7 @@ const ComponentTest: React.FC = () => {
                 <div className="glass-panel p-2 text-xs">
                   Scrollable content area with glassmorphism styling
                 </div>
-                <div className="glass-panel p-2 text-xs">
-                  Interactive elements work correctly
-                </div>
+                <div className="glass-panel p-2 text-xs">Interactive elements work correctly</div>
               </div>
             </div>
           </div>
@@ -301,7 +313,9 @@ const ComponentTest: React.FC = () => {
         <div>Panels: {panels.length}</div>
         <div>Selected: {selectedPanelIds.length}</div>
         <div>Grid Size: {gridSettings.size}px</div>
-        <div>Viewport: {window.innerWidth} × {window.innerHeight}</div>
+        <div>
+          Viewport: {window.innerWidth} × {window.innerHeight}
+        </div>
       </div>
     </div>
   );

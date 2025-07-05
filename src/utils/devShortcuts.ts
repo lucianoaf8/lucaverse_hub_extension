@@ -38,7 +38,7 @@ export class DevShortcutsManager {
     this.stateInspector = new StateInspector();
     this.performanceMonitor = new PerformanceMonitor();
     this.setupDefaultShortcuts();
-    
+
     if (process.env.NODE_ENV === 'development') {
       this.enable();
     }
@@ -49,7 +49,7 @@ export class DevShortcutsManager {
    */
   enable(): void {
     if (this.isEnabled) return;
-    
+
     this.isEnabled = true;
     document.addEventListener('keydown', this.handleKeyDown);
     this.setupConsoleCommands();
@@ -62,7 +62,7 @@ export class DevShortcutsManager {
    */
   disable(): void {
     if (!this.isEnabled) return;
-    
+
     this.isEnabled = false;
     document.removeEventListener('keydown', this.handleKeyDown);
     console.log('🛠️ Development shortcuts disabled');
@@ -78,12 +78,18 @@ export class DevShortcutsManager {
   /**
    * Remove shortcut by key combination
    */
-  removeShortcut(key: string, modifiers: { ctrl?: boolean; shift?: boolean; alt?: boolean } = {}): void {
-    this.shortcuts = this.shortcuts.filter(shortcut => 
-      !(shortcut.key === key && 
-        !!shortcut.ctrlKey === !!modifiers.ctrl &&
-        !!shortcut.shiftKey === !!modifiers.shift &&
-        !!shortcut.altKey === !!modifiers.alt)
+  removeShortcut(
+    key: string,
+    modifiers: { ctrl?: boolean; shift?: boolean; alt?: boolean } = {}
+  ): void {
+    this.shortcuts = this.shortcuts.filter(
+      shortcut =>
+        !(
+          shortcut.key === key &&
+          !!shortcut.ctrlKey === !!modifiers.ctrl &&
+          !!shortcut.shiftKey === !!modifiers.shift &&
+          !!shortcut.altKey === !!modifiers.alt
+        )
     );
   }
 
@@ -101,20 +107,20 @@ export class DevShortcutsManager {
       for (let i = 0; i < config.panels; i++) {
         const components = ['SmartHub', 'AIChat', 'TaskManager', 'Productivity'];
         const component = components[Math.floor(Math.random() * components.length)];
-        
+
         layoutStore.addPanel({
           component: component as any,
           position: {
             x: Math.random() * 800,
-            y: Math.random() * 600
+            y: Math.random() * 600,
           },
           size: {
             width: 250 + Math.random() * 200,
-            height: 200 + Math.random() * 150
+            height: 200 + Math.random() * 150,
           },
           zIndex: 1,
           visible: true,
-          title: `Mock ${component} ${i + 1}`
+          title: `Mock ${component} ${i + 1}`,
         });
       }
       console.log(`✅ Generated ${config.panels} mock panels`);
@@ -122,13 +128,18 @@ export class DevShortcutsManager {
 
     // Generate mock notifications
     if (config.notifications && config.notifications > 0) {
-      const types: Array<'info' | 'success' | 'warning' | 'error'> = ['info', 'success', 'warning', 'error'];
+      const types: Array<'info' | 'success' | 'warning' | 'error'> = [
+        'info',
+        'success',
+        'warning',
+        'error',
+      ];
       for (let i = 0; i < config.notifications; i++) {
         appStore.addNotification({
           type: types[Math.floor(Math.random() * types.length)],
           title: `Mock Notification ${i + 1}`,
           message: `This is a mock notification for testing purposes #${i + 1}`,
-          duration: 5000
+          duration: 5000,
         });
       }
       console.log(`✅ Generated ${config.notifications} mock notifications`);
@@ -161,9 +172,9 @@ export class DevShortcutsManager {
    */
   switchTheme(theme?: 'light' | 'dark'): void {
     const appStore = useAppStore.getState();
-    
+
     if (theme) {
-      appStore.setTheme(theme === 'dark' ? 'Dark' as any : 'Light' as any);
+      appStore.setTheme(theme === 'dark' ? ('Dark' as any) : ('Light' as any));
       console.log(`🎨 Theme switched to ${theme}`);
     } else {
       appStore.toggleTheme();
@@ -210,7 +221,7 @@ export class DevShortcutsManager {
     switch (type) {
       case 'render':
         throw new Error('Simulated render error for testing');
-      
+
       case 'state':
         try {
           JSON.parse('invalid json');
@@ -223,14 +234,13 @@ export class DevShortcutsManager {
           );
         }
         break;
-      
+
       case 'network':
-        fetch('/nonexistent-endpoint')
-          .catch(error => {
-            globalErrorTracker.trackError(error, { component: 'DevTools' });
-          });
+        fetch('/nonexistent-endpoint').catch(error => {
+          globalErrorTracker.trackError(error, { component: 'DevTools' });
+        });
         break;
-      
+
       case 'critical':
         globalErrorTracker.trackCustomError(
           'Simulated critical error',
@@ -271,7 +281,7 @@ export class DevShortcutsManager {
         key: 'F12',
         description: 'Toggle debug panel',
         category: 'debug',
-        action: () => this.toggleDebugPanel()
+        action: () => this.toggleDebugPanel(),
       },
       {
         key: 'd',
@@ -282,7 +292,7 @@ export class DevShortcutsManager {
         action: () => {
           useAppStore.getState().toggleDebugMode();
           console.log('🐛 Debug mode toggled');
-        }
+        },
       },
 
       // Layout shortcuts
@@ -292,7 +302,7 @@ export class DevShortcutsManager {
         shiftKey: true,
         description: 'Reset layout',
         category: 'layout',
-        action: () => this.resetState('layout')
+        action: () => this.resetState('layout'),
       },
       {
         key: 'g',
@@ -302,11 +312,11 @@ export class DevShortcutsManager {
         category: 'layout',
         action: () => {
           const layoutStore = useLayoutStore.getState();
-          layoutStore.updateGridSettings({ 
-            visible: !layoutStore.gridSettings.visible 
+          layoutStore.updateGridSettings({
+            visible: !layoutStore.gridSettings.visible,
           });
           console.log('📐 Grid visibility toggled');
-        }
+        },
       },
 
       // State shortcuts
@@ -316,7 +326,7 @@ export class DevShortcutsManager {
         shiftKey: true,
         description: 'Inspect state',
         category: 'state',
-        action: () => this.inspectState()
+        action: () => this.inspectState(),
       },
       {
         key: 's',
@@ -324,7 +334,7 @@ export class DevShortcutsManager {
         shiftKey: true,
         description: 'Save state snapshot',
         category: 'state',
-        action: () => this.saveStateSnapshot()
+        action: () => this.saveStateSnapshot(),
       },
 
       // Testing shortcuts
@@ -334,7 +344,7 @@ export class DevShortcutsManager {
         shiftKey: true,
         description: 'Generate mock data',
         category: 'testing',
-        action: () => this.generateMockData({ panels: 3, notifications: 2 })
+        action: () => this.generateMockData({ panels: 3, notifications: 2 }),
       },
       {
         key: 'e',
@@ -342,7 +352,7 @@ export class DevShortcutsManager {
         shiftKey: true,
         description: 'Simulate error',
         category: 'testing',
-        action: () => this.simulateError()
+        action: () => this.simulateError(),
       },
 
       // Performance shortcuts
@@ -352,7 +362,7 @@ export class DevShortcutsManager {
         shiftKey: true,
         description: 'Run performance test',
         category: 'performance',
-        action: () => this.runPerformanceTest()
+        action: () => this.runPerformanceTest(),
       },
       {
         key: 't',
@@ -360,19 +370,20 @@ export class DevShortcutsManager {
         shiftKey: true,
         description: 'Toggle theme',
         category: 'debug',
-        action: () => this.switchTheme()
-      }
+        action: () => this.switchTheme(),
+      },
     ];
   }
 
   private handleKeyDown = (event: KeyboardEvent): void => {
     if (!this.isEnabled) return;
 
-    const matchingShortcut = this.shortcuts.find(shortcut =>
-      shortcut.key.toLowerCase() === event.key.toLowerCase() &&
-      !!shortcut.ctrlKey === event.ctrlKey &&
-      !!shortcut.shiftKey === event.shiftKey &&
-      !!shortcut.altKey === event.altKey
+    const matchingShortcut = this.shortcuts.find(
+      shortcut =>
+        shortcut.key.toLowerCase() === event.key.toLowerCase() &&
+        !!shortcut.ctrlKey === event.ctrlKey &&
+        !!shortcut.shiftKey === event.shiftKey &&
+        !!shortcut.altKey === event.altKey
     );
 
     if (matchingShortcut) {
@@ -407,15 +418,16 @@ export class DevShortcutsManager {
       toggleTheme: () => this.switchTheme(),
 
       // Error testing
-      simulateError: (type?: 'render' | 'state' | 'network' | 'critical') => this.simulateError(type),
-      
+      simulateError: (type?: 'render' | 'state' | 'network' | 'critical') =>
+        this.simulateError(type),
+
       // Performance testing
       perfTest: (duration?: number) => this.runPerformanceTest(duration),
       perfMetrics: () => this.performanceMonitor.getMetrics(),
 
       // Help
       help: () => this.printShortcutHelp(),
-      shortcuts: () => this.printShortcutHelp()
+      shortcuts: () => this.printShortcutHelp(),
     };
 
     // Add commands to window object
@@ -437,11 +449,11 @@ export class DevShortcutsManager {
   private saveStateSnapshot(): void {
     const layoutState = useLayoutStore.getState();
     const appState = useAppStore.getState();
-    
+
     const snapshot = {
       timestamp: new Date().toISOString(),
       layout: layoutState,
-      app: appState
+      app: appState,
     };
 
     const blob = new Blob([JSON.stringify(snapshot, null, 2)], { type: 'application/json' });
@@ -457,12 +469,12 @@ export class DevShortcutsManager {
 
   private printShortcutHelp(): void {
     console.group('⌨️ Development Shortcuts');
-    
+
     const categories = [...new Set(this.shortcuts.map(s => s.category))];
-    
+
     categories.forEach(category => {
       console.group(`${category.charAt(0).toUpperCase() + category.slice(1)} Shortcuts:`);
-      
+
       this.shortcuts
         .filter(s => s.category === category)
         .forEach(shortcut => {
@@ -470,15 +482,17 @@ export class DevShortcutsManager {
             shortcut.ctrlKey ? 'Ctrl' : '',
             shortcut.shiftKey ? 'Shift' : '',
             shortcut.altKey ? 'Alt' : '',
-            shortcut.key.toUpperCase()
-          ].filter(Boolean).join(' + ');
-          
+            shortcut.key.toUpperCase(),
+          ]
+            .filter(Boolean)
+            .join(' + ');
+
           console.log(`${keys}: ${shortcut.description}`);
         });
-      
+
       console.groupEnd();
     });
-    
+
     console.groupEnd();
   }
 }

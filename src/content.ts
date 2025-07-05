@@ -14,7 +14,7 @@ async function initializeContentScript(): Promise<void> {
 
   try {
     console.log('Lucaverse Hub content script initializing...');
-    
+
     // Get page context
     pageContext = {
       url: window.location.href,
@@ -37,7 +37,6 @@ async function initializeContentScript(): Promise<void> {
 
     isInitialized = true;
     console.log('Content script initialized successfully');
-
   } catch (error) {
     console.error('Content script initialization failed:', error);
   }
@@ -97,20 +96,22 @@ function handleMessage(message: any, sender: any, sendResponse: Function): boole
 function setupPageMonitoring(): void {
   // Monitor URL changes (for SPAs)
   let currentUrl = window.location.href;
-  
+
   const observer = new MutationObserver(() => {
     if (window.location.href !== currentUrl) {
       currentUrl = window.location.href;
       pageContext.url = currentUrl;
       pageContext.title = document.title;
-      
+
       // Notify background of page change
-      chrome.runtime.sendMessage({
-        action: 'pageChanged',
-        data: pageContext,
-      }).catch(() => {
-        // Ignore errors if background is not available
-      });
+      chrome.runtime
+        .sendMessage({
+          action: 'pageChanged',
+          data: pageContext,
+        })
+        .catch(() => {
+          // Ignore errors if background is not available
+        });
     }
   });
 
@@ -144,7 +145,9 @@ function setupSmartBookmarkDetection(): void {
       hasVideo: !!document.querySelector('video, iframe[src*="youtube"], iframe[src*="vimeo"]'),
       hasCode: !!document.querySelector('pre, code, .code, .highlight'),
       hasForm: !!document.querySelector('form'),
-      isDocumentation: /docs|documentation|guide|tutorial|manual/.test(window.location.href.toLowerCase()),
+      isDocumentation: /docs|documentation|guide|tutorial|manual/.test(
+        window.location.href.toLowerCase()
+      ),
       isGitHub: window.location.hostname.includes('github.com'),
       isStackOverflow: window.location.hostname.includes('stackoverflow.com'),
     };
@@ -158,14 +161,14 @@ function setupSmartBookmarkDetection(): void {
   // Auto-categorize bookmarks
   const suggestCategory = () => {
     const { classification } = pageContext;
-    
+
     if (classification.isGitHub) return 'development';
     if (classification.isStackOverflow) return 'development';
     if (classification.isDocumentation) return 'documentation';
     if (classification.hasVideo) return 'media';
     if (classification.hasArticle) return 'articles';
     if (classification.hasCode) return 'development';
-    
+
     return 'general';
   };
 
@@ -188,10 +191,10 @@ function setupContextMenus(): void {
   });
 
   // Track links for context menu
-  document.addEventListener('contextmenu', (event) => {
+  document.addEventListener('contextmenu', event => {
     const target = event.target as Element;
     const link = target.closest('a');
-    
+
     if (link) {
       pageContext.lastContextLink = {
         url: link.href,
@@ -215,11 +218,16 @@ function getSelectedText(): string {
  */
 function getVisibleLinks(): Array<{ url: string; text: string; title: string }> {
   const links = Array.from(document.querySelectorAll('a[href]'));
-  
+
   return links
     .filter(link => {
       const rect = link.getBoundingClientRect();
-      return rect.top >= 0 && rect.left >= 0 && rect.bottom <= window.innerHeight && rect.right <= window.innerWidth;
+      return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= window.innerHeight &&
+        rect.right <= window.innerWidth
+      );
     })
     .slice(0, 20) // Limit to first 20 visible links
     .map(link => ({
@@ -279,7 +287,7 @@ function extractMainContent(): string {
   // Fallback: get body text but remove nav, footer, aside
   const body = document.body.cloneNode(true) as HTMLElement;
   const unwantedSelectors = ['nav', 'footer', 'aside', '.sidebar', '.navigation', 'header'];
-  
+
   unwantedSelectors.forEach(selector => {
     const elements = body.querySelectorAll(selector);
     elements.forEach(el => el.remove());
@@ -293,7 +301,7 @@ function extractMainContent(): string {
  */
 function extractImages(): Array<{ src: string; alt: string; title: string }> {
   const images = Array.from(document.querySelectorAll('img[src]'));
-  
+
   return images
     .filter(img => {
       const rect = img.getBoundingClientRect();
@@ -312,13 +320,13 @@ function extractImages(): Array<{ src: string; alt: string; title: string }> {
  */
 function extractLinks(): Array<{ url: string; text: string; type: string }> {
   const links = Array.from(document.querySelectorAll('a[href]'));
-  
+
   return links
     .slice(0, 50) // Limit to first 50 links
     .map(link => {
       const href = (link as HTMLAnchorElement).href;
       const text = link.textContent?.trim() || '';
-      
+
       let type = 'general';
       if (href.includes('github.com')) type = 'github';
       else if (href.includes('docs.') || href.includes('/docs/')) type = 'documentation';
@@ -326,7 +334,7 @@ function extractLinks(): Array<{ url: string; text: string; type: string }> {
       else if (href.includes('.pdf')) type = 'pdf';
       else if (href.startsWith('mailto:')) type = 'email';
       else if (href.startsWith('tel:')) type = 'phone';
-      
+
       return { url: href, text, type };
     });
 }
@@ -344,7 +352,7 @@ function highlightElement(selector: string): void {
   const element = document.querySelector(selector);
   if (element) {
     element.classList.add('lucaverse-highlight');
-    
+
     // Add highlight styles
     if (!document.getElementById('lucaverse-highlight-styles')) {
       const style = document.createElement('style');
@@ -432,7 +440,7 @@ function injectQuickBookmarkButton(): void {
         // Show success feedback
         bookmarkBtn.innerHTML = '✅';
         bookmarkBtn.style.background = 'linear-gradient(135deg, #10B981, #059669)';
-        
+
         setTimeout(() => {
           bookmarkBtn.innerHTML = '🔖';
           bookmarkBtn.style.background = 'linear-gradient(135deg, #3B82F6, #8B5CF6)';
@@ -440,11 +448,11 @@ function injectQuickBookmarkButton(): void {
       }
     } catch (error) {
       console.error('Failed to save bookmark:', error);
-      
+
       // Show error feedback
       bookmarkBtn.innerHTML = '❌';
       bookmarkBtn.style.background = 'linear-gradient(135deg, #EF4444, #DC2626)';
-      
+
       setTimeout(() => {
         bookmarkBtn.innerHTML = '🔖';
         bookmarkBtn.style.background = 'linear-gradient(135deg, #3B82F6, #8B5CF6)';
@@ -482,7 +490,9 @@ function handleSpecialPages(): void {
 
   // Documentation pages
   if (pageContext.classification.isDocumentation) {
-    const headings = Array.from(document.querySelectorAll('h1, h2, h3')).map(h => h.textContent?.trim());
+    const headings = Array.from(document.querySelectorAll('h1, h2, h3')).map(h =>
+      h.textContent?.trim()
+    );
     pageContext.documentation = {
       headings: headings.slice(0, 10),
       hasCodeExamples: !!document.querySelector('pre code, .highlight'),

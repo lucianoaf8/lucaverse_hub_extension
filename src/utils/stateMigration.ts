@@ -109,10 +109,10 @@ interface StateBackup {
  */
 export async function migrateVanillaState(): Promise<MigrationResult> {
   console.log('🔄 Starting state migration using enhanced system...');
-  
+
   // Use the enhanced migration system
   const result = await enhancedMigrate();
-  
+
   console.log(`Migration completed: ${result.success ? 'Success' : 'Failed'}`);
   if (result.errors.length > 0) {
     console.warn('Migration errors:', result.errors);
@@ -120,7 +120,7 @@ export async function migrateVanillaState(): Promise<MigrationResult> {
   if (result.warnings.length > 0) {
     console.warn('Migration warnings:', result.warnings);
   }
-  
+
   return result;
 }
 
@@ -167,25 +167,23 @@ export async function migrateVanillaStateLegacy(): Promise<MigrationResult> {
     result.theme = settingsMigrationResult.theme;
 
     // Create migrated workspace
-    result.workspace = createMigratedWorkspace(
-      legacyState.workspace,
-      result.panels
-    );
+    result.workspace = createMigratedWorkspace(legacyState.workspace, result.panels);
 
     // Mark migration as successful if no critical errors
     result.success = result.errors.length === 0;
 
     if (result.success) {
       console.log('State migration completed successfully');
-      
+
       // Archive legacy state
       archiveLegacyState(legacyState);
     } else {
       console.error('State migration failed with errors:', result.errors);
     }
-
   } catch (error) {
-    result.errors.push(`Migration failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    result.errors.push(
+      `Migration failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
     console.error('State migration error:', error);
   }
 
@@ -202,14 +200,14 @@ function loadLegacyState(): LegacyState | null {
       'lucaverse-state',
       'quadrant-data',
       'lucaverse-quadrants',
-      'productivity-hub-state'
+      'productivity-hub-state',
     ];
 
     for (const key of legacyKeys) {
       const stored = localStorage.getItem(key);
       if (stored) {
         const parsed = JSON.parse(stored);
-        
+
         // Validate basic structure
         if (parsed && typeof parsed === 'object') {
           return normalizeLegacyState(parsed);
@@ -259,7 +257,9 @@ function migrateQuadrantsToPanels(quadrants: LegacyQuadrantData[]): {
         result.warnings.push(`Skipped quadrant ${index}: unable to convert`);
       }
     } catch (error) {
-      result.errors.push(`Failed to convert quadrant ${index}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      result.errors.push(
+        `Failed to convert quadrant ${index}: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
     }
   });
 
@@ -332,11 +332,12 @@ function migrateSettings(settings: LegacySettings): {
     maxHistorySize: 50,
   };
 
-  const theme: ThemeVariant = settings.theme === 'light' 
-    ? ThemeVariant.Light 
-    : settings.theme === 'auto' 
-    ? ThemeVariant.Auto 
-    : ThemeVariant.Dark;
+  const theme: ThemeVariant =
+    settings.theme === 'light'
+      ? ThemeVariant.Light
+      : settings.theme === 'auto'
+        ? ThemeVariant.Auto
+        : ThemeVariant.Dark;
 
   return { preferences, performance, theme };
 }
@@ -344,10 +345,7 @@ function migrateSettings(settings: LegacySettings): {
 /**
  * Create migrated workspace configuration
  */
-function createMigratedWorkspace(
-  legacyWorkspace: any,
-  panels: PanelLayout[]
-): WorkspaceConfig {
+function createMigratedWorkspace(legacyWorkspace: any, panels: PanelLayout[]): WorkspaceConfig {
   return {
     id: 'migrated-workspace',
     name: legacyWorkspace.name || 'Migrated Workspace',
@@ -378,7 +376,7 @@ function createBackup(): StateBackup | null {
   try {
     const allData: Record<string, string> = {};
     const keys = Object.keys(localStorage);
-    
+
     keys.forEach(key => {
       if (key.startsWith('lucaverse-') || key.includes('quadrant')) {
         const value = localStorage.getItem(key);
@@ -408,7 +406,7 @@ function createBackup(): StateBackup | null {
         }
       }
       keysToRemove.forEach(key => localStorage.removeItem(key));
-      
+
       // Try again with cleared space
       try {
         localStorage.setItem('lucaverse-backup', JSON.stringify(backup));
@@ -435,15 +433,15 @@ function archiveLegacyState(legacyState: LegacyState): void {
     };
 
     localStorage.setItem('lucaverse-legacy-archive', JSON.stringify(archive));
-    
+
     // Remove old keys
     const keysToRemove = [
       'lucaverse-state',
-      'quadrant-data', 
+      'quadrant-data',
       'lucaverse-quadrants',
-      'productivity-hub-state'
+      'productivity-hub-state',
     ];
-    
+
     keysToRemove.forEach(key => {
       localStorage.removeItem(key);
     });

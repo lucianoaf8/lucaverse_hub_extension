@@ -28,12 +28,7 @@ export const PanelManagementTest: React.FC = () => {
   }>({});
 
   // Template store
-  const {
-    templates,
-    createTemplate,
-    applyTemplate,
-    getFilteredTemplates,
-  } = useTemplateStore();
+  const { templates, createTemplate, applyTemplate, getFilteredTemplates } = useTemplateStore();
 
   // Context menu
   const { contextMenu, showContextMenu, hideContextMenu } = useContextMenu();
@@ -112,77 +107,83 @@ export const PanelManagementTest: React.FC = () => {
   /**
    * Panel creation handler
    */
-  const handleCreatePanel = useCallback((type: PanelComponent, position?: Position) => {
-    try {
-      const newPanel: PanelLayout = {
-        id: `panel-${type}-${Date.now()}`,
-        component: type,
-        position: position || { x: 100 + Math.random() * 400, y: 100 + Math.random() * 300 },
-        size: getDefaultPanelSize(type),
-        zIndex: Math.max(...panels.map(p => p.zIndex), 2000) + 1,
-        visible: true,
-        constraints: { minSize: getMinPanelSize(type) },
-        metadata: {
-          title: `${type} Panel`,
-          icon: getPanelIcon(type),
-          color: getPanelColor(type),
-        },
-      };
+  const handleCreatePanel = useCallback(
+    (type: PanelComponent, position?: Position) => {
+      try {
+        const newPanel: PanelLayout = {
+          id: `panel-${type}-${Date.now()}`,
+          component: type,
+          position: position || { x: 100 + Math.random() * 400, y: 100 + Math.random() * 300 },
+          size: getDefaultPanelSize(type),
+          zIndex: Math.max(...panels.map(p => p.zIndex), 2000) + 1,
+          visible: true,
+          constraints: { minSize: getMinPanelSize(type) },
+          metadata: {
+            title: `${type} Panel`,
+            icon: getPanelIcon(type),
+            color: getPanelColor(type),
+          },
+        };
 
-      setPanels(prev => [...prev, newPanel]);
-      setHasUnsavedChanges(true);
-      logTestResult('panel-creation', true, `Created ${type} panel successfully`);
-    } catch (error) {
-      logTestResult('panel-creation', false, `Failed to create panel: ${error}`);
-    }
-  }, [panels]);
+        setPanels(prev => [...prev, newPanel]);
+        setHasUnsavedChanges(true);
+        logTestResult('panel-creation', true, `Created ${type} panel successfully`);
+      } catch (error) {
+        logTestResult('panel-creation', false, `Failed to create panel: ${error}`);
+      }
+    },
+    [panels]
+  );
 
   /**
    * Workspace save handler
    */
-  const handleSaveWorkspace = useCallback(async (name?: string) => {
-    setIsLoading(true);
-    try {
-      const workspaceConfig = {
-        name: name || workspaceName,
-        panels,
-        selectedPanelIds: selectedPanels,
-        gridSettings: {
-          enabled: gridEnabled,
-          size: 50,
-          visible: gridEnabled,
-          color: '#ffffff',
-          opacity: 0.1,
-          snapThreshold: 10,
-        },
-        settings: {
-          theme: 'dark',
-          autoSave: true,
-          autoSaveInterval: 30000,
-          snapToGrid: snapEnabled,
-          showGrid: gridEnabled,
-          debugMode: true,
-        },
-      };
+  const handleSaveWorkspace = useCallback(
+    async (name?: string) => {
+      setIsLoading(true);
+      try {
+        const workspaceConfig = {
+          name: name || workspaceName,
+          panels,
+          selectedPanelIds: selectedPanels,
+          gridSettings: {
+            enabled: gridEnabled,
+            size: 50,
+            visible: gridEnabled,
+            color: '#ffffff',
+            opacity: 0.1,
+            snapThreshold: 10,
+          },
+          settings: {
+            theme: 'dark',
+            autoSave: true,
+            autoSaveInterval: 30000,
+            snapToGrid: snapEnabled,
+            showGrid: gridEnabled,
+            debugMode: true,
+          },
+        };
 
-      const workspaceId = await workspaceManager.saveWorkspace(
-        workspaceConfig.name,
-        workspaceConfig,
-        {
-          description: 'Test workspace for panel management validation',
-          tags: ['test', 'validation'],
-          createBackup: true,
-        }
-      );
+        const workspaceId = await workspaceManager.saveWorkspace(
+          workspaceConfig.name,
+          workspaceConfig,
+          {
+            description: 'Test workspace for panel management validation',
+            tags: ['test', 'validation'],
+            createBackup: true,
+          }
+        );
 
-      setHasUnsavedChanges(false);
-      logTestResult('workspace-save', true, `Workspace saved with ID: ${workspaceId}`);
-    } catch (error) {
-      logTestResult('workspace-save', false, `Failed to save workspace: ${error}`);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [workspaceName, panels, selectedPanels, gridEnabled, snapEnabled]);
+        setHasUnsavedChanges(false);
+        logTestResult('workspace-save', true, `Workspace saved with ID: ${workspaceId}`);
+      } catch (error) {
+        logTestResult('workspace-save', false, `Failed to save workspace: ${error}`);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [workspaceName, panels, selectedPanels, gridEnabled, snapEnabled]
+  );
 
   /**
    * Workspace load handler
@@ -192,9 +193,11 @@ export const PanelManagementTest: React.FC = () => {
     try {
       // For demo, load the first available workspace
       const workspaces = workspaceManager.getWorkspaces();
-      const targetWorkspace = workspaceId 
+      const targetWorkspace = workspaceId
         ? await workspaceManager.loadWorkspace(workspaceId)
-        : workspaces[0] ? await workspaceManager.loadWorkspace(workspaces[0].id) : null;
+        : workspaces[0]
+          ? await workspaceManager.loadWorkspace(workspaces[0].id)
+          : null;
 
       if (targetWorkspace) {
         setPanels(targetWorkspace.panels || []);
@@ -327,9 +330,7 @@ export const PanelManagementTest: React.FC = () => {
   const handlePanelSelect = useCallback((panelId: string, addToSelection: boolean = false) => {
     setSelectedPanels(prev => {
       if (addToSelection) {
-        return prev.includes(panelId) 
-          ? prev.filter(id => id !== panelId)
-          : [...prev, panelId];
+        return prev.includes(panelId) ? prev.filter(id => id !== panelId) : [...prev, panelId];
       } else {
         return [panelId];
       }
@@ -343,11 +344,13 @@ export const PanelManagementTest: React.FC = () => {
 
   const handleInvertSelection = useCallback(() => {
     const currentSelected = new Set(selectedPanels);
-    const newSelection = panels
-      .filter(p => !currentSelected.has(p.id))
-      .map(p => p.id);
+    const newSelection = panels.filter(p => !currentSelected.has(p.id)).map(p => p.id);
     setSelectedPanels(newSelection);
-    logTestResult('select-invert', true, `Inverted selection: ${newSelection.length} panels selected`);
+    logTestResult(
+      'select-invert',
+      true,
+      `Inverted selection: ${newSelection.length} panels selected`
+    );
   }, [panels, selectedPanels]);
 
   const handleClearSelection = useCallback(() => {
@@ -358,69 +361,78 @@ export const PanelManagementTest: React.FC = () => {
   /**
    * Context menu actions
    */
-  const handleContextMenuAction = useCallback((action: string, panelIds: string[]) => {
-    try {
-      switch (action) {
-        case 'duplicate':
-          panelIds.forEach(panelId => {
-            const originalPanel = panels.find(p => p.id === panelId);
-            if (originalPanel) {
-              handleCreatePanel(originalPanel.component, {
-                x: originalPanel.position.x + 20,
-                y: originalPanel.position.y + 20,
-              });
-            }
-          });
-          logTestResult('context-duplicate', true, `Duplicated ${panelIds.length} panels`);
-          break;
+  const handleContextMenuAction = useCallback(
+    (action: string, panelIds: string[]) => {
+      try {
+        switch (action) {
+          case 'duplicate':
+            panelIds.forEach(panelId => {
+              const originalPanel = panels.find(p => p.id === panelId);
+              if (originalPanel) {
+                handleCreatePanel(originalPanel.component, {
+                  x: originalPanel.position.x + 20,
+                  y: originalPanel.position.y + 20,
+                });
+              }
+            });
+            logTestResult('context-duplicate', true, `Duplicated ${panelIds.length} panels`);
+            break;
 
-        case 'delete':
-          setPanels(prev => prev.filter(p => !panelIds.includes(p.id)));
-          setSelectedPanels(prev => prev.filter(id => !panelIds.includes(id)));
-          setHasUnsavedChanges(true);
-          logTestResult('context-delete', true, `Deleted ${panelIds.length} panels`);
-          break;
+          case 'delete':
+            setPanels(prev => prev.filter(p => !panelIds.includes(p.id)));
+            setSelectedPanels(prev => prev.filter(id => !panelIds.includes(id)));
+            setHasUnsavedChanges(true);
+            logTestResult('context-delete', true, `Deleted ${panelIds.length} panels`);
+            break;
 
-        case 'bring-to-front':
-          handleBringToFront();
-          break;
+          case 'bring-to-front':
+            handleBringToFront();
+            break;
 
-        case 'send-to-back':
-          handleSendToBack();
-          break;
+          case 'send-to-back':
+            handleSendToBack();
+            break;
 
-        case 'group':
-          handleCreateGroup();
-          break;
+          case 'group':
+            handleCreateGroup();
+            break;
 
-        default:
-          logTestResult(`context-${action}`, true, `Executed context action: ${action}`);
+          default:
+            logTestResult(`context-${action}`, true, `Executed context action: ${action}`);
+        }
+      } catch (error) {
+        logTestResult(`context-${action}`, false, `Failed to execute ${action}: ${error}`);
       }
-    } catch (error) {
-      logTestResult(`context-${action}`, false, `Failed to execute ${action}: ${error}`);
-    }
-  }, [panels, handleCreatePanel, handleBringToFront, handleSendToBack, handleCreateGroup]);
+    },
+    [panels, handleCreatePanel, handleBringToFront, handleSendToBack, handleCreateGroup]
+  );
 
   /**
    * Right-click handler for context menu
    */
-  const handlePanelRightClick = useCallback((event: React.MouseEvent, panelId: string) => {
-    event.preventDefault();
-    const panel = panels.find(p => p.id === panelId);
-    if (panel) {
-      if (!selectedPanels.includes(panelId)) {
-        setSelectedPanels([panelId]);
+  const handlePanelRightClick = useCallback(
+    (event: React.MouseEvent, panelId: string) => {
+      event.preventDefault();
+      const panel = panels.find(p => p.id === panelId);
+      if (panel) {
+        if (!selectedPanels.includes(panelId)) {
+          setSelectedPanels([panelId]);
+        }
+        showContextMenu(
+          event,
+          panels.filter(p => selectedPanels.includes(p.id) || p.id === panelId)
+        );
       }
-      showContextMenu(event, panels.filter(p => selectedPanels.includes(p.id) || p.id === panelId));
-    }
-  }, [panels, selectedPanels, showContextMenu]);
+    },
+    [panels, selectedPanels, showContextMenu]
+  );
 
   /**
    * Run all automated tests
    */
   const runAutomatedTests = useCallback(async () => {
     setTestResults({});
-    
+
     // Test 1: Panel Creation
     setTimeout(() => {
       handleCreatePanel(PanelComponent.SmartHub);
@@ -462,8 +474,16 @@ export const PanelManagementTest: React.FC = () => {
     }, 700);
 
     logTestResult('automated-tests', true, 'Started automated test sequence');
-  }, [panels, handleCreatePanel, handleSaveTemplate, handleSaveWorkspace, 
-      handleSelectAll, handleInvertSelection, handleCreateGroup, handleBringToFront]);
+  }, [
+    panels,
+    handleCreatePanel,
+    handleSaveTemplate,
+    handleSaveWorkspace,
+    handleSelectAll,
+    handleInvertSelection,
+    handleCreateGroup,
+    handleBringToFront,
+  ]);
 
   // Helper functions for panel defaults
   const getDefaultPanelSize = (type: PanelComponent) => {
@@ -531,11 +551,11 @@ export const PanelManagementTest: React.FC = () => {
           onSelectAll={handleSelectAll}
           onInvertSelection={handleInvertSelection}
           onClearSelection={handleClearSelection}
-          onToggleGrid={(enabled) => {
+          onToggleGrid={enabled => {
             setGridEnabled(enabled);
             logTestResult('grid-toggle', true, `Grid ${enabled ? 'enabled' : 'disabled'}`);
           }}
-          onToggleSnap={(enabled) => {
+          onToggleSnap={enabled => {
             setSnapEnabled(enabled);
             logTestResult('snap-toggle', true, `Snap ${enabled ? 'enabled' : 'disabled'}`);
           }}
@@ -557,29 +577,35 @@ export const PanelManagementTest: React.FC = () => {
             ref={canvasRef}
             className="w-full h-full relative bg-gradient-to-br from-gray-800 to-gray-900"
             style={{
-              backgroundImage: gridEnabled 
+              backgroundImage: gridEnabled
                 ? 'radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)'
                 : undefined,
               backgroundSize: gridEnabled ? '50px 50px' : undefined,
             }}
           >
             {/* Panel Groups */}
-            {panelGroups.map((group) => (
+            {panelGroups.map(group => (
               <PanelGroup
                 key={group.id}
                 group={group}
                 panels={panels}
                 selectedPanelIds={selectedPanels}
                 onGroupAction={(groupId, action) => {
-                  logTestResult(`group-${action}`, true, `Executed group action: ${action} on group ${groupId}`);
+                  logTestResult(
+                    `group-${action}`,
+                    true,
+                    `Executed group action: ${action} on group ${groupId}`
+                  );
                 }}
                 onPanelSelect={(panelIds, addToSelection) => {
                   setSelectedPanels(addToSelection ? [...selectedPanels, ...panelIds] : panelIds);
                 }}
                 onGroupUpdate={(groupId, updates) => {
-                  setPanelGroups(prev => prev.map(g => g.id === groupId ? { ...g, ...updates } : g));
+                  setPanelGroups(prev =>
+                    prev.map(g => (g.id === groupId ? { ...g, ...updates } : g))
+                  );
                 }}
-                onGroupDelete={(groupId) => {
+                onGroupDelete={groupId => {
                   setPanelGroups(prev => prev.filter(g => g.id !== groupId));
                   logTestResult('group-delete', true, `Deleted group: ${groupId}`);
                 }}
@@ -587,7 +613,7 @@ export const PanelManagementTest: React.FC = () => {
             ))}
 
             {/* Panels */}
-            {panels.map((panel) => (
+            {panels.map(panel => (
               <div
                 key={panel.id}
                 className={clsx(
@@ -606,30 +632,22 @@ export const PanelManagementTest: React.FC = () => {
                   height: panel.size.height,
                   zIndex: panel.zIndex,
                 }}
-                onClick={(e) => handlePanelSelect(panel.id, e.ctrlKey || e.metaKey)}
-                onContextMenu={(e) => handlePanelRightClick(e, panel.id)}
+                onClick={e => handlePanelSelect(panel.id, e.ctrlKey || e.metaKey)}
+                onContextMenu={e => handlePanelRightClick(e, panel.id)}
               >
                 {/* Panel Header */}
                 <div className="flex items-center justify-between p-3 border-b border-white/10">
                   <div className="flex items-center space-x-2">
                     <span className="text-lg">{panel.metadata?.icon}</span>
-                    <span className="text-white text-sm font-medium">
-                      {panel.metadata?.title}
-                    </span>
+                    <span className="text-white text-sm font-medium">{panel.metadata?.title}</span>
                   </div>
-                  <div className="text-xs text-white/50">
-                    z:{panel.zIndex}
-                  </div>
+                  <div className="text-xs text-white/50">z:{panel.zIndex}</div>
                 </div>
 
                 {/* Panel Content */}
                 <div className="p-4 h-full">
-                  <div className="text-white/70 text-sm">
-                    {panel.component} Panel
-                  </div>
-                  <div className="text-white/50 text-xs mt-2">
-                    ID: {panel.id}
-                  </div>
+                  <div className="text-white/70 text-sm">{panel.component} Panel</div>
+                  <div className="text-white/50 text-xs mt-2">ID: {panel.id}</div>
                   <div className="text-white/50 text-xs">
                     Size: {panel.size.width}x{panel.size.height}
                   </div>
@@ -646,7 +664,9 @@ export const PanelManagementTest: React.FC = () => {
                 <div className="text-center text-white/50">
                   <div className="text-6xl mb-4">📋</div>
                   <div className="text-xl mb-2">No Panels</div>
-                  <div className="text-sm">Use the toolbar to create panels or load a workspace</div>
+                  <div className="text-sm">
+                    Use the toolbar to create panels or load a workspace
+                  </div>
                 </div>
               </div>
             )}
@@ -658,7 +678,7 @@ export const PanelManagementTest: React.FC = () => {
           {/* Test Controls */}
           <div className="p-4 border-b border-gray-700">
             <h3 className="text-white font-semibold mb-4">Test Controls</h3>
-            
+
             <div className="space-y-2">
               <button
                 onClick={runAutomatedTests}
@@ -666,25 +686,29 @@ export const PanelManagementTest: React.FC = () => {
               >
                 Run All Tests
               </button>
-              
+
               <button
                 onClick={handleSaveTemplate}
                 className="w-full px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm transition-colors"
               >
                 Save as Template
               </button>
-              
+
               <button
                 onClick={handleLoadTemplate}
                 className="w-full px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm transition-colors"
               >
                 Load Template
               </button>
-              
+
               <button
                 onClick={() => {
                   const stats = panelManager.getStatistics();
-                  logTestResult('panel-stats', true, `Stats: ${stats.totalPanels} panels, ${stats.overlappingPanels} overlapping`);
+                  logTestResult(
+                    'panel-stats',
+                    true,
+                    `Stats: ${stats.totalPanels} panels, ${stats.overlappingPanels} overlapping`
+                  );
                 }}
                 className="w-full px-3 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded text-sm transition-colors"
               >
@@ -706,38 +730,35 @@ export const PanelManagementTest: React.FC = () => {
             <div className="p-3 border-b border-gray-700">
               <h4 className="text-white font-medium text-sm">Test Results</h4>
             </div>
-            
-            <div
-              ref={testLogRef}
-              className="flex-1 overflow-y-auto p-3 space-y-2 text-xs"
-            >
+
+            <div ref={testLogRef} className="flex-1 overflow-y-auto p-3 space-y-2 text-xs">
               {Object.entries(testResults).map(([testName, result]) => (
                 <div
                   key={`${testName}-${result.timestamp}`}
                   className={clsx(
                     'p-2 rounded border-l-4',
-                    result.passed 
-                      ? 'bg-green-900/30 border-green-500' 
+                    result.passed
+                      ? 'bg-green-900/30 border-green-500'
                       : 'bg-red-900/30 border-red-500'
                   )}
                 >
                   <div className="flex items-center justify-between">
-                    <span className={clsx(
-                      'font-medium',
-                      result.passed ? 'text-green-400' : 'text-red-400'
-                    )}>
+                    <span
+                      className={clsx(
+                        'font-medium',
+                        result.passed ? 'text-green-400' : 'text-red-400'
+                      )}
+                    >
                       {result.passed ? '✅' : '❌'} {testName}
                     </span>
                     <span className="text-white/50 text-xs">
                       {new Date(result.timestamp).toLocaleTimeString()}
                     </span>
                   </div>
-                  <div className="text-white/70 mt-1">
-                    {result.message}
-                  </div>
+                  <div className="text-white/70 mt-1">{result.message}</div>
                 </div>
               ))}
-              
+
               {Object.keys(testResults).length === 0 && (
                 <div className="text-white/50 text-center py-8">
                   No test results yet. Click "Run All Tests" to start.

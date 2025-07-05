@@ -40,17 +40,17 @@ export interface ResizablePanelProps {
   constraints?: ResizeConstraints;
   className?: string;
   disabled?: boolean;
-  
+
   // Resize handles configuration
   handles?: ResizeDirection[];
   handleSize?: number;
   handleClassName?: string;
-  
+
   // Event handlers
   onResizeStart?: (event: ResizeEventData) => void;
   onResize?: (newSize: Size, event: ResizeEventData) => void;
   onResizeEnd?: (finalSize: Size, event: ResizeEventData) => void;
-  
+
   // Visual feedback options
   showPreview?: boolean;
   showConstraints?: boolean;
@@ -109,7 +109,7 @@ export const ResizablePanel: React.FC<ResizablePanelProps> = ({
   const getCursorForDirection = (direction: ResizeDirection): string => {
     const cursors = {
       n: 'ns-resize',
-      s: 'ns-resize', 
+      s: 'ns-resize',
       e: 'ew-resize',
       w: 'ew-resize',
       ne: 'nesw-resize',
@@ -121,218 +121,220 @@ export const ResizablePanel: React.FC<ResizablePanelProps> = ({
   };
 
   // Enforce size constraints
-  const enforceConstraints = useCallback((newSize: Size, aspectRatioLocked: boolean = false): Size => {
-    let constrainedSize = { ...newSize };
+  const enforceConstraints = useCallback(
+    (newSize: Size, aspectRatioLocked: boolean = false): Size => {
+      let constrainedSize = { ...newSize };
 
-    // Apply min/max constraints
-    constrainedSize.width = Math.max(finalConstraints.minSize.width, constrainedSize.width);
-    constrainedSize.height = Math.max(finalConstraints.minSize.height, constrainedSize.height);
+      // Apply min/max constraints
+      constrainedSize.width = Math.max(finalConstraints.minSize.width, constrainedSize.width);
+      constrainedSize.height = Math.max(finalConstraints.minSize.height, constrainedSize.height);
 
-    if (finalConstraints.maxSize) {
-      constrainedSize.width = Math.min(finalConstraints.maxSize.width, constrainedSize.width);
-      constrainedSize.height = Math.min(finalConstraints.maxSize.height, constrainedSize.height);
-    }
+      if (finalConstraints.maxSize) {
+        constrainedSize.width = Math.min(finalConstraints.maxSize.width, constrainedSize.width);
+        constrainedSize.height = Math.min(finalConstraints.maxSize.height, constrainedSize.height);
+      }
 
-    // Apply aspect ratio if locked
-    if (aspectRatioLocked || finalConstraints.preserveAspectRatio) {
-      const originalRatio = startSizeRef.current.width / startSizeRef.current.height;
-      const currentRatio = constrainedSize.width / constrainedSize.height;
-      
-      if (Math.abs(currentRatio - originalRatio) > 0.01) {
-        // Adjust to maintain aspect ratio, prioritizing the dimension that changed more
-        const widthChange = Math.abs(constrainedSize.width - startSizeRef.current.width);
-        const heightChange = Math.abs(constrainedSize.height - startSizeRef.current.height);
-        
-        if (widthChange > heightChange) {
-          constrainedSize.height = constrainedSize.width / originalRatio;
-        } else {
-          constrainedSize.width = constrainedSize.height * originalRatio;
+      // Apply aspect ratio if locked
+      if (aspectRatioLocked || finalConstraints.preserveAspectRatio) {
+        const originalRatio = startSizeRef.current.width / startSizeRef.current.height;
+        const currentRatio = constrainedSize.width / constrainedSize.height;
+
+        if (Math.abs(currentRatio - originalRatio) > 0.01) {
+          // Adjust to maintain aspect ratio, prioritizing the dimension that changed more
+          const widthChange = Math.abs(constrainedSize.width - startSizeRef.current.width);
+          const heightChange = Math.abs(constrainedSize.height - startSizeRef.current.height);
+
+          if (widthChange > heightChange) {
+            constrainedSize.height = constrainedSize.width / originalRatio;
+          } else {
+            constrainedSize.width = constrainedSize.height * originalRatio;
+          }
         }
       }
-    }
 
-    // Snap to grid if enabled
-    if (finalConstraints.snapToGrid?.enabled) {
-      const gridSize = finalConstraints.snapToGrid.gridSize;
-      constrainedSize.width = Math.round(constrainedSize.width / gridSize) * gridSize;
-      constrainedSize.height = Math.round(constrainedSize.height / gridSize) * gridSize;
-    }
+      // Snap to grid if enabled
+      if (finalConstraints.snapToGrid?.enabled) {
+        const gridSize = finalConstraints.snapToGrid.gridSize;
+        constrainedSize.width = Math.round(constrainedSize.width / gridSize) * gridSize;
+        constrainedSize.height = Math.round(constrainedSize.height / gridSize) * gridSize;
+      }
 
-    return constrainedSize;
-  }, [finalConstraints]);
+      return constrainedSize;
+    },
+    [finalConstraints]
+  );
 
   // Calculate new size based on resize direction and mouse movement
-  const calculateNewSize = useCallback((
-    direction: ResizeDirection,
-    deltaX: number,
-    deltaY: number,
-    originalSize: Size
-  ): Size => {
-    let newSize = { ...originalSize };
+  const calculateNewSize = useCallback(
+    (direction: ResizeDirection, deltaX: number, deltaY: number, originalSize: Size): Size => {
+      let newSize = { ...originalSize };
 
-    switch (direction) {
-      case 'e':
-        newSize.width = originalSize.width + deltaX;
-        break;
-      case 'w':
-        newSize.width = originalSize.width - deltaX;
-        break;
-      case 's':
-        newSize.height = originalSize.height + deltaY;
-        break;
-      case 'n':
-        newSize.height = originalSize.height - deltaY;
-        break;
-      case 'se':
-        newSize.width = originalSize.width + deltaX;
-        newSize.height = originalSize.height + deltaY;
-        break;
-      case 'sw':
-        newSize.width = originalSize.width - deltaX;
-        newSize.height = originalSize.height + deltaY;
-        break;
-      case 'ne':
-        newSize.width = originalSize.width + deltaX;
-        newSize.height = originalSize.height - deltaY;
-        break;
-      case 'nw':
-        newSize.width = originalSize.width - deltaX;
-        newSize.height = originalSize.height - deltaY;
-        break;
-    }
+      switch (direction) {
+        case 'e':
+          newSize.width = originalSize.width + deltaX;
+          break;
+        case 'w':
+          newSize.width = originalSize.width - deltaX;
+          break;
+        case 's':
+          newSize.height = originalSize.height + deltaY;
+          break;
+        case 'n':
+          newSize.height = originalSize.height - deltaY;
+          break;
+        case 'se':
+          newSize.width = originalSize.width + deltaX;
+          newSize.height = originalSize.height + deltaY;
+          break;
+        case 'sw':
+          newSize.width = originalSize.width - deltaX;
+          newSize.height = originalSize.height + deltaY;
+          break;
+        case 'ne':
+          newSize.width = originalSize.width + deltaX;
+          newSize.height = originalSize.height - deltaY;
+          break;
+        case 'nw':
+          newSize.width = originalSize.width - deltaX;
+          newSize.height = originalSize.height - deltaY;
+          break;
+      }
 
-    return newSize;
-  }, []);
+      return newSize;
+    },
+    []
+  );
 
   // Handle mouse down on resize handle
-  const handleMouseDown = useCallback((
-    event: React.MouseEvent,
-    direction: ResizeDirection
-  ) => {
-    if (disabled) return;
+  const handleMouseDown = useCallback(
+    (event: React.MouseEvent, direction: ResizeDirection) => {
+      if (disabled) return;
 
-    event.preventDefault();
-    event.stopPropagation();
+      event.preventDefault();
+      event.stopPropagation();
 
-    setIsResizing(true);
-    setActiveDirection(direction);
-    setStartPos({ x: event.clientX, y: event.clientY });
-    startSizeRef.current = size;
-    setPreviewSize(size);
+      setIsResizing(true);
+      setActiveDirection(direction);
+      setStartPos({ x: event.clientX, y: event.clientY });
+      startSizeRef.current = size;
+      setPreviewSize(size);
 
-    // Track modifier keys
-    setModifierKeys({
-      shift: event.shiftKey,
-      alt: event.altKey,
-      ctrl: event.ctrlKey,
-    });
-
-    // Create resize event data
-    const resizeEventData: ResizeEventData = {
-      direction,
-      startSize: size,
-      currentSize: size,
-      deltaSize: { width: 0, height: 0 },
-      isShiftPressed: event.shiftKey,
-      isAltPressed: event.altKey,
-      isCtrlPressed: event.ctrlKey,
-    };
-
-    onResizeStart?.(resizeEventData);
-
-    // Add global mouse event listeners
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-    document.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('keyup', handleKeyUp);
-  }, [disabled, size, onResizeStart]);
-
-  // Handle mouse move during resize
-  const handleMouseMove = useCallback((event: MouseEvent) => {
-    if (!isResizing || !activeDirection) return;
-
-    // Use requestAnimationFrame for smooth performance
-    if (rafRef.current) {
-      cancelAnimationFrame(rafRef.current);
-    }
-
-    rafRef.current = requestAnimationFrame(() => {
-      const deltaX = event.clientX - startPos.x;
-      const deltaY = event.clientY - startPos.y;
-
-      const newSize = calculateNewSize(
-        activeDirection,
-        deltaX,
-        deltaY,
-        startSizeRef.current
-      );
-
-      const aspectRatioLocked = modifierKeys.shift || finalConstraints.preserveAspectRatio;
-      const constrainedSize = enforceConstraints(newSize, aspectRatioLocked);
-
-      setPreviewSize(constrainedSize);
+      // Track modifier keys
+      setModifierKeys({
+        shift: event.shiftKey,
+        alt: event.altKey,
+        ctrl: event.ctrlKey,
+      });
 
       // Create resize event data
       const resizeEventData: ResizeEventData = {
+        direction,
+        startSize: size,
+        currentSize: size,
+        deltaSize: { width: 0, height: 0 },
+        isShiftPressed: event.shiftKey,
+        isAltPressed: event.altKey,
+        isCtrlPressed: event.ctrlKey,
+      };
+
+      onResizeStart?.(resizeEventData);
+
+      // Add global mouse event listeners
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener('keydown', handleKeyDown);
+      document.addEventListener('keyup', handleKeyUp);
+    },
+    [disabled, size, onResizeStart]
+  );
+
+  // Handle mouse move during resize
+  const handleMouseMove = useCallback(
+    (event: MouseEvent) => {
+      if (!isResizing || !activeDirection) return;
+
+      // Use requestAnimationFrame for smooth performance
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
+
+      rafRef.current = requestAnimationFrame(() => {
+        const deltaX = event.clientX - startPos.x;
+        const deltaY = event.clientY - startPos.y;
+
+        const newSize = calculateNewSize(activeDirection, deltaX, deltaY, startSizeRef.current);
+
+        const aspectRatioLocked = modifierKeys.shift || finalConstraints.preserveAspectRatio;
+        const constrainedSize = enforceConstraints(newSize, aspectRatioLocked);
+
+        setPreviewSize(constrainedSize);
+
+        // Create resize event data
+        const resizeEventData: ResizeEventData = {
+          direction: activeDirection,
+          startSize: startSizeRef.current,
+          currentSize: constrainedSize,
+          deltaSize: {
+            width: constrainedSize.width - startSizeRef.current.width,
+            height: constrainedSize.height - startSizeRef.current.height,
+          },
+          isShiftPressed: modifierKeys.shift,
+          isAltPressed: modifierKeys.alt,
+          isCtrlPressed: modifierKeys.ctrl,
+        };
+
+        onResize?.(constrainedSize, resizeEventData);
+      });
+    },
+    [
+      isResizing,
+      activeDirection,
+      startPos,
+      modifierKeys,
+      calculateNewSize,
+      enforceConstraints,
+      finalConstraints.preserveAspectRatio,
+      onResize,
+    ]
+  );
+
+  // Handle mouse up to end resize
+  const handleMouseUp = useCallback(
+    (event: MouseEvent) => {
+      if (!isResizing || !activeDirection) return;
+
+      setIsResizing(false);
+      setActiveDirection(null);
+
+      // Create final resize event data
+      const resizeEventData: ResizeEventData = {
         direction: activeDirection,
         startSize: startSizeRef.current,
-        currentSize: constrainedSize,
+        currentSize: previewSize,
         deltaSize: {
-          width: constrainedSize.width - startSizeRef.current.width,
-          height: constrainedSize.height - startSizeRef.current.height,
+          width: previewSize.width - startSizeRef.current.width,
+          height: previewSize.height - startSizeRef.current.height,
         },
         isShiftPressed: modifierKeys.shift,
         isAltPressed: modifierKeys.alt,
         isCtrlPressed: modifierKeys.ctrl,
       };
 
-      onResize?.(constrainedSize, resizeEventData);
-    });
-  }, [
-    isResizing,
-    activeDirection,
-    startPos,
-    modifierKeys,
-    calculateNewSize,
-    enforceConstraints,
-    finalConstraints.preserveAspectRatio,
-    onResize
-  ]);
+      onResizeEnd?.(previewSize, resizeEventData);
 
-  // Handle mouse up to end resize
-  const handleMouseUp = useCallback((event: MouseEvent) => {
-    if (!isResizing || !activeDirection) return;
+      // Cleanup event listeners
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keyup', handleKeyUp);
 
-    setIsResizing(false);
-    setActiveDirection(null);
-
-    // Create final resize event data
-    const resizeEventData: ResizeEventData = {
-      direction: activeDirection,
-      startSize: startSizeRef.current,
-      currentSize: previewSize,
-      deltaSize: {
-        width: previewSize.width - startSizeRef.current.width,
-        height: previewSize.height - startSizeRef.current.height,
-      },
-      isShiftPressed: modifierKeys.shift,
-      isAltPressed: modifierKeys.alt,
-      isCtrlPressed: modifierKeys.ctrl,
-    };
-
-    onResizeEnd?.(previewSize, resizeEventData);
-
-    // Cleanup event listeners
-    document.removeEventListener('mousemove', handleMouseMove);
-    document.removeEventListener('mouseup', handleMouseUp);
-    document.removeEventListener('keydown', handleKeyDown);
-    document.removeEventListener('keyup', handleKeyUp);
-
-    // Cancel any pending animation frame
-    if (rafRef.current) {
-      cancelAnimationFrame(rafRef.current);
-    }
-  }, [isResizing, activeDirection, previewSize, modifierKeys, onResizeEnd, handleMouseMove]);
+      // Cancel any pending animation frame
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
+    },
+    [isResizing, activeDirection, previewSize, modifierKeys, onResizeEnd, handleMouseMove]
+  );
 
   // Handle key events for modifier keys
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
@@ -394,7 +396,7 @@ export const ResizablePanel: React.FC<ResizablePanelProps> = ({
           handleClassName
         )}
         style={{ cursor }}
-        onMouseDown={(e) => handleMouseDown(e, direction)}
+        onMouseDown={e => handleMouseDown(e, direction)}
       />
     );
   };
@@ -423,9 +425,7 @@ export const ResizablePanel: React.FC<ResizablePanelProps> = ({
       data-resizing={isResizing}
     >
       {/* Panel Content */}
-      <div className="relative w-full h-full overflow-hidden">
-        {children}
-      </div>
+      <div className="relative w-full h-full overflow-hidden">{children}</div>
 
       {/* Resize Handles */}
       {!disabled && handles.map(direction => renderHandle(direction))}

@@ -36,9 +36,7 @@ export const DragGhost: React.FC<{
           <div className="text-sm font-medium">
             {panelData?.metadata?.title || `Panel ${panelData?.id}`}
           </div>
-          <div className="text-xs text-white/70 mt-1">
-            Dragging...
-          </div>
+          <div className="text-xs text-white/70 mt-1">Dragging...</div>
         </div>
       </div>
     </div>
@@ -56,7 +54,7 @@ export const DropZoneHighlight: React.FC<{
 }> = ({ zones }) => {
   return (
     <div className="fixed inset-0 pointer-events-none z-40">
-      {zones.map((zone) => (
+      {zones.map(zone => (
         <div
           key={zone.id}
           className={clsx(
@@ -119,15 +117,9 @@ export const SnapLines: React.FC<{
             )}
           </g>
         ))}
-        
+
         {/* Active position indicator */}
-        <circle
-          cx={activePosition.x}
-          cy={activePosition.y}
-          r="4"
-          fill="#3B82F6"
-          opacity="0.8"
-        />
+        <circle cx={activePosition.x} cy={activePosition.y} r="4" fill="#3B82F6" opacity="0.8" />
       </svg>
     </div>
   );
@@ -143,7 +135,7 @@ export const CollisionWarning: React.FC<{
 }> = ({ collisions }) => {
   return (
     <div className="fixed inset-0 pointer-events-none z-35">
-      {collisions.map((collision) => (
+      {collisions.map(collision => (
         <div
           key={collision.panelId}
           className="absolute border-2 border-red-500 bg-red-500/10 rounded-lg animate-pulse"
@@ -172,16 +164,9 @@ export const DragTooltip: React.FC<{
   mousePosition: Position;
   showDistance?: boolean;
   showCoordinates?: boolean;
-}> = ({ 
-  position, 
-  startPosition, 
-  mousePosition, 
-  showDistance = true, 
-  showCoordinates = true 
-}) => {
+}> = ({ position, startPosition, mousePosition, showDistance = true, showCoordinates = true }) => {
   const distance = Math.sqrt(
-    Math.pow(position.x - startPosition.x, 2) + 
-    Math.pow(position.y - startPosition.y, 2)
+    Math.pow(position.x - startPosition.x, 2) + Math.pow(position.y - startPosition.y, 2)
   );
 
   return (
@@ -200,9 +185,7 @@ export const DragTooltip: React.FC<{
           </div>
         )}
         {showDistance && (
-          <div className="text-xs text-white/70 mt-1">
-            Distance: {Math.round(distance)}px
-          </div>
+          <div className="text-xs text-white/70 mt-1">Distance: {Math.round(distance)}px</div>
         )}
       </div>
     </div>
@@ -217,7 +200,7 @@ export const DragShadow: React.FC<{
 }> = ({ position, size, elevation = 3 }) => {
   const shadowOffset = elevation * 2;
   const shadowBlur = elevation * 4;
-  
+
   return (
     <div
       className="fixed pointer-events-none z-20 rounded-lg"
@@ -270,7 +253,7 @@ export const DragFeedback: React.FC<DragFeedbackProps> = ({
       { x: 100, type: 'grid' as const },
       { y: 150, type: 'grid' as const },
     ];
-    
+
     setSnapTargets(mockSnapTargets);
   }, [dragState]);
 
@@ -287,12 +270,8 @@ export const DragFeedback: React.FC<DragFeedbackProps> = ({
   return (
     <div className={clsx('drag-feedback-container', className)}>
       {/* Drag Shadow for depth */}
-      <DragShadow
-        position={currentPosition}
-        size={dragState.activePanelData.size}
-        elevation={3}
-      />
-      
+      <DragShadow position={currentPosition} size={dragState.activePanelData.size} elevation={3} />
+
       {/* Drag Ghost */}
       {showGhost && (
         <DragGhost
@@ -301,25 +280,18 @@ export const DragFeedback: React.FC<DragFeedbackProps> = ({
           size={dragState.activePanelData.size}
         />
       )}
-      
+
       {/* Snap Lines */}
-      {showSnapLines && (
-        <SnapLines
-          activePosition={currentPosition}
-          snapTargets={snapTargets}
-        />
-      )}
-      
+      {showSnapLines && <SnapLines activePosition={currentPosition} snapTargets={snapTargets} />}
+
       {/* Collision Warnings */}
       {showCollisionWarnings && collisions.length > 0 && (
         <CollisionWarning collisions={collisions} />
       )}
-      
+
       {/* Drop Zone Highlights */}
-      {dropZones.length > 0 && (
-        <DropZoneHighlight zones={dropZones} />
-      )}
-      
+      {dropZones.length > 0 && <DropZoneHighlight zones={dropZones} />}
+
       {/* Distance and Position Tooltip */}
       {showDistanceTooltips && (
         <DragTooltip

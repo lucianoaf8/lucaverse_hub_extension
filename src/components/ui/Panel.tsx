@@ -7,7 +7,12 @@
 import React, { useMemo, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLayoutStore } from '@/stores/layoutStore';
-import { usePanelDrag, usePanelResize, usePanelSelection, useKeyboardShortcuts } from '@/hooks/usePanelInteractions';
+import {
+  usePanelDrag,
+  usePanelResize,
+  usePanelSelection,
+  useKeyboardShortcuts,
+} from '@/hooks/usePanelInteractions';
 import { HeaderDragHandle } from './DragHandle';
 import { ErrorBoundary } from './ErrorBoundary';
 import { ResizeHandles } from './ResizeHandle';
@@ -60,19 +65,13 @@ export const Panel: React.FC<PanelProps> = ({
   zIndex: propZIndex,
   headerActions,
   animated = true,
-  glassmorphism = true
+  glassmorphism = true,
 }) => {
   const panelRef = useRef<HTMLDivElement>(null);
-  
+
   // Store integration
-  const { 
-    getPanel, 
-    updatePanel, 
-    dragState, 
-    resizeState,
-    selectedPanelIds,
-    panels
-  } = useLayoutStore();
+  const { getPanel, updatePanel, dragState, resizeState, selectedPanelIds, panels } =
+    useLayoutStore();
 
   // Get panel data from store
   const storePanel = getPanel(id);
@@ -114,7 +113,7 @@ export const Panel: React.FC<PanelProps> = ({
       height: finalSize.height,
       zIndex: effectiveZIndex + (isDragging ? 1000 : 0) + (isResizing ? 500 : 0),
       pointerEvents: 'auto',
-      ...style
+      ...style,
     };
 
     return baseStyle;
@@ -122,12 +121,7 @@ export const Panel: React.FC<PanelProps> = ({
 
   // Calculate panel CSS classes
   const panelClasses = useMemo(() => {
-    const baseClasses = [
-      'panel',
-      'select-none',
-      'outline-none',
-      className
-    ];
+    const baseClasses = ['panel', 'select-none', 'outline-none', className];
 
     // Glassmorphism styling
     if (glassmorphism) {
@@ -143,12 +137,7 @@ export const Panel: React.FC<PanelProps> = ({
 
     // Selection state
     if (effectiveIsSelected) {
-      baseClasses.push(
-        'ring-2',
-        'ring-blue-400',
-        'ring-opacity-75',
-        'shadow-blue-500/25'
-      );
+      baseClasses.push('ring-2', 'ring-blue-400', 'ring-opacity-75', 'shadow-blue-500/25');
     }
 
     // Interaction states
@@ -169,10 +158,10 @@ export const Panel: React.FC<PanelProps> = ({
   // Handle panel click for selection
   const handlePanelClick = (event: React.MouseEvent) => {
     event.stopPropagation();
-    
+
     const multiSelect = event.ctrlKey || event.metaKey;
     handleSelect(multiSelect);
-    
+
     if (onSelect) {
       onSelect(!effectiveIsSelected);
     }
@@ -198,27 +187,29 @@ export const Panel: React.FC<PanelProps> = ({
   // Animation variants for framer-motion
   const panelVariants = {
     initial: { opacity: 0, scale: 0.95 },
-    animate: { 
-      opacity: 1, 
+    animate: {
+      opacity: 1,
       scale: 1,
-      transition: { duration: 0.2, ease: 'easeOut' }
+      transition: { duration: 0.2, ease: 'easeOut' },
     },
-    exit: { 
-      opacity: 0, 
+    exit: {
+      opacity: 0,
       scale: 0.95,
-      transition: { duration: 0.15, ease: 'easeIn' }
-    }
+      transition: { duration: 0.15, ease: 'easeIn' },
+    },
   };
 
   const MotionDiv = animated ? motion.div : 'div';
-  const motionProps = animated ? {
-    variants: panelVariants,
-    initial: 'initial',
-    animate: 'animate',
-    exit: 'exit',
-    layout: true,
-    layoutId: id
-  } : {};
+  const motionProps = animated
+    ? {
+        variants: panelVariants,
+        initial: 'initial',
+        animate: 'animate',
+        exit: 'exit',
+        layout: true,
+        layoutId: id,
+      }
+    : {};
 
   return (
     <MotionDiv
@@ -249,16 +240,14 @@ export const Panel: React.FC<PanelProps> = ({
       )}
 
       {/* Content */}
-      <div 
+      <div
         className={`panel-content ${showHeader ? 'h-[calc(100%-48px)]' : 'h-full'} overflow-auto`}
-        style={{ 
+        style={{
           scrollbarWidth: 'thin',
-          scrollbarColor: 'rgba(255, 255, 255, 0.3) transparent'
+          scrollbarColor: 'rgba(255, 255, 255, 0.3) transparent',
         }}
       >
-        <ErrorBoundary>
-          {children}
-        </ErrorBoundary>
+        <ErrorBoundary>{children}</ErrorBoundary>
       </div>
 
       {/* Resize Handles */}
@@ -281,9 +270,7 @@ export const Panel: React.FC<PanelProps> = ({
       )}
 
       {/* Focus indicator for keyboard navigation */}
-      <div 
-        className="absolute inset-0 pointer-events-none rounded-lg ring-2 ring-blue-500 ring-opacity-0 focus-within:ring-opacity-50 transition-all duration-150"
-      />
+      <div className="absolute inset-0 pointer-events-none rounded-lg ring-2 ring-blue-500 ring-opacity-0 focus-within:ring-opacity-50 transition-all duration-150" />
     </MotionDiv>
   );
 };

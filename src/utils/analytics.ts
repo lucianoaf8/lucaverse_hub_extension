@@ -65,9 +65,9 @@ class Analytics {
       endpoints: {
         events: `${import.meta.env.VITE_API_BASE_URL}/analytics/events`,
         sessions: `${import.meta.env.VITE_API_BASE_URL}/analytics/sessions`,
-        conversions: `${import.meta.env.VITE_API_BASE_URL}/analytics/conversions`
+        conversions: `${import.meta.env.VITE_API_BASE_URL}/analytics/conversions`,
       },
-      ...config
+      ...config,
     };
 
     this.session = this.createSession();
@@ -77,7 +77,11 @@ class Analytics {
   /**
    * Track user event
    */
-  track(eventName: string, properties: Record<string, any> = {}, category: AnalyticsEvent['category'] = 'user_action'): void {
+  track(
+    eventName: string,
+    properties: Record<string, any> = {},
+    category: AnalyticsEvent['category'] = 'user_action'
+  ): void {
     if (!this.shouldTrack()) return;
 
     const event: AnalyticsEvent = {
@@ -88,7 +92,7 @@ class Analytics {
       sessionId: this.session.sessionId,
       timestamp: Date.now(),
       platform: this.detectPlatform(),
-      version: import.meta.env.VITE_BUILD_VERSION || '1.0.0'
+      version: import.meta.env.VITE_BUILD_VERSION || '1.0.0',
     };
 
     this.queueEvent(event);
@@ -99,12 +103,16 @@ class Analytics {
    * Track page view
    */
   page(pageName: string, properties: Record<string, any> = {}): void {
-    this.track('page_view', {
-      page: pageName,
-      url: typeof window !== 'undefined' ? window.location.href : '',
-      referrer: typeof document !== 'undefined' ? document.referrer : '',
-      ...properties
-    }, 'user_action');
+    this.track(
+      'page_view',
+      {
+        page: pageName,
+        url: typeof window !== 'undefined' ? window.location.href : '',
+        referrer: typeof document !== 'undefined' ? document.referrer : '',
+        ...properties,
+      },
+      'user_action'
+    );
 
     this.session.pageViews++;
   }
@@ -113,22 +121,30 @@ class Analytics {
    * Track user interaction
    */
   interaction(element: string, action: string, properties: Record<string, any> = {}): void {
-    this.track('user_interaction', {
-      element,
-      action,
-      ...properties
-    }, 'user_action');
+    this.track(
+      'user_interaction',
+      {
+        element,
+        action,
+        ...properties,
+      },
+      'user_action'
+    );
   }
 
   /**
    * Track feature usage
    */
   feature(featureName: string, action: string, properties: Record<string, any> = {}): void {
-    this.track('feature_usage', {
-      feature: featureName,
-      action,
-      ...properties
-    }, 'feature_usage');
+    this.track(
+      'feature_usage',
+      {
+        feature: featureName,
+        action,
+        ...properties,
+      },
+      'feature_usage'
+    );
   }
 
   /**
@@ -137,11 +153,15 @@ class Analytics {
   performance(metric: string, value: number, properties: Record<string, any> = {}): void {
     if (!this.config.enablePerformanceAnalytics) return;
 
-    this.track('performance_metric', {
-      metric,
-      value,
-      ...properties
-    }, 'performance');
+    this.track(
+      'performance_metric',
+      {
+        metric,
+        value,
+        ...properties,
+      },
+      'performance'
+    );
   }
 
   /**
@@ -150,22 +170,30 @@ class Analytics {
   conversion(goal: string, value?: number, properties: Record<string, any> = {}): void {
     if (!this.config.enableConversionTracking) return;
 
-    this.track('conversion', {
-      goal,
-      value,
-      ...properties
-    }, 'conversion');
+    this.track(
+      'conversion',
+      {
+        goal,
+        value,
+        ...properties,
+      },
+      'conversion'
+    );
   }
 
   /**
    * Track error events
    */
   error(errorType: string, message: string, properties: Record<string, any> = {}): void {
-    this.track('error', {
-      errorType,
-      message,
-      ...properties
-    }, 'error');
+    this.track(
+      'error',
+      {
+        errorType,
+        message,
+        ...properties,
+      },
+      'error'
+    );
   }
 
   /**
@@ -176,9 +204,13 @@ class Analytics {
     this.session.userId = userId;
 
     if (this.config.enableUserTracking) {
-      this.track('user_identified', {
-        traits: this.config.privacyCompliant ? this.sanitizeProperties(traits) : traits
-      }, 'user_action');
+      this.track(
+        'user_identified',
+        {
+          traits: this.config.privacyCompliant ? this.sanitizeProperties(traits) : traits,
+        },
+        'user_action'
+      );
     }
   }
 
@@ -205,11 +237,15 @@ class Analytics {
     this.abTestVariants[testName] = variant;
 
     // Track variant assignment
-    this.track('ab_test_assigned', {
-      testName,
-      variant,
-      variants
-    }, 'feature_usage');
+    this.track(
+      'ab_test_assigned',
+      {
+        testName,
+        variant,
+        variants,
+      },
+      'feature_usage'
+    );
 
     return variant;
   }
@@ -219,7 +255,7 @@ class Analytics {
    */
   time(label: string): () => void {
     const startTime = performance.now();
-    
+
     return () => {
       const duration = performance.now() - startTime;
       this.performance(`timing_${label}`, duration, { label });
@@ -248,7 +284,7 @@ class Analytics {
       sessionDuration: Date.now() - this.session.startTime,
       pageViews: this.session.pageViews,
       queueSize: this.eventQueue.length,
-      samplingRate: this.config.samplingRate
+      samplingRate: this.config.samplingRate,
     };
   }
 
@@ -291,13 +327,13 @@ class Analytics {
       events: 0,
       platform: this.detectPlatform(),
       userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'Unknown',
-      referrer: typeof document !== 'undefined' ? document.referrer : ''
+      referrer: typeof document !== 'undefined' ? document.referrer : '',
     };
   }
 
   private shouldTrack(): boolean {
     if (!this.config.enableAnalytics) return false;
-    
+
     // Sample based on configured rate
     if (Math.random() > this.config.samplingRate) return false;
 
@@ -350,13 +386,15 @@ class Analytics {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...(import.meta.env.VITE_API_KEY ? { 'Authorization': `Bearer ${import.meta.env.VITE_API_KEY}` } : {})
+        ...(import.meta.env.VITE_API_KEY
+          ? { Authorization: `Bearer ${import.meta.env.VITE_API_KEY}` }
+          : {}),
       },
       body: JSON.stringify({
         events,
         session: this.session,
-        timestamp: Date.now()
-      })
+        timestamp: Date.now(),
+      }),
     });
 
     if (!response.ok) {
@@ -368,7 +406,7 @@ class Analytics {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash; // Convert to 32-bit integer
     }
     return Math.abs(hash);
@@ -397,10 +435,14 @@ class Analytics {
     }, this.config.flushInterval);
 
     // Track session start
-    this.track('session_started', {
-      platform: this.session.platform,
-      userAgent: this.session.userAgent
-    }, 'user_action');
+    this.track(
+      'session_started',
+      {
+        platform: this.session.platform,
+        userAgent: this.session.userAgent,
+      },
+      'user_action'
+    );
 
     // Set up page visibility change tracking
     if (typeof document !== 'undefined') {
@@ -415,11 +457,15 @@ class Analytics {
 
       // Track page unload
       window.addEventListener('beforeunload', () => {
-        this.track('session_ended', {
-          duration: Date.now() - this.session.startTime,
-          events: this.session.events,
-          pageViews: this.session.pageViews
-        }, 'user_action');
+        this.track(
+          'session_ended',
+          {
+            duration: Date.now() - this.session.startTime,
+            events: this.session.events,
+            pageViews: this.session.pageViews,
+          },
+          'user_action'
+        );
 
         // Attempt to flush events synchronously
         if (navigator.sendBeacon && this.config.endpoints.events) {
@@ -428,7 +474,7 @@ class Analytics {
             JSON.stringify({
               events: this.eventQueue,
               session: this.session,
-              timestamp: Date.now()
+              timestamp: Date.now(),
             })
           );
         }
@@ -459,25 +505,25 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
 
 // Export convenience functions
 export const analytics = {
-  track: (event: string, properties?: Record<string, any>, category?: AnalyticsEvent['category']) => 
+  track: (event: string, properties?: Record<string, any>, category?: AnalyticsEvent['category']) =>
     globalAnalytics.track(event, properties, category),
-  page: (pageName: string, properties?: Record<string, any>) => 
+  page: (pageName: string, properties?: Record<string, any>) =>
     globalAnalytics.page(pageName, properties),
-  interaction: (element: string, action: string, properties?: Record<string, any>) => 
+  interaction: (element: string, action: string, properties?: Record<string, any>) =>
     globalAnalytics.interaction(element, action, properties),
-  feature: (featureName: string, action: string, properties?: Record<string, any>) => 
+  feature: (featureName: string, action: string, properties?: Record<string, any>) =>
     globalAnalytics.feature(featureName, action, properties),
-  performance: (metric: string, value: number, properties?: Record<string, any>) => 
+  performance: (metric: string, value: number, properties?: Record<string, any>) =>
     globalAnalytics.performance(metric, value, properties),
-  conversion: (goal: string, value?: number, properties?: Record<string, any>) => 
+  conversion: (goal: string, value?: number, properties?: Record<string, any>) =>
     globalAnalytics.conversion(goal, value, properties),
-  error: (errorType: string, message: string, properties?: Record<string, any>) => 
+  error: (errorType: string, message: string, properties?: Record<string, any>) =>
     globalAnalytics.error(errorType, message, properties),
-  identify: (userId: string, traits?: Record<string, any>) => 
+  identify: (userId: string, traits?: Record<string, any>) =>
     globalAnalytics.identify(userId, traits),
-  abTest: (testName: string, variants: string[], sticky?: boolean) => 
+  abTest: (testName: string, variants: string[], sticky?: boolean) =>
     globalAnalytics.abTest(testName, variants, sticky),
-  time: (label: string) => globalAnalytics.time(label)
+  time: (label: string) => globalAnalytics.time(label),
 };
 
 export default Analytics;

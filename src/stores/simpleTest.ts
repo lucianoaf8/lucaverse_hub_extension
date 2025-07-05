@@ -9,12 +9,12 @@ import { PanelComponent } from '@/types/panel';
 // Simple test function to validate store operations
 export function testBasicStoreOperations(): boolean {
   console.log('🧪 Testing Basic Store Operations...');
-  
+
   try {
     // Test Layout Store
     console.log('Testing Layout Store...');
     const layoutStore = useLayoutStore.getState();
-    
+
     // Test adding a panel
     const initialPanelCount = layoutStore.panels.length;
     layoutStore.addPanel({
@@ -30,10 +30,10 @@ export function testBasicStoreOperations(): boolean {
         title: 'Test Panel',
       },
     });
-    
+
     const newPanelCount = layoutStore.panels.length;
     console.log(`✅ Panel added: ${initialPanelCount} → ${newPanelCount}`);
-    
+
     // Test panel selection
     if (layoutStore.panels.length > 0) {
       const firstPanel = layoutStore.panels[0];
@@ -42,17 +42,17 @@ export function testBasicStoreOperations(): boolean {
         console.log(`✅ Panel selected: ${firstPanel.id}`);
       }
     }
-    
+
     // Test App Store
     console.log('Testing App Store...');
     const appStore = useAppStore.getState();
-    
+
     // Test theme toggle
     const originalTheme = appStore.theme;
     appStore.toggleTheme();
     const newTheme = appStore.theme;
     console.log(`✅ Theme toggled: ${originalTheme} → ${newTheme}`);
-    
+
     // Test notification
     const initialNotificationCount = appStore.notifications.length;
     appStore.addNotification({
@@ -62,13 +62,13 @@ export function testBasicStoreOperations(): boolean {
     });
     const newNotificationCount = appStore.notifications.length;
     console.log(`✅ Notification added: ${initialNotificationCount} → ${newNotificationCount}`);
-    
+
     // Test preferences
     appStore.updatePreferences({ autoSave: true });
     console.log(`✅ Preferences updated: autoSave = ${appStore.preferences.autoSave}`);
-    
+
     console.log('🎉 All basic store operations successful!');
-    
+
     return true;
   } catch (error) {
     console.error('❌ Store test failed:', error);

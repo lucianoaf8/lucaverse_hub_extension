@@ -5,7 +5,14 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { SmartHub, AIChat, TaskManager, Productivity, getAllComponents, getComponentMetadata } from '../panels';
+import {
+  SmartHub,
+  AIChat,
+  TaskManager,
+  Productivity,
+  getAllComponents,
+  getComponentMetadata,
+} from '../panels';
 import type { Position, Size } from '@/types/panel';
 
 interface TestResult {
@@ -25,38 +32,41 @@ export const PanelMigrationTest: React.FC = () => {
     'smart-hub': {
       id: 'test-smart-hub',
       position: { x: 50, y: 50 } as Position,
-      size: { width: 500, height: 600 } as Size
+      size: { width: 500, height: 600 } as Size,
     },
     'ai-chat': {
       id: 'test-ai-chat',
       position: { x: 570, y: 50 } as Position,
-      size: { width: 600, height: 700 } as Size
+      size: { width: 600, height: 700 } as Size,
     },
     'task-manager': {
       id: 'test-task-manager',
       position: { x: 50, y: 670 } as Position,
-      size: { width: 550, height: 650 } as Size
+      size: { width: 550, height: 650 } as Size,
     },
-    'productivity': {
+    productivity: {
       id: 'test-productivity',
       position: { x: 620, y: 670 } as Position,
-      size: { width: 500, height: 700 } as Size
-    }
+      size: { width: 500, height: 700 } as Size,
+    },
   };
 
   const addTestResult = (component: string, passed: boolean, message: string) => {
-    setTestResults(prev => [...prev, {
-      component,
-      passed,
-      message,
-      timestamp: Date.now()
-    }]);
+    setTestResults(prev => [
+      ...prev,
+      {
+        component,
+        passed,
+        message,
+        timestamp: Date.now(),
+      },
+    ]);
   };
 
   // Component render tests
   const testComponentRender = async (componentName: string) => {
     setCurrentTest(`Testing ${componentName} render...`);
-    
+
     try {
       const metadata = getComponentMetadata(componentName);
       if (!metadata) {
@@ -82,7 +92,7 @@ export const PanelMigrationTest: React.FC = () => {
   // LocalStorage persistence tests
   const testLocalStoragePersistence = async () => {
     setCurrentTest('Testing localStorage persistence...');
-    
+
     try {
       // Test SmartHub bookmarks
       const testBookmark = {
@@ -93,12 +103,12 @@ export const PanelMigrationTest: React.FC = () => {
         visits: 1,
         isPinned: false,
         createdAt: Date.now(),
-        updatedAt: Date.now()
+        updatedAt: Date.now(),
       };
-      
+
       localStorage.setItem('lucaverse_bookmarks', JSON.stringify([testBookmark]));
       const storedBookmarks = JSON.parse(localStorage.getItem('lucaverse_bookmarks') || '[]');
-      
+
       if (storedBookmarks.length > 0 && storedBookmarks[0].title === 'Test Bookmark') {
         addTestResult('localStorage', true, 'SmartHub bookmark persistence works');
       } else {
@@ -114,12 +124,12 @@ export const PanelMigrationTest: React.FC = () => {
         priority: 3,
         progress: 0,
         createdAt: Date.now(),
-        updatedAt: Date.now()
+        updatedAt: Date.now(),
       };
-      
+
       localStorage.setItem('lucaverse_tasks', JSON.stringify([testTask]));
       const storedTasks = JSON.parse(localStorage.getItem('lucaverse_tasks') || '[]');
-      
+
       if (storedTasks.length > 0 && storedTasks[0].text === 'Test Task') {
         addTestResult('localStorage', true, 'TaskManager task persistence works');
       } else {
@@ -131,19 +141,24 @@ export const PanelMigrationTest: React.FC = () => {
       const testSession = {
         id: `test_${Date.now()}`,
         title: 'Test Chat',
-        messages: [{
-          id: `msg_${Date.now()}`,
-          type: 'user',
-          content: 'Test message',
-          timestamp: Date.now()
-        }],
+        messages: [
+          {
+            id: `msg_${Date.now()}`,
+            type: 'user',
+            content: 'Test message',
+            timestamp: Date.now(),
+          },
+        ],
         createdAt: Date.now(),
-        updatedAt: Date.now()
+        updatedAt: Date.now(),
       };
-      
-      localStorage.setItem('lucaverse_chat_sessions', JSON.stringify({ [testSession.id]: testSession }));
+
+      localStorage.setItem(
+        'lucaverse_chat_sessions',
+        JSON.stringify({ [testSession.id]: testSession })
+      );
       const storedSessions = JSON.parse(localStorage.getItem('lucaverse_chat_sessions') || '{}');
-      
+
       if (Object.keys(storedSessions).length > 0) {
         addTestResult('localStorage', true, 'AIChat session persistence works');
       } else {
@@ -158,12 +173,14 @@ export const PanelMigrationTest: React.FC = () => {
         duration: 25,
         completed: false,
         startTime: Date.now(),
-        date: new Date().toISOString().split('T')[0]
+        date: new Date().toISOString().split('T')[0],
       };
-      
+
       localStorage.setItem('lucaverse_pomodoro_sessions', JSON.stringify([testPomodoroSession]));
-      const storedPomodoro = JSON.parse(localStorage.getItem('lucaverse_pomodoro_sessions') || '[]');
-      
+      const storedPomodoro = JSON.parse(
+        localStorage.getItem('lucaverse_pomodoro_sessions') || '[]'
+      );
+
       if (storedPomodoro.length > 0 && storedPomodoro[0].type === 'work') {
         addTestResult('localStorage', true, 'Productivity session persistence works');
       } else {
@@ -181,10 +198,10 @@ export const PanelMigrationTest: React.FC = () => {
   // Component registry tests
   const testComponentRegistry = async () => {
     setCurrentTest('Testing component registry...');
-    
+
     try {
       const allComponents = getAllComponents();
-      
+
       if (allComponents.length !== 4) {
         addTestResult('registry', false, `Expected 4 components, found ${allComponents.length}`);
         return false;
@@ -192,7 +209,7 @@ export const PanelMigrationTest: React.FC = () => {
 
       const expectedComponents = ['smart-hub', 'ai-chat', 'task-manager', 'productivity'];
       const foundComponents = allComponents.map(comp => comp.id);
-      
+
       for (const expected of expectedComponents) {
         if (!foundComponents.includes(expected)) {
           addTestResult('registry', false, `Missing component: ${expected}`);
@@ -207,8 +224,18 @@ export const PanelMigrationTest: React.FC = () => {
           addTestResult('registry', false, `No metadata for ${component.id}`);
           return false;
         }
-        
-        const requiredFields = ['id', 'name', 'description', 'icon', 'category', 'defaultSize', 'minSize', 'maxSize', 'component'];
+
+        const requiredFields = [
+          'id',
+          'name',
+          'description',
+          'icon',
+          'category',
+          'defaultSize',
+          'minSize',
+          'maxSize',
+          'component',
+        ];
         for (const field of requiredFields) {
           if (!(field in metadata)) {
             addTestResult('registry', false, `Missing ${field} in ${component.id} metadata`);
@@ -228,11 +255,11 @@ export const PanelMigrationTest: React.FC = () => {
   // TypeScript compilation test
   const testTypeScriptCompliance = async () => {
     setCurrentTest('Testing TypeScript compliance...');
-    
+
     try {
       // Check if components export proper types
       const components = [SmartHub, AIChat, TaskManager, Productivity];
-      
+
       for (const Component of components) {
         if (!Component.displayName) {
           addTestResult('typescript', false, `Component missing displayName: ${Component.name}`);
@@ -251,21 +278,26 @@ export const PanelMigrationTest: React.FC = () => {
   // Performance test
   const testPerformance = async () => {
     setCurrentTest('Testing performance...');
-    
+
     try {
       const startTime = performance.now();
-      
+
       // Simulate rapid state changes
       for (let i = 0; i < 100; i++) {
         // This would test React rendering performance
         await new Promise(resolve => setTimeout(resolve, 1));
       }
-      
+
       const endTime = performance.now();
       const duration = endTime - startTime;
-      
-      if (duration < 1000) { // Should complete in under 1 second
-        addTestResult('performance', true, `Performance test completed in ${duration.toFixed(2)}ms`);
+
+      if (duration < 1000) {
+        // Should complete in under 1 second
+        addTestResult(
+          'performance',
+          true,
+          `Performance test completed in ${duration.toFixed(2)}ms`
+        );
         return true;
       } else {
         addTestResult('performance', false, `Performance test too slow: ${duration.toFixed(2)}ms`);
@@ -281,7 +313,7 @@ export const PanelMigrationTest: React.FC = () => {
   const runAllTests = async () => {
     setIsRunning(true);
     setTestResults([]);
-    
+
     const tests = [
       () => testComponentRender('smart-hub'),
       () => testComponentRender('ai-chat'),
@@ -290,14 +322,14 @@ export const PanelMigrationTest: React.FC = () => {
       testLocalStoragePersistence,
       testComponentRegistry,
       testTypeScriptCompliance,
-      testPerformance
+      testPerformance,
     ];
 
     for (const test of tests) {
       await test();
       await new Promise(resolve => setTimeout(resolve, 500)); // Delay between tests
     }
-    
+
     setCurrentTest('All tests completed');
     setIsRunning(false);
   };
@@ -311,9 +343,9 @@ export const PanelMigrationTest: React.FC = () => {
       'lucaverse_pomodoro_sessions',
       'lucaverse_recent_links',
       'lucaverse_productivity_notes',
-      'lucaverse_productivity_settings'
+      'lucaverse_productivity_settings',
     ];
-    
+
     keys.forEach(key => {
       const existing = localStorage.getItem(key);
       if (existing && existing.includes('Test')) {
@@ -383,7 +415,7 @@ export const PanelMigrationTest: React.FC = () => {
         {isRunning && (
           <div className="mt-4">
             <div className="w-full bg-white bg-opacity-10 rounded-full h-2">
-              <div 
+              <div
                 className="bg-blue-500 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${(totalTests / 8) * 100}%` }}
               />
@@ -400,8 +432,8 @@ export const PanelMigrationTest: React.FC = () => {
             <div
               key={index}
               className={`p-3 rounded flex items-center justify-between ${
-                result.passed 
-                  ? 'bg-green-500 bg-opacity-20 border border-green-500 border-opacity-30' 
+                result.passed
+                  ? 'bg-green-500 bg-opacity-20 border border-green-500 border-opacity-30'
                   : 'bg-red-500 bg-opacity-20 border border-red-500 border-opacity-30'
               }`}
             >
@@ -410,12 +442,12 @@ export const PanelMigrationTest: React.FC = () => {
                   {result.passed ? '✅' : '❌'}
                 </span>
                 <div>
-                  <div className={`font-medium ${result.passed ? 'text-green-300' : 'text-red-300'}`}>
+                  <div
+                    className={`font-medium ${result.passed ? 'text-green-300' : 'text-red-300'}`}
+                  >
                     {result.component}
                   </div>
-                  <div className="text-white text-opacity-80 text-sm">
-                    {result.message}
-                  </div>
+                  <div className="text-white text-opacity-80 text-sm">{result.message}</div>
                 </div>
               </div>
               <div className="text-white text-opacity-60 text-xs">

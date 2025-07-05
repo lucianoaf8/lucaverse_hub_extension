@@ -48,7 +48,7 @@ export class AssetPreloader {
       retryAttempts: 3,
       timeout: 10000, // 10 seconds
       enableAnalytics: true,
-      ...config
+      ...config,
     };
 
     this.platform = this.detectPlatform();
@@ -66,7 +66,7 @@ export class AssetPreloader {
         priority: 'critical',
         crossorigin: true,
         as: 'font',
-        platform: 'all'
+        platform: 'all',
       },
       {
         url: '/fonts/Inter-Medium.woff2',
@@ -74,7 +74,7 @@ export class AssetPreloader {
         priority: 'critical',
         crossorigin: true,
         as: 'font',
-        platform: 'all'
+        platform: 'all',
       },
       {
         url: '/fonts/Inter-SemiBold.woff2',
@@ -82,7 +82,7 @@ export class AssetPreloader {
         priority: 'important',
         crossorigin: true,
         as: 'font',
-        platform: 'all'
+        platform: 'all',
       },
       {
         url: '/fonts/JetBrainsMono-Regular.woff2',
@@ -90,8 +90,8 @@ export class AssetPreloader {
         priority: 'important',
         crossorigin: true,
         as: 'font',
-        platform: 'all'
-      }
+        platform: 'all',
+      },
     ];
 
     return this.preloadAssets(fontAssets);
@@ -106,26 +106,26 @@ export class AssetPreloader {
         url: '/css/critical.css',
         type: 'css',
         priority: 'critical',
-        platform: 'all'
+        platform: 'all',
       },
       {
         url: '/css/components.css',
         type: 'css',
         priority: 'important',
-        platform: 'all'
+        platform: 'all',
       },
       {
         url: '/js/vendor-react.js',
         type: 'js',
         priority: 'critical',
-        platform: 'all'
+        platform: 'all',
       },
       {
         url: '/js/vendor-state.js',
         type: 'js',
         priority: 'critical',
-        platform: 'all'
-      }
+        platform: 'all',
+      },
     ];
 
     return this.preloadAssets(criticalAssets);
@@ -140,7 +140,7 @@ export class AssetPreloader {
       url: dep.url,
       type: dep.type,
       priority: 'important',
-      platform: 'all'
+      platform: 'all',
     }));
 
     return this.preloadAssets(dependencyAssets);
@@ -155,38 +155,38 @@ export class AssetPreloader {
         url: '/icons/logo.svg',
         type: 'icon',
         priority: 'critical',
-        platform: 'all'
+        platform: 'all',
       },
       {
         url: '/icons/panels/smarthub.svg',
         type: 'icon',
         priority: 'important',
-        platform: 'all'
+        platform: 'all',
       },
       {
         url: '/icons/panels/aichat.svg',
         type: 'icon',
         priority: 'important',
-        platform: 'all'
+        platform: 'all',
       },
       {
         url: '/icons/panels/taskmanager.svg',
         type: 'icon',
         priority: 'important',
-        platform: 'all'
+        platform: 'all',
       },
       {
         url: '/icons/panels/productivity.svg',
         type: 'icon',
         priority: 'important',
-        platform: 'all'
+        platform: 'all',
       },
       {
         url: '/images/background-patterns/grid.svg',
         type: 'image',
         priority: 'normal',
-        platform: 'all'
-      }
+        platform: 'all',
+      },
     ];
 
     return this.preloadAssets(imageAssets);
@@ -205,13 +205,13 @@ export class AssetPreloader {
             url: '/js/platform-extension.js',
             type: 'js',
             priority: 'critical',
-            platform: 'extension'
+            platform: 'extension',
           },
           {
             url: '/css/extension-styles.css',
             type: 'css',
             priority: 'important',
-            platform: 'extension'
+            platform: 'extension',
           }
         );
         break;
@@ -222,13 +222,13 @@ export class AssetPreloader {
             url: '/js/platform-electron.js',
             type: 'js',
             priority: 'critical',
-            platform: 'electron'
+            platform: 'electron',
           },
           {
             url: '/css/electron-styles.css',
             type: 'css',
             priority: 'important',
-            platform: 'electron'
+            platform: 'electron',
           }
         );
         break;
@@ -239,13 +239,13 @@ export class AssetPreloader {
             url: '/js/platform-web.js',
             type: 'js',
             priority: 'critical',
-            platform: 'web'
+            platform: 'web',
           },
           {
             url: '/css/web-styles.css',
             type: 'css',
             priority: 'important',
-            platform: 'web'
+            platform: 'web',
           }
         );
         break;
@@ -259,8 +259,8 @@ export class AssetPreloader {
    */
   async preloadAssets(assets: PreloadableAsset[]): Promise<PreloadResult[]> {
     // Filter assets by platform
-    const filteredAssets = assets.filter(asset => 
-      asset.platform === 'all' || asset.platform === this.platform
+    const filteredAssets = assets.filter(
+      asset => asset.platform === 'all' || asset.platform === this.platform
     );
 
     // Sort by priority
@@ -314,7 +314,7 @@ export class AssetPreloader {
         this.preloadFonts(),
         this.preloadCriticalResources(),
         this.preloadImages(),
-        this.preloadPlatformAssets()
+        this.preloadPlatformAssets(),
       ]);
 
       const endTime = performance.now();
@@ -345,28 +345,25 @@ export class AssetPreloader {
     const now = Date.now();
     let totalLoadTime = 0;
     let expiredEntries = 0;
-    
-    this.preloadCache.forEach((entry) => {
+
+    this.preloadCache.forEach(entry => {
       totalLoadTime += entry.loadTime;
       if (now - entry.timestamp > this.config.cacheExpiry) {
         expiredEntries++;
       }
     });
 
-    const totalRequests = Array.from(this.analytics.values())
-      .flat()
-      .length;
+    const totalRequests = Array.from(this.analytics.values()).flat().length;
 
     const cacheHits = Array.from(this.analytics.values())
       .flat()
-      .filter(result => result.cached)
-      .length;
+      .filter(result => result.cached).length;
 
     return {
       size: this.preloadCache.size,
       hitRate: totalRequests > 0 ? (cacheHits / totalRequests) * 100 : 0,
       averageLoadTime: this.preloadCache.size > 0 ? totalLoadTime / this.preloadCache.size : 0,
-      expiredEntries
+      expiredEntries,
     };
   }
 
@@ -396,16 +393,20 @@ export class AssetPreloader {
       totalRequests: results.length,
       successRate: (results.filter(r => r.success).length / results.length) * 100,
       averageLoadTime: results.reduce((sum, r) => sum + r.loadTime, 0) / results.length,
-      cacheHitRate: (results.filter(r => r.cached).length / results.length) * 100
+      cacheHitRate: (results.filter(r => r.cached).length / results.length) * 100,
     }));
 
-    return JSON.stringify({
-      platform: this.platform,
-      config: this.config,
-      cacheStatistics: this.getCacheStatistics(),
-      assetAnalytics: analytics,
-      timestamp: new Date().toISOString()
-    }, null, 2);
+    return JSON.stringify(
+      {
+        platform: this.platform,
+        config: this.config,
+        cacheStatistics: this.getCacheStatistics(),
+        assetAnalytics: analytics,
+        timestamp: new Date().toISOString(),
+      },
+      null,
+      2
+    );
   }
 
   // Private methods
@@ -415,9 +416,7 @@ export class AssetPreloader {
     const results: PreloadResult[] = [];
 
     for (const chunk of chunks) {
-      const chunkResults = await Promise.all(
-        chunk.map(asset => this.loadSingleAsset(asset))
-      );
+      const chunkResults = await Promise.all(chunk.map(asset => this.loadSingleAsset(asset)));
       results.push(...chunkResults);
     }
 
@@ -434,15 +433,15 @@ export class AssetPreloader {
     if (this.config.enableCache && this.preloadCache.has(asset.url)) {
       const cached = this.preloadCache.get(asset.url)!;
       const now = Date.now();
-      
+
       if (now - cached.timestamp < this.config.cacheExpiry) {
         const result: PreloadResult = {
           url: asset.url,
           success: true,
           loadTime: 0,
-          cached: true
+          cached: true,
         };
-        
+
         this.recordAnalytics(asset.url, result);
         return result;
       } else {
@@ -470,7 +469,7 @@ export class AssetPreloader {
     while (attempts < this.config.retryAttempts) {
       try {
         attempts++;
-        
+
         const success = await this.loadAssetByType(asset);
         const loadTime = performance.now() - startTime;
 
@@ -478,20 +477,19 @@ export class AssetPreloader {
           url: asset.url,
           success,
           loadTime,
-          cached: false
+          cached: false,
         };
 
         if (success && this.config.enableCache) {
           this.preloadCache.set(asset.url, {
             data: null, // Store actual data if needed
             timestamp: Date.now(),
-            loadTime
+            loadTime,
           });
         }
 
         this.recordAnalytics(asset.url, result);
         return result;
-
       } catch (error) {
         if (attempts >= this.config.retryAttempts) {
           const result: PreloadResult = {
@@ -499,7 +497,7 @@ export class AssetPreloader {
             success: false,
             loadTime: performance.now() - startTime,
             cached: false,
-            error: error instanceof Error ? error.message : 'Unknown error'
+            error: error instanceof Error ? error.message : 'Unknown error',
           };
 
           this.recordAnalytics(asset.url, result);
@@ -523,27 +521,51 @@ export class AssetPreloader {
       switch (asset.type) {
         case 'font':
           this.loadFont(asset.url)
-            .then(() => { clearTimeout(timeout); resolve(true); })
-            .catch(error => { clearTimeout(timeout); reject(error); });
+            .then(() => {
+              clearTimeout(timeout);
+              resolve(true);
+            })
+            .catch(error => {
+              clearTimeout(timeout);
+              reject(error);
+            });
           break;
 
         case 'css':
           this.loadCSS(asset)
-            .then(() => { clearTimeout(timeout); resolve(true); })
-            .catch(error => { clearTimeout(timeout); reject(error); });
+            .then(() => {
+              clearTimeout(timeout);
+              resolve(true);
+            })
+            .catch(error => {
+              clearTimeout(timeout);
+              reject(error);
+            });
           break;
 
         case 'js':
           this.loadScript(asset.url)
-            .then(() => { clearTimeout(timeout); resolve(true); })
-            .catch(error => { clearTimeout(timeout); reject(error); });
+            .then(() => {
+              clearTimeout(timeout);
+              resolve(true);
+            })
+            .catch(error => {
+              clearTimeout(timeout);
+              reject(error);
+            });
           break;
 
         case 'image':
         case 'icon':
           this.loadImage(asset.url)
-            .then(() => { clearTimeout(timeout); resolve(true); })
-            .catch(error => { clearTimeout(timeout); reject(error); });
+            .then(() => {
+              clearTimeout(timeout);
+              resolve(true);
+            })
+            .catch(error => {
+              clearTimeout(timeout);
+              reject(error);
+            });
           break;
 
         default:
@@ -576,10 +598,10 @@ export class AssetPreloader {
       link.as = 'style';
       link.href = asset.url;
       if (asset.media) link.media = asset.media;
-      
+
       link.onload = () => resolve();
       link.onerror = () => reject(new Error(`Failed to load CSS: ${asset.url}`));
-      
+
       document.head.appendChild(link);
     });
   }
@@ -590,10 +612,10 @@ export class AssetPreloader {
       link.rel = 'preload';
       link.as = 'script';
       link.href = url;
-      
+
       link.onload = () => resolve();
       link.onerror = () => reject(new Error(`Failed to load script: ${url}`));
-      
+
       document.head.appendChild(link);
     });
   }
@@ -607,25 +629,27 @@ export class AssetPreloader {
     });
   }
 
-  private analyzeComponentDependencies(componentName: string): Array<{ url: string; type: AssetType }> {
+  private analyzeComponentDependencies(
+    componentName: string
+  ): Array<{ url: string; type: AssetType }> {
     // Component dependency mapping
     const dependencyMap: Record<string, Array<{ url: string; type: AssetType }>> = {
-      'SmartHub': [
+      SmartHub: [
         { url: '/js/panel-smarthub.js', type: 'js' },
-        { url: '/css/panel-smarthub.css', type: 'css' }
+        { url: '/css/panel-smarthub.css', type: 'css' },
       ],
-      'AIChat': [
+      AIChat: [
         { url: '/js/panel-aichat.js', type: 'js' },
-        { url: '/css/panel-aichat.css', type: 'css' }
+        { url: '/css/panel-aichat.css', type: 'css' },
       ],
-      'TaskManager': [
+      TaskManager: [
         { url: '/js/panel-taskmanager.js', type: 'js' },
-        { url: '/css/panel-taskmanager.css', type: 'css' }
+        { url: '/css/panel-taskmanager.css', type: 'css' },
       ],
-      'Productivity': [
+      Productivity: [
         { url: '/js/panel-productivity.js', type: 'js' },
-        { url: '/css/panel-productivity.css', type: 'css' }
-      ]
+        { url: '/css/panel-productivity.css', type: 'css' },
+      ],
     };
 
     return dependencyMap[componentName] || [];
@@ -644,9 +668,12 @@ export class AssetPreloader {
     this.clearExpiredCache();
 
     // Set up periodic cache cleanup
-    setInterval(() => {
-      this.clearExpiredCache();
-    }, 5 * 60 * 1000); // Every 5 minutes
+    setInterval(
+      () => {
+        this.clearExpiredCache();
+      },
+      5 * 60 * 1000
+    ); // Every 5 minutes
   }
 
   private recordAnalytics(url: string, result: PreloadResult): void {
@@ -655,7 +682,7 @@ export class AssetPreloader {
     if (!this.analytics.has(url)) {
       this.analytics.set(url, []);
     }
-    
+
     this.analytics.get(url)!.push(result);
 
     // Keep only last 100 results per asset
@@ -681,7 +708,7 @@ export const globalAssetPreloader = new AssetPreloader({
   maxConcurrent: 6,
   retryAttempts: 3,
   timeout: 10000,
-  enableAnalytics: true
+  enableAnalytics: true,
 });
 
 // Make asset preloader available globally for debugging

@@ -39,10 +39,10 @@ const FEATURE_TESTS: FeatureTest[] = [
       'Look for bookmark search input field',
       'Check for category filters (development, code, documentation, web, help)',
       'Verify "Most Visited" and "Recent Bookmarks" sections exist',
-      'Test adding a new bookmark (if functionality is implemented)'
+      'Test adding a new bookmark (if functionality is implemented)',
     ],
     expectedBehavior: 'Should display bookmark interface with search and categorization',
-    critical: true
+    critical: true,
   },
   {
     id: 'sh-search',
@@ -52,10 +52,10 @@ const FEATURE_TESTS: FeatureTest[] = [
     instructions: [
       'Type in the search input field',
       'Verify search placeholder text appears',
-      'Check if search functionality filters results'
+      'Check if search functionality filters results',
     ],
     expectedBehavior: 'Search should filter bookmarks in real-time',
-    critical: true
+    critical: true,
   },
   {
     id: 'sh-categories',
@@ -65,10 +65,10 @@ const FEATURE_TESTS: FeatureTest[] = [
     instructions: [
       'Click on category buttons (development, code, documentation, web, help)',
       'Verify categories are visually distinct',
-      'Check if category selection filters bookmarks'
+      'Check if category selection filters bookmarks',
     ],
     expectedBehavior: 'Categories should filter bookmark display',
-    critical: false
+    critical: false,
   },
 
   // AIChat Tests
@@ -81,10 +81,10 @@ const FEATURE_TESTS: FeatureTest[] = [
       'Find the chat input field with placeholder "Ask me anything..."',
       'Type a test message',
       'Press Ctrl+Enter or click Send button',
-      'Verify message appears in chat history'
+      'Verify message appears in chat history',
     ],
     expectedBehavior: 'Should accept text input and send messages',
-    critical: true
+    critical: true,
   },
   {
     id: 'ai-providers',
@@ -94,10 +94,10 @@ const FEATURE_TESTS: FeatureTest[] = [
     instructions: [
       'Look for provider selection buttons/icons',
       'Check for provider status indicators',
-      'Verify "Clear All" and other control buttons exist'
+      'Verify "Clear All" and other control buttons exist',
     ],
     expectedBehavior: 'Should show multiple AI provider options',
-    critical: true
+    critical: true,
   },
   {
     id: 'ai-history',
@@ -108,10 +108,10 @@ const FEATURE_TESTS: FeatureTest[] = [
       'Send a test message',
       'Verify message appears in chat area',
       'Check message formatting and timestamps',
-      'Test chat history persistence'
+      'Test chat history persistence',
     ],
     expectedBehavior: 'Messages should appear with proper user/assistant distinction',
-    critical: true
+    critical: true,
   },
 
   // TaskManager Tests
@@ -124,10 +124,10 @@ const FEATURE_TESTS: FeatureTest[] = [
       'Look for "Add Task" button',
       'Check task statistics display (Total, Done, Critical, Complete %)',
       'Verify search functionality exists',
-      'Test "Templates" button if available'
+      'Test "Templates" button if available',
     ],
     expectedBehavior: 'Should display task statistics and creation interface',
-    critical: true
+    critical: true,
   },
   {
     id: 'tm-statistics',
@@ -137,10 +137,10 @@ const FEATURE_TESTS: FeatureTest[] = [
     instructions: [
       'Verify statistics show: Total (0), Done (0), Critical (0), Complete (0%)',
       'Check if statistics update when tasks change',
-      'Verify visual styling matches design'
+      'Verify visual styling matches design',
     ],
     expectedBehavior: 'Statistics should accurately reflect task state',
-    critical: false
+    critical: false,
   },
   {
     id: 'tm-search',
@@ -151,10 +151,10 @@ const FEATURE_TESTS: FeatureTest[] = [
       'Use search input to filter tasks',
       'Test category filtering dropdown',
       'Verify "Show Done" toggle functionality',
-      'Check if filters work correctly'
+      'Check if filters work correctly',
     ],
     expectedBehavior: 'Search should filter tasks based on criteria',
-    critical: false
+    critical: false,
   },
 
   // Productivity Tests
@@ -167,10 +167,10 @@ const FEATURE_TESTS: FeatureTest[] = [
       'Find timer display showing "25:00"',
       'Look for "Focus Time" section',
       'Check for session tracking display',
-      'Verify timer technique description exists'
+      'Verify timer technique description exists',
     ],
     expectedBehavior: 'Should display functional Pomodoro timer interface',
-    critical: true
+    critical: true,
   },
   {
     id: 'prod-sessions',
@@ -181,10 +181,10 @@ const FEATURE_TESTS: FeatureTest[] = [
       'Verify session counter displays (Session 1)',
       'Check focus time tracking',
       'Look for session type indicators',
-      'Test session statistics if available'
+      'Test session statistics if available',
     ],
     expectedBehavior: 'Should track and display session information',
-    critical: false
+    critical: false,
   },
 
   // Layout Tests
@@ -197,10 +197,10 @@ const FEATURE_TESTS: FeatureTest[] = [
       'Verify all 4 panels are visible and properly positioned',
       'Check panel titles and content',
       'Test panel resizing handles if visible',
-      'Verify panels maintain their content'
+      'Verify panels maintain their content',
     ],
     expectedBehavior: 'All panels should render with correct content and layout',
-    critical: true
+    critical: true,
   },
   {
     id: 'layout-toolbar',
@@ -211,10 +211,10 @@ const FEATURE_TESTS: FeatureTest[] = [
       'Look for toolbar with panel creation buttons',
       'Check for workspace management controls',
       'Verify layout and selection tools',
-      'Test grid and snap controls if visible'
+      'Test grid and snap controls if visible',
     ],
     expectedBehavior: 'Toolbar should provide panel management capabilities',
-    critical: false
+    critical: false,
   },
 
   // Global Tests
@@ -227,10 +227,10 @@ const FEATURE_TESTS: FeatureTest[] = [
       'Resize browser window',
       'Check if panels adjust appropriately',
       'Verify UI remains usable at different sizes',
-      'Test mobile-like dimensions'
+      'Test mobile-like dimensions',
     ],
     expectedBehavior: 'Interface should adapt to screen size changes',
-    critical: false
+    critical: false,
   },
   {
     id: 'global-persistence',
@@ -241,11 +241,11 @@ const FEATURE_TESTS: FeatureTest[] = [
       'Make changes to any component (add bookmark, task, etc.)',
       'Refresh the page',
       'Verify changes are preserved',
-      'Check localStorage for data'
+      'Check localStorage for data',
     ],
     expectedBehavior: 'State should persist across page reloads',
-    critical: true
-  }
+    critical: true,
+  },
 ];
 
 export const FeatureParityValidation: React.FC = () => {
@@ -260,38 +260,45 @@ export const FeatureParityValidation: React.FC = () => {
     const initialResults = FEATURE_TESTS.map(test => ({
       category: test.category,
       feature: test.feature,
-      status: 'pending' as const
+      status: 'pending' as const,
     }));
     setTestResults(initialResults);
   }, []);
 
-  const handleTestResult = useCallback((testId: string, status: 'pass' | 'fail', notes?: string) => {
-    const test = FEATURE_TESTS.find(t => t.id === testId);
-    if (!test) return;
+  const handleTestResult = useCallback(
+    (testId: string, status: 'pass' | 'fail', notes?: string) => {
+      const test = FEATURE_TESTS.find(t => t.id === testId);
+      if (!test) return;
 
-    setTestResults(prev => {
-      const updated = [...prev];
-      const index = updated.findIndex(r => r.category === test.category && r.feature === test.feature);
-      if (index >= 0) {
-        updated[index] = {
-          ...updated[index],
-          status,
-          notes,
-          timestamp: Date.now()
-        };
-      }
-      return updated;
-    });
+      setTestResults(prev => {
+        const updated = [...prev];
+        const index = updated.findIndex(
+          r => r.category === test.category && r.feature === test.feature
+        );
+        if (index >= 0) {
+          updated[index] = {
+            ...updated[index],
+            status,
+            notes,
+            timestamp: Date.now(),
+          };
+        }
+        return updated;
+      });
 
-    setCurrentTest(null);
-    setNotes('');
-  }, []);
+      setCurrentTest(null);
+      setNotes('');
+    },
+    []
+  );
 
   const categories = Array.from(new Set(FEATURE_TESTS.map(t => t.category)));
   const filteredTests = FEATURE_TESTS.filter(test => {
     if (filterCategory !== 'all' && test.category !== filterCategory) return false;
     if (showOnlyFailed) {
-      const result = testResults.find(r => r.category === test.category && r.feature === test.feature);
+      const result = testResults.find(
+        r => r.category === test.category && r.feature === test.feature
+      );
       return result?.status === 'fail';
     }
     return true;
@@ -303,17 +310,23 @@ export const FeatureParityValidation: React.FC = () => {
 
   const getStatusColor = (status: 'pending' | 'pass' | 'fail') => {
     switch (status) {
-      case 'pass': return 'text-green-400 bg-green-500/20';
-      case 'fail': return 'text-red-400 bg-red-500/20';
-      default: return 'text-yellow-400 bg-yellow-500/20';
+      case 'pass':
+        return 'text-green-400 bg-green-500/20';
+      case 'fail':
+        return 'text-red-400 bg-red-500/20';
+      default:
+        return 'text-yellow-400 bg-yellow-500/20';
     }
   };
 
   const getStatusIcon = (status: 'pending' | 'pass' | 'fail') => {
     switch (status) {
-      case 'pass': return '✅';
-      case 'fail': return '❌';
-      default: return '⏳';
+      case 'pass':
+        return '✅';
+      case 'fail':
+        return '❌';
+      default:
+        return '⏳';
     }
   };
 
@@ -330,13 +343,15 @@ export const FeatureParityValidation: React.FC = () => {
       timestamp: new Date().toISOString(),
       summary: getTotalResults(),
       details: testResults.map(result => {
-        const test = FEATURE_TESTS.find(t => t.category === result.category && t.feature === result.feature);
+        const test = FEATURE_TESTS.find(
+          t => t.category === result.category && t.feature === result.feature
+        );
         return {
           ...result,
           critical: test?.critical || false,
-          description: test?.description || ''
+          description: test?.description || '',
         };
-      })
+      }),
     };
 
     const blob = new Blob([JSON.stringify(results, null, 2)], { type: 'application/json' });
@@ -396,19 +411,21 @@ export const FeatureParityValidation: React.FC = () => {
           <div className="flex items-center gap-4 mb-6">
             <select
               value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value)}
+              onChange={e => setFilterCategory(e.target.value)}
               className="bg-white/10 border border-white/20 rounded px-3 py-2"
             >
               <option value="all">All Categories</option>
               {categories.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
               ))}
             </select>
             <label className="flex items-center gap-2">
               <input
                 type="checkbox"
                 checked={showOnlyFailed}
-                onChange={(e) => setShowOnlyFailed(e.target.checked)}
+                onChange={e => setShowOnlyFailed(e.target.checked)}
                 className="rounded"
               />
               Show Only Failed
@@ -432,10 +449,14 @@ export const FeatureParityValidation: React.FC = () => {
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <span className={`px-3 py-1 rounded-full text-sm ${getStatusColor(result?.status || 'pending')}`}>
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm ${getStatusColor(result?.status || 'pending')}`}
+                      >
                         {getStatusIcon(result?.status || 'pending')} {result?.status || 'pending'}
                       </span>
-                      <h3 className="text-xl font-semibold">{test.category} - {test.feature}</h3>
+                      <h3 className="text-xl font-semibold">
+                        {test.category} - {test.feature}
+                      </h3>
                       {test.critical && (
                         <span className="bg-red-500/30 text-red-300 px-2 py-1 rounded text-xs">
                           CRITICAL
@@ -443,9 +464,7 @@ export const FeatureParityValidation: React.FC = () => {
                       )}
                     </div>
                     <p className="text-gray-300 mb-3">{test.description}</p>
-                    <div className="text-sm text-gray-400">
-                      Expected: {test.expectedBehavior}
-                    </div>
+                    <div className="text-sm text-gray-400">Expected: {test.expectedBehavior}</div>
                   </div>
                   <div className="flex gap-2">
                     <button
@@ -462,15 +481,17 @@ export const FeatureParityValidation: React.FC = () => {
                     <h4 className="font-semibold mb-2">Test Instructions:</h4>
                     <ul className="list-disc list-inside space-y-1 mb-4">
                       {test.instructions.map((instruction, index) => (
-                        <li key={index} className="text-gray-300">{instruction}</li>
+                        <li key={index} className="text-gray-300">
+                          {instruction}
+                        </li>
                       ))}
                     </ul>
-                    
+
                     <div className="mb-4">
                       <label className="block text-sm font-medium mb-2">Notes (optional):</label>
                       <textarea
                         value={notes}
-                        onChange={(e) => setNotes(e.target.value)}
+                        onChange={e => setNotes(e.target.value)}
                         className="w-full bg-white/10 border border-white/20 rounded px-3 py-2 text-white"
                         rows={3}
                         placeholder="Add any observations or issues found..."

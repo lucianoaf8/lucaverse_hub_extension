@@ -33,18 +33,19 @@ const initializeNewTab = async () => {
     }
 
     // Notify background that new tab opened
-    chrome.runtime.sendMessage({
-      action: 'newTabOpened',
-      data: {
-        timestamp: Date.now(),
-        parameters: { panel, workspace, template },
-      },
-    }).catch(() => {
-      // Ignore errors if background is not available
-    });
+    chrome.runtime
+      .sendMessage({
+        action: 'newTabOpened',
+        data: {
+          timestamp: Date.now(),
+          parameters: { panel, workspace, template },
+        },
+      })
+      .catch(() => {
+        // Ignore errors if background is not available
+      });
 
     console.log('Lucaverse Hub new tab initialized');
-
   } catch (error) {
     console.error('New tab initialization failed:', error);
   }

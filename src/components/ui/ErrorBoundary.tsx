@@ -38,7 +38,10 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         this.props.fallback ?? (
           <div className="flex flex-col items-center justify-center w-full h-full p-4 text-center text-red-400">
             <h2 className="text-lg font-semibold mb-2">Something went wrong.</h2>
-            <p className="text-sm opacity-80">The panel crashed unexpectedly. Please refresh the panel or check the console for details.</p>
+            <p className="text-sm opacity-80">
+              The panel crashed unexpectedly. Please refresh the panel or check the console for
+              details.
+            </p>
           </div>
         )
       );

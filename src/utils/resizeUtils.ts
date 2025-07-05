@@ -42,7 +42,7 @@ const CACHE_TTL = 5000; // 5 seconds
  */
 export const calculateAspectRatio = (size: Size): number => {
   const startTime = performance.now();
-  
+
   try {
     if (size.height === 0) return 0;
     return size.width / size.height;
@@ -59,11 +59,11 @@ export const calculatePreciseAspectRatio = (
   precision: number = 2
 ): { ratio: number; formatted: string } => {
   const startTime = performance.now();
-  
+
   try {
     const ratio = calculateAspectRatio(size);
     const roundedRatio = Math.round(ratio * Math.pow(10, precision)) / Math.pow(10, precision);
-    
+
     return {
       ratio: roundedRatio,
       formatted: `${roundedRatio.toFixed(precision)}:1`,
@@ -92,9 +92,9 @@ export const enforceMinMaxConstraints = (
   const cacheKey = `enforceConstraints_${JSON.stringify({ size, constraints })}`;
   const cached = getCachedOperation(cacheKey);
   if (cached) return cached.output;
-  
+
   const startTime = performance.now();
-  
+
   try {
     const violations: Array<{
       dimension: 'width' | 'height';
@@ -102,10 +102,10 @@ export const enforceMinMaxConstraints = (
       original: number;
       constrained: number;
     }> = [];
-    
+
     let constrainedSize = { ...size };
     let wasConstrained = false;
-    
+
     // Enforce minimum width
     if (constrainedSize.width < constraints.minSize.width) {
       violations.push({
@@ -117,7 +117,7 @@ export const enforceMinMaxConstraints = (
       constrainedSize.width = constraints.minSize.width;
       wasConstrained = true;
     }
-    
+
     // Enforce minimum height
     if (constrainedSize.height < constraints.minSize.height) {
       violations.push({
@@ -129,7 +129,7 @@ export const enforceMinMaxConstraints = (
       constrainedSize.height = constraints.minSize.height;
       wasConstrained = true;
     }
-    
+
     // Enforce maximum width
     if (constraints.maxSize && constrainedSize.width > constraints.maxSize.width) {
       violations.push({
@@ -141,7 +141,7 @@ export const enforceMinMaxConstraints = (
       constrainedSize.width = constraints.maxSize.width;
       wasConstrained = true;
     }
-    
+
     // Enforce maximum height
     if (constraints.maxSize && constrainedSize.height > constraints.maxSize.height) {
       violations.push({
@@ -153,10 +153,10 @@ export const enforceMinMaxConstraints = (
       constrainedSize.height = constraints.maxSize.height;
       wasConstrained = true;
     }
-    
+
     const result = { constrainedSize, wasConstrained, violations };
     setCachedOperation(cacheKey, 'enforceConstraints', { size, constraints }, result);
-    
+
     return result;
   } finally {
     trackPerformance(performance.now() - startTime);
@@ -180,30 +180,29 @@ export const snapToCommonSizes = (
   const cacheKey = `snapToSizes_${JSON.stringify({ size, snapThreshold, commonSizes })}`;
   const cached = getCachedOperation(cacheKey);
   if (cached) return cached.output;
-  
+
   const startTime = performance.now();
-  
+
   try {
     const alternatives: Array<{ size: Size; distance: number }> = [];
     let bestMatch: { size: Size; distance: number } | null = null;
-    
+
     // Calculate distances to all common sizes
     commonSizes.forEach(commonSize => {
       const distance = Math.sqrt(
-        Math.pow(size.width - commonSize.width, 2) + 
-        Math.pow(size.height - commonSize.height, 2)
+        Math.pow(size.width - commonSize.width, 2) + Math.pow(size.height - commonSize.height, 2)
       );
-      
+
       alternatives.push({ size: commonSize, distance });
-      
+
       if (!bestMatch || distance < bestMatch.distance) {
         bestMatch = { size: commonSize, distance };
       }
     });
-    
+
     // Sort alternatives by distance
     alternatives.sort((a, b) => a.distance - b.distance);
-    
+
     const wasSnapped = bestMatch && bestMatch.distance <= snapThreshold;
     const result = {
       snappedSize: wasSnapped ? bestMatch!.size : size,
@@ -212,7 +211,7 @@ export const snapToCommonSizes = (
       snapDistance: bestMatch?.distance || 0,
       alternatives: alternatives.slice(0, 5), // Top 5 alternatives
     };
-    
+
     setCachedOperation(cacheKey, 'snapToSize', { size, snapThreshold, commonSizes }, result);
     return result;
   } finally {
@@ -234,7 +233,7 @@ export const calculateProportionalResize = (
   relationship: 'horizontal' | 'vertical' | 'both' | 'none';
 }> => {
   const startTime = performance.now();
-  
+
   try {
     const results: Array<{
       panelId: string;
@@ -242,38 +241,42 @@ export const calculateProportionalResize = (
       proportion: number;
       relationship: 'horizontal' | 'vertical' | 'both' | 'none';
     }> = [];
-    
+
     panels.forEach(panel => {
       if (panel.id === anchorPanel.id) return;
-      
+
       // Determine spatial relationship
       const horizontalAlignment = Math.abs(panel.position.y - anchorPanel.position.y) < 50;
       const verticalAlignment = Math.abs(panel.position.x - anchorPanel.position.x) < 50;
-      
+
       let relationship: 'horizontal' | 'vertical' | 'both' | 'none' = 'none';
       if (horizontalAlignment && verticalAlignment) relationship = 'both';
       else if (horizontalAlignment) relationship = 'horizontal';
       else if (verticalAlignment) relationship = 'vertical';
-      
+
       if (relationship === 'none') return;
-      
+
       // Calculate proportional adjustments
-      const widthProportion = relationship === 'horizontal' || relationship === 'both' 
-        ? panel.size.width / anchorPanel.size.width 
-        : 1;
-      const heightProportion = relationship === 'vertical' || relationship === 'both'
-        ? panel.size.height / anchorPanel.size.height
-        : 1;
-      
+      const widthProportion =
+        relationship === 'horizontal' || relationship === 'both'
+          ? panel.size.width / anchorPanel.size.width
+          : 1;
+      const heightProportion =
+        relationship === 'vertical' || relationship === 'both'
+          ? panel.size.height / anchorPanel.size.height
+          : 1;
+
       const newSize: Size = {
-        width: relationship === 'horizontal' || relationship === 'both'
-          ? panel.size.width + (deltaSize.width * widthProportion)
-          : panel.size.width,
-        height: relationship === 'vertical' || relationship === 'both'
-          ? panel.size.height + (deltaSize.height * heightProportion)
-          : panel.size.height,
+        width:
+          relationship === 'horizontal' || relationship === 'both'
+            ? panel.size.width + deltaSize.width * widthProportion
+            : panel.size.width,
+        height:
+          relationship === 'vertical' || relationship === 'both'
+            ? panel.size.height + deltaSize.height * heightProportion
+            : panel.size.height,
       };
-      
+
       results.push({
         panelId: panel.id,
         newSize,
@@ -281,7 +284,7 @@ export const calculateProportionalResize = (
         relationship,
       });
     });
-    
+
     return results;
   } finally {
     trackPerformance(performance.now() - startTime);
@@ -309,20 +312,20 @@ export const validateResizeOperation = (
   confidence: number;
 } => {
   const startTime = performance.now();
-  
+
   try {
     const errors: string[] = [];
     const warnings: string[] = [];
     const suggestions: string[] = [];
     let validatedSize = { ...newSize };
     let confidence = 1.0;
-    
+
     // 1. Basic size validation
     if (newSize.width <= 0 || newSize.height <= 0) {
       errors.push('Size dimensions must be positive');
       confidence = 0;
     }
-    
+
     // 2. Constraint validation
     const constraintResult = enforceMinMaxConstraints(newSize, constraints);
     if (constraintResult.wasConstrained) {
@@ -332,25 +335,25 @@ export const validateResizeOperation = (
         confidence *= 0.9;
       });
     }
-    
+
     // 3. Aspect ratio validation
     if (context.preserveAspectRatio && constraints.aspectRatio) {
       const currentRatio = calculateAspectRatio(validatedSize);
       const targetRatio = constraints.aspectRatio.ratio;
       const tolerance = constraints.aspectRatio.tolerance || 0.1;
-      
+
       if (Math.abs(currentRatio - targetRatio) > tolerance) {
         warnings.push('Aspect ratio deviated from target');
         suggestions.push(`Adjust to maintain ${targetRatio.toFixed(2)}:1 ratio`);
         confidence *= 0.8;
       }
     }
-    
+
     // 4. Collision validation
     if (context.otherPanels && constraints.collisionConstraints?.preventOverlap) {
       const collisions = context.otherPanels.filter(otherPanel => {
         if (otherPanel.id === panel.id) return false;
-        
+
         // Check for overlap
         const panelBounds = {
           left: panel.position.x,
@@ -358,14 +361,14 @@ export const validateResizeOperation = (
           right: panel.position.x + validatedSize.width,
           bottom: panel.position.y + validatedSize.height,
         };
-        
+
         const otherBounds = {
           left: otherPanel.position.x,
           top: otherPanel.position.y,
           right: otherPanel.position.x + otherPanel.size.width,
           bottom: otherPanel.position.y + otherPanel.size.height,
         };
-        
+
         return !(
           panelBounds.right <= otherBounds.left ||
           panelBounds.left >= otherBounds.right ||
@@ -373,14 +376,14 @@ export const validateResizeOperation = (
           panelBounds.top >= otherBounds.bottom
         );
       });
-      
+
       if (collisions.length > 0) {
         errors.push(`Collision detected with ${collisions.length} panel(s)`);
         suggestions.push('Reduce size or move panel to avoid overlap');
         confidence *= 0.5;
       }
     }
-    
+
     // 5. Viewport validation
     if (context.viewport) {
       if (panel.position.x + validatedSize.width > context.viewport.width) {
@@ -388,14 +391,14 @@ export const validateResizeOperation = (
         suggestions.push('Reduce width or move panel left');
         confidence *= 0.9;
       }
-      
+
       if (panel.position.y + validatedSize.height > context.viewport.height) {
         warnings.push('Panel extends beyond bottom viewport boundary');
         suggestions.push('Reduce height or move panel up');
         confidence *= 0.9;
       }
     }
-    
+
     return {
       isValid: errors.length === 0,
       validatedSize,
@@ -415,17 +418,17 @@ export const validateResizeOperation = (
 const trackPerformance = (processingTime: number) => {
   performanceMetrics.operationCount++;
   performanceMetrics.totalProcessingTime += processingTime;
-  performanceMetrics.averageProcessingTime = 
+  performanceMetrics.averageProcessingTime =
     performanceMetrics.totalProcessingTime / performanceMetrics.operationCount;
-  
+
   if (processingTime > performanceMetrics.maxProcessingTime) {
     performanceMetrics.maxProcessingTime = processingTime;
   }
-  
+
   if (processingTime < performanceMetrics.minProcessingTime) {
     performanceMetrics.minProcessingTime = processingTime;
   }
-  
+
   // Track frame drops (operations taking longer than 16ms)
   if (processingTime > 16) {
     performanceMetrics.frameDrops++;
@@ -438,13 +441,13 @@ const trackPerformance = (processingTime: number) => {
 const getCachedOperation = (key: string): ResizeOperationCacheEntry | null => {
   const entry = operationCache.get(key);
   if (!entry) return null;
-  
+
   // Check TTL
   if (Date.now() - entry.timestamp > CACHE_TTL) {
     operationCache.delete(key);
     return null;
   }
-  
+
   entry.accessCount++;
   return entry;
 };
@@ -464,7 +467,7 @@ const setCachedOperation = (
       operationCache.delete(key);
     });
   }
-  
+
   operationCache.set(key, {
     key,
     operation,
@@ -515,8 +518,9 @@ export const getCacheStatistics = (): {
   const entries = Array.from(operationCache.values());
   const totalAccesses = entries.reduce((sum, entry) => sum + entry.accessCount, 0);
   const cacheHits = entries.filter(entry => entry.accessCount > 1).length;
-  const averageAge = entries.reduce((sum, entry) => sum + (Date.now() - entry.timestamp), 0) / entries.length;
-  
+  const averageAge =
+    entries.reduce((sum, entry) => sum + (Date.now() - entry.timestamp), 0) / entries.length;
+
   return {
     size: operationCache.size,
     hitRate: entries.length > 0 ? cacheHits / entries.length : 0,
@@ -552,7 +556,7 @@ export const getRecommendedSize = (
     moderate: 1.0,
     extensive: 1.4,
   };
-  
+
   const contentMultipliers = {
     text: { width: 1.0, height: 1.2 },
     image: { width: 1.3, height: 1.0 },
@@ -560,10 +564,10 @@ export const getRecommendedSize = (
     chart: { width: 1.2, height: 1.0 },
     form: { width: 1.0, height: 1.5 },
   };
-  
+
   const multiplier = multipliers[contentAmount];
   const contentMultiplier = contentMultipliers[contentType];
-  
+
   return {
     width: Math.round(baseSize.width * multiplier * contentMultiplier.width),
     height: Math.round(baseSize.height * multiplier * contentMultiplier.height),

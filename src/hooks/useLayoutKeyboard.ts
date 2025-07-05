@@ -22,14 +22,14 @@ interface ShortcutConfig {
 const MOVEMENT_STEP = {
   SMALL: 1,
   MEDIUM: 10,
-  LARGE: 50
+  LARGE: 50,
 };
 
-// Resize step sizes  
+// Resize step sizes
 const RESIZE_STEP = {
   SMALL: 5,
   MEDIUM: 20,
-  LARGE: 100
+  LARGE: 100,
 };
 
 /**
@@ -40,7 +40,7 @@ export const useLayoutKeyboard = (config: ShortcutConfig = {}) => {
     enabled = true,
     preventDefault = true,
     stopPropagation = true,
-    enableOnFormTags = false
+    enableOnFormTags = false,
   } = config;
 
   const {
@@ -58,151 +58,238 @@ export const useLayoutKeyboard = (config: ShortcutConfig = {}) => {
     resetLayout,
     duplicatePanel,
     centerPanel,
-    getSelectedPanels
+    getSelectedPanels,
   } = useLayoutStore();
 
   // Helper to get default position for new panels
-  const getDefaultPosition = useCallback((size: Size): Position => {
-    const existingPositions = panels.map(p => p.position);
-    const cascadeOffset = 30;
-    let basePosition = { x: 100, y: 100 };
-    
-    // Find a position that doesn't overlap
-    for (let i = 0; i < 20; i++) {
-      const testPosition = {
-        x: basePosition.x + (i * cascadeOffset),
-        y: basePosition.y + (i * cascadeOffset)
-      };
-      
-      const hasOverlap = existingPositions.some(pos => 
-        Math.abs(pos.x - testPosition.x) < 50 && Math.abs(pos.y - testPosition.y) < 50
-      );
-      
-      if (!hasOverlap) {
-        return testPosition;
+  const getDefaultPosition = useCallback(
+    (size: Size): Position => {
+      const existingPositions = panels.map(p => p.position);
+      const cascadeOffset = 30;
+      let basePosition = { x: 100, y: 100 };
+
+      // Find a position that doesn't overlap
+      for (let i = 0; i < 20; i++) {
+        const testPosition = {
+          x: basePosition.x + i * cascadeOffset,
+          y: basePosition.y + i * cascadeOffset,
+        };
+
+        const hasOverlap = existingPositions.some(
+          pos => Math.abs(pos.x - testPosition.x) < 50 && Math.abs(pos.y - testPosition.y) < 50
+        );
+
+        if (!hasOverlap) {
+          return testPosition;
+        }
       }
-    }
-    
-    return basePosition;
-  }, [panels]);
+
+      return basePosition;
+    },
+    [panels]
+  );
 
   // Panel navigation shortcuts
   useHotkeys(
     'tab',
-    (e) => {
+    e => {
       if (!enabled) return;
       e.preventDefault();
-      
+
       if (panels.length === 0) return;
-      
-      const currentIndex = selectedPanelIds.length > 0 
-        ? panels.findIndex(p => p.id === selectedPanelIds[0])
-        : -1;
-      
+
+      const currentIndex =
+        selectedPanelIds.length > 0 ? panels.findIndex(p => p.id === selectedPanelIds[0]) : -1;
+
       const nextIndex = (currentIndex + 1) % panels.length;
       const nextPanel = panels[nextIndex];
-      
+
       if (nextPanel) {
         selectPanel(nextPanel.id, false);
       }
     },
     {
       preventDefault,
-      enableOnFormTags
+      enableOnFormTags,
     },
     [enabled, panels, selectedPanelIds, selectPanel]
   );
 
   useHotkeys(
     'shift+tab',
-    (e) => {
+    e => {
       if (!enabled) return;
       e.preventDefault();
-      
+
       if (panels.length === 0) return;
-      
-      const currentIndex = selectedPanelIds.length > 0 
-        ? panels.findIndex(p => p.id === selectedPanelIds[0])
-        : 0;
-      
+
+      const currentIndex =
+        selectedPanelIds.length > 0 ? panels.findIndex(p => p.id === selectedPanelIds[0]) : 0;
+
       const prevIndex = currentIndex <= 0 ? panels.length - 1 : currentIndex - 1;
       const prevPanel = panels[prevIndex];
-      
+
       if (prevPanel) {
         selectPanel(prevPanel.id, false);
       }
     },
     {
       preventDefault,
-      enableOnFormTags
+      enableOnFormTags,
     },
     [enabled, panels, selectedPanelIds, selectPanel]
   );
 
   // Panel movement shortcuts
-  const moveSelectedPanels = useCallback((deltaX: number, deltaY: number) => {
-    const selectedPanels = getSelectedPanels();
-    
-    selectedPanels.forEach(panel => {
-      const newPosition = {
-        x: Math.max(0, panel.position.x + deltaX),
-        y: Math.max(0, panel.position.y + deltaY)
-      };
-      
-      updatePanel(panel.id, { position: newPosition });
-    });
-  }, [getSelectedPanels, updatePanel]);
+  const moveSelectedPanels = useCallback(
+    (deltaX: number, deltaY: number) => {
+      const selectedPanels = getSelectedPanels();
+
+      selectedPanels.forEach(panel => {
+        const newPosition = {
+          x: Math.max(0, panel.position.x + deltaX),
+          y: Math.max(0, panel.position.y + deltaY),
+        };
+
+        updatePanel(panel.id, { position: newPosition });
+      });
+    },
+    [getSelectedPanels, updatePanel]
+  );
 
   // Fine movement (1px)
-  useHotkeys('ctrl+shift+left', () => enabled && moveSelectedPanels(-MOVEMENT_STEP.SMALL, 0), { preventDefault, enableOnFormTags }, [enabled, moveSelectedPanels]);
-  useHotkeys('ctrl+shift+right', () => enabled && moveSelectedPanels(MOVEMENT_STEP.SMALL, 0), { preventDefault, enableOnFormTags }, [enabled, moveSelectedPanels]);
-  useHotkeys('ctrl+shift+up', () => enabled && moveSelectedPanels(0, -MOVEMENT_STEP.SMALL), { preventDefault, enableOnFormTags }, [enabled, moveSelectedPanels]);
-  useHotkeys('ctrl+shift+down', () => enabled && moveSelectedPanels(0, MOVEMENT_STEP.SMALL), { preventDefault, enableOnFormTags }, [enabled, moveSelectedPanels]);
+  useHotkeys(
+    'ctrl+shift+left',
+    () => enabled && moveSelectedPanels(-MOVEMENT_STEP.SMALL, 0),
+    { preventDefault, enableOnFormTags },
+    [enabled, moveSelectedPanels]
+  );
+  useHotkeys(
+    'ctrl+shift+right',
+    () => enabled && moveSelectedPanels(MOVEMENT_STEP.SMALL, 0),
+    { preventDefault, enableOnFormTags },
+    [enabled, moveSelectedPanels]
+  );
+  useHotkeys(
+    'ctrl+shift+up',
+    () => enabled && moveSelectedPanels(0, -MOVEMENT_STEP.SMALL),
+    { preventDefault, enableOnFormTags },
+    [enabled, moveSelectedPanels]
+  );
+  useHotkeys(
+    'ctrl+shift+down',
+    () => enabled && moveSelectedPanels(0, MOVEMENT_STEP.SMALL),
+    { preventDefault, enableOnFormTags },
+    [enabled, moveSelectedPanels]
+  );
 
   // Medium movement (10px)
-  useHotkeys('ctrl+left', () => enabled && moveSelectedPanels(-MOVEMENT_STEP.MEDIUM, 0), { preventDefault, enableOnFormTags }, [enabled, moveSelectedPanels]);
-  useHotkeys('ctrl+right', () => enabled && moveSelectedPanels(MOVEMENT_STEP.MEDIUM, 0), { preventDefault, enableOnFormTags }, [enabled, moveSelectedPanels]);
-  useHotkeys('ctrl+up', () => enabled && moveSelectedPanels(0, -MOVEMENT_STEP.MEDIUM), { preventDefault, enableOnFormTags }, [enabled, moveSelectedPanels]);
-  useHotkeys('ctrl+down', () => enabled && moveSelectedPanels(0, MOVEMENT_STEP.MEDIUM), { preventDefault, enableOnFormTags }, [enabled, moveSelectedPanels]);
+  useHotkeys(
+    'ctrl+left',
+    () => enabled && moveSelectedPanels(-MOVEMENT_STEP.MEDIUM, 0),
+    { preventDefault, enableOnFormTags },
+    [enabled, moveSelectedPanels]
+  );
+  useHotkeys(
+    'ctrl+right',
+    () => enabled && moveSelectedPanels(MOVEMENT_STEP.MEDIUM, 0),
+    { preventDefault, enableOnFormTags },
+    [enabled, moveSelectedPanels]
+  );
+  useHotkeys(
+    'ctrl+up',
+    () => enabled && moveSelectedPanels(0, -MOVEMENT_STEP.MEDIUM),
+    { preventDefault, enableOnFormTags },
+    [enabled, moveSelectedPanels]
+  );
+  useHotkeys(
+    'ctrl+down',
+    () => enabled && moveSelectedPanels(0, MOVEMENT_STEP.MEDIUM),
+    { preventDefault, enableOnFormTags },
+    [enabled, moveSelectedPanels]
+  );
 
   // Large movement (50px)
-  useHotkeys('ctrl+alt+left', () => enabled && moveSelectedPanels(-MOVEMENT_STEP.LARGE, 0), { preventDefault, enableOnFormTags }, [enabled, moveSelectedPanels]);
-  useHotkeys('ctrl+alt+right', () => enabled && moveSelectedPanels(MOVEMENT_STEP.LARGE, 0), { preventDefault, enableOnFormTags }, [enabled, moveSelectedPanels]);
-  useHotkeys('ctrl+alt+up', () => enabled && moveSelectedPanels(0, -MOVEMENT_STEP.LARGE), { preventDefault, enableOnFormTags }, [enabled, moveSelectedPanels]);
-  useHotkeys('ctrl+alt+down', () => enabled && moveSelectedPanels(0, MOVEMENT_STEP.LARGE), { preventDefault, enableOnFormTags }, [enabled, moveSelectedPanels]);
+  useHotkeys(
+    'ctrl+alt+left',
+    () => enabled && moveSelectedPanels(-MOVEMENT_STEP.LARGE, 0),
+    { preventDefault, enableOnFormTags },
+    [enabled, moveSelectedPanels]
+  );
+  useHotkeys(
+    'ctrl+alt+right',
+    () => enabled && moveSelectedPanels(MOVEMENT_STEP.LARGE, 0),
+    { preventDefault, enableOnFormTags },
+    [enabled, moveSelectedPanels]
+  );
+  useHotkeys(
+    'ctrl+alt+up',
+    () => enabled && moveSelectedPanels(0, -MOVEMENT_STEP.LARGE),
+    { preventDefault, enableOnFormTags },
+    [enabled, moveSelectedPanels]
+  );
+  useHotkeys(
+    'ctrl+alt+down',
+    () => enabled && moveSelectedPanels(0, MOVEMENT_STEP.LARGE),
+    { preventDefault, enableOnFormTags },
+    [enabled, moveSelectedPanels]
+  );
 
   // Panel resizing shortcuts
-  const resizeSelectedPanels = useCallback((deltaWidth: number, deltaHeight: number) => {
-    const selectedPanels = getSelectedPanels();
-    
-    selectedPanels.forEach(panel => {
-      const constraints = panel.constraints;
-      const minWidth = constraints?.minSize.width || 200;
-      const minHeight = constraints?.minSize.height || 150;
-      const maxWidth = constraints?.maxSize?.width || 2000;
-      const maxHeight = constraints?.maxSize?.height || 1500;
-      
-      const newSize = {
-        width: Math.max(minWidth, Math.min(maxWidth, panel.size.width + deltaWidth)),
-        height: Math.max(minHeight, Math.min(maxHeight, panel.size.height + deltaHeight))
-      };
-      
-      updatePanel(panel.id, { size: newSize });
-    });
-  }, [getSelectedPanels, updatePanel]);
+  const resizeSelectedPanels = useCallback(
+    (deltaWidth: number, deltaHeight: number) => {
+      const selectedPanels = getSelectedPanels();
+
+      selectedPanels.forEach(panel => {
+        const constraints = panel.constraints;
+        const minWidth = constraints?.minSize.width || 200;
+        const minHeight = constraints?.minSize.height || 150;
+        const maxWidth = constraints?.maxSize?.width || 2000;
+        const maxHeight = constraints?.maxSize?.height || 1500;
+
+        const newSize = {
+          width: Math.max(minWidth, Math.min(maxWidth, panel.size.width + deltaWidth)),
+          height: Math.max(minHeight, Math.min(maxHeight, panel.size.height + deltaHeight)),
+        };
+
+        updatePanel(panel.id, { size: newSize });
+      });
+    },
+    [getSelectedPanels, updatePanel]
+  );
 
   // Resize shortcuts
-  useHotkeys('ctrl+shift+alt+left', () => enabled && resizeSelectedPanels(-RESIZE_STEP.MEDIUM, 0), { preventDefault, enableOnFormTags }, [enabled, resizeSelectedPanels]);
-  useHotkeys('ctrl+shift+alt+right', () => enabled && resizeSelectedPanels(RESIZE_STEP.MEDIUM, 0), { preventDefault, enableOnFormTags }, [enabled, resizeSelectedPanels]);
-  useHotkeys('ctrl+shift+alt+up', () => enabled && resizeSelectedPanels(0, -RESIZE_STEP.MEDIUM), { preventDefault, enableOnFormTags }, [enabled, resizeSelectedPanels]);
-  useHotkeys('ctrl+shift+alt+down', () => enabled && resizeSelectedPanels(0, RESIZE_STEP.MEDIUM), { preventDefault, enableOnFormTags }, [enabled, resizeSelectedPanels]);
+  useHotkeys(
+    'ctrl+shift+alt+left',
+    () => enabled && resizeSelectedPanels(-RESIZE_STEP.MEDIUM, 0),
+    { preventDefault, enableOnFormTags },
+    [enabled, resizeSelectedPanels]
+  );
+  useHotkeys(
+    'ctrl+shift+alt+right',
+    () => enabled && resizeSelectedPanels(RESIZE_STEP.MEDIUM, 0),
+    { preventDefault, enableOnFormTags },
+    [enabled, resizeSelectedPanels]
+  );
+  useHotkeys(
+    'ctrl+shift+alt+up',
+    () => enabled && resizeSelectedPanels(0, -RESIZE_STEP.MEDIUM),
+    { preventDefault, enableOnFormTags },
+    [enabled, resizeSelectedPanels]
+  );
+  useHotkeys(
+    'ctrl+shift+alt+down',
+    () => enabled && resizeSelectedPanels(0, RESIZE_STEP.MEDIUM),
+    { preventDefault, enableOnFormTags },
+    [enabled, resizeSelectedPanels]
+  );
 
   // Panel management shortcuts
   useHotkeys(
     'delete',
     () => {
       if (!enabled || selectedPanelIds.length === 0) return;
-      
+
       selectedPanelIds.forEach(id => removePanel(id));
       clearSelection();
     },
@@ -332,8 +419,8 @@ export const useLayoutKeyboard = (config: ShortcutConfig = {}) => {
         visible: true,
         constraints: {
           minSize: { width: 400, height: 300 },
-          maxSize: { width: 800, height: 700 }
-        }
+          maxSize: { width: 800, height: 700 },
+        },
       });
     },
     { preventDefault, enableOnFormTags },
@@ -353,8 +440,8 @@ export const useLayoutKeyboard = (config: ShortcutConfig = {}) => {
         visible: true,
         constraints: {
           minSize: { width: 400, height: 400 },
-          maxSize: { width: 800, height: 800 }
-        }
+          maxSize: { width: 800, height: 800 },
+        },
       });
     },
     { preventDefault, enableOnFormTags },
@@ -374,8 +461,8 @@ export const useLayoutKeyboard = (config: ShortcutConfig = {}) => {
         visible: true,
         constraints: {
           minSize: { width: 400, height: 400 },
-          maxSize: { width: 800, height: 800 }
-        }
+          maxSize: { width: 800, height: 800 },
+        },
       });
     },
     { preventDefault, enableOnFormTags },
@@ -395,8 +482,8 @@ export const useLayoutKeyboard = (config: ShortcutConfig = {}) => {
         visible: true,
         constraints: {
           minSize: { width: 400, height: 500 },
-          maxSize: { width: 800, height: 900 }
-        }
+          maxSize: { width: 800, height: 900 },
+        },
       });
     },
     { preventDefault, enableOnFormTags },
@@ -417,8 +504,8 @@ export const useLayoutKeyboard = (config: ShortcutConfig = {}) => {
       selection: ['Ctrl+A'],
       workspace: ['Ctrl+S', 'Ctrl+Shift+R'],
       grid: ['Ctrl+G', 'Ctrl+Shift+G', 'Ctrl+Shift+Plus/Minus'],
-      creation: ['Ctrl+1', 'Ctrl+2', 'Ctrl+3', 'Ctrl+4']
-    }
+      creation: ['Ctrl+1', 'Ctrl+2', 'Ctrl+3', 'Ctrl+4'],
+    },
   };
 };
 
@@ -428,7 +515,7 @@ export const useLayoutKeyboard = (config: ShortcutConfig = {}) => {
 export const usePanelKeyboard = (panelId: string, config: ShortcutConfig = {}) => {
   const { enabled = true } = config;
   const { selectedPanelIds, selectPanel, updatePanel, getPanel } = useLayoutStore();
-  
+
   const isSelected = selectedPanelIds.includes(panelId);
   const panel = getPanel(panelId);
 
@@ -437,13 +524,11 @@ export const usePanelKeyboard = (panelId: string, config: ShortcutConfig = {}) =
     'f',
     () => {
       if (!enabled || !isSelected || !panel) return;
-      
+
       // Toggle fullscreen-like behavior
       const isLarge = panel.size.width > 800 || panel.size.height > 600;
-      const newSize = isLarge 
-        ? { width: 400, height: 300 }
-        : { width: 1000, height: 700 };
-      
+      const newSize = isLarge ? { width: 400, height: 300 } : { width: 1000, height: 700 };
+
       updatePanel(panelId, { size: newSize });
     },
     { preventDefault: true },
@@ -452,7 +537,7 @@ export const usePanelKeyboard = (panelId: string, config: ShortcutConfig = {}) =
 
   useHotkeys(
     'space',
-    (e) => {
+    e => {
       if (!enabled) return;
       e.preventDefault();
       selectPanel(panelId, false);
@@ -463,7 +548,7 @@ export const usePanelKeyboard = (panelId: string, config: ShortcutConfig = {}) =
 
   return {
     isSelected,
-    panel
+    panel,
   };
 };
 
@@ -473,11 +558,7 @@ export const usePanelKeyboard = (panelId: string, config: ShortcutConfig = {}) =
 export const useLayoutKeyboardHelp = () => {
   const [showHelp, setShowHelp] = useState(false);
 
-  useHotkeys(
-    'ctrl+shift+h',
-    () => setShowHelp(prev => !prev),
-    { preventDefault: true }
-  );
+  useHotkeys('ctrl+shift+h', () => setShowHelp(prev => !prev), { preventDefault: true });
 
   useHotkeys(
     'ctrl+shift+d',
@@ -486,11 +567,20 @@ export const useLayoutKeyboardHelp = () => {
       console.log('Navigation:', 'Tab (next), Shift+Tab (previous)');
       console.log('Movement:', 'Ctrl+Arrow (10px), Ctrl+Shift+Arrow (1px), Ctrl+Alt+Arrow (50px)');
       console.log('Resize:', 'Ctrl+Shift+Alt+Arrow');
-      console.log('Management:', 'Delete (remove), Escape (deselect), Enter (center), Ctrl+D (duplicate)');
+      console.log(
+        'Management:',
+        'Delete (remove), Escape (deselect), Enter (center), Ctrl+D (duplicate)'
+      );
       console.log('Selection:', 'Ctrl+A (select all)');
       console.log('Workspace:', 'Ctrl+S (save), Ctrl+Shift+R (reset)');
-      console.log('Grid:', 'Ctrl+G (toggle snap), Ctrl+Shift+G (toggle visible), Ctrl+Shift+Plus/Minus (size)');
-      console.log('Creation:', 'Ctrl+1 (SmartHub), Ctrl+2 (AIChat), Ctrl+3 (TaskManager), Ctrl+4 (Productivity)');
+      console.log(
+        'Grid:',
+        'Ctrl+G (toggle snap), Ctrl+Shift+G (toggle visible), Ctrl+Shift+Plus/Minus (size)'
+      );
+      console.log(
+        'Creation:',
+        'Ctrl+1 (SmartHub), Ctrl+2 (AIChat), Ctrl+3 (TaskManager), Ctrl+4 (Productivity)'
+      );
       console.groupEnd();
     },
     { preventDefault: true }

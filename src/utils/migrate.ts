@@ -67,7 +67,7 @@ export interface LegacyState {
   'lucaverse-quadrants'?: string;
   'quadrant-data'?: string;
   'productivity-hub-state'?: string;
-  
+
   // Component-specific keys
   'lucaverse-bookmarks'?: string;
   'lucaverse-tasks'?: string;
@@ -76,7 +76,7 @@ export interface LegacyState {
   'lucaverse-preferences'?: string;
   'lucaverse-theme'?: string;
   'lucaverse-workspace'?: string;
-  
+
   // Additional keys
   'lucaverse-shortcuts'?: string;
   'lucaverse-ai-providers'?: string;
@@ -117,7 +117,7 @@ export function detectLegacyData(): {
     'lucaverse-timer-settings',
     'lucaverse-preferences',
     'lucaverse-theme',
-    'lucaverse-workspace'
+    'lucaverse-workspace',
   ];
 
   const foundKeys: string[] = [];
@@ -129,7 +129,7 @@ export function detectLegacyData(): {
     if (value) {
       foundKeys.push(key);
       totalSize += value.length;
-      
+
       // Try to detect version from state
       if (key === 'lucaverse-state') {
         try {
@@ -147,7 +147,7 @@ export function detectLegacyData(): {
     hasLegacyData: foundKeys.length > 0,
     keys: foundKeys,
     version: version || '1.0.0',
-    totalSize
+    totalSize,
   };
 }
 
@@ -182,7 +182,7 @@ export function validateLegacyData(data: any): {
   // Check for required keys
   const hasQuadrants = data['lucaverse-quadrants'] || data['quadrant-data'];
   const hasState = data['lucaverse-state'] || data['productivity-hub-state'];
-  
+
   if (!hasQuadrants && !hasState) {
     warnings.push('No quadrant or state data found - using defaults');
   }
@@ -197,13 +197,15 @@ export function validateLegacyData(data: any): {
   });
 
   if (totalSize > maxSize) {
-    warnings.push(`Data size (${(totalSize / 1024 / 1024).toFixed(2)}MB) exceeds recommended limit`);
+    warnings.push(
+      `Data size (${(totalSize / 1024 / 1024).toFixed(2)}MB) exceeds recommended limit`
+    );
   }
 
   return {
     isValid: errors.length === 0,
     errors,
-    warnings
+    warnings,
   };
 }
 
@@ -215,12 +217,12 @@ export async function createBackup(legacyData: LegacyState): Promise<StateBackup
     const backup: StateBackup = {
       timestamp: Date.now(),
       version: detectLegacyData().version || '1.0.0',
-      data: JSON.stringify(legacyData)
+      data: JSON.stringify(legacyData),
     };
 
     // Try to store backup
     const backupKey = `lucaverse-backup-${backup.timestamp}`;
-    
+
     try {
       localStorage.setItem(backupKey, JSON.stringify(backup));
       console.log(`Backup created: ${backupKey}`);
@@ -230,7 +232,7 @@ export async function createBackup(legacyData: LegacyState): Promise<StateBackup
       if (e instanceof Error && e.name === 'QuotaExceededError') {
         console.warn('Storage quota exceeded, cleaning old backups...');
         cleanOldBackups();
-        
+
         // Try again
         try {
           localStorage.setItem(backupKey, JSON.stringify(backup));
@@ -253,7 +255,7 @@ export async function createBackup(legacyData: LegacyState): Promise<StateBackup
  */
 function cleanOldBackups(keepCount: number = 3): void {
   const backupKeys: { key: string; timestamp: number }[] = [];
-  
+
   // Find all backup keys
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
@@ -291,7 +293,7 @@ export function generateMigrationReport(
     failedItems: 0,
     duration,
     backupCreated: false,
-    details: {}
+    details: {},
   };
 
   // Calculate totals from result data
@@ -304,7 +306,7 @@ export function generateMigrationReport(
           attempted: items.length,
           successful: items.length,
           failed: 0,
-          errors: []
+          errors: [],
         };
         report.totalItems += items.length;
         report.migratedItems += items.length;
@@ -329,9 +331,8 @@ export function generateMigrationReport(
  */
 export function migrateQuadrantData(legacyQuadrants: string | LegacyQuadrantData[]): PanelLayout[] {
   try {
-    const quadrants = typeof legacyQuadrants === 'string' 
-      ? JSON.parse(legacyQuadrants) 
-      : legacyQuadrants;
+    const quadrants =
+      typeof legacyQuadrants === 'string' ? JSON.parse(legacyQuadrants) : legacyQuadrants;
 
     if (!Array.isArray(quadrants)) {
       console.warn('Invalid quadrant data format');
@@ -367,8 +368,8 @@ export function migrateQuadrantData(legacyQuadrants: string | LegacyQuadrantData
         visible: quad.visible !== false,
         constraints: {
           minSize: { width: 300, height: 200 },
-          maxSize: { width: 800, height: 600 }
-        }
+          maxSize: { width: 800, height: 600 },
+        },
       };
     });
   } catch (error) {
@@ -382,9 +383,8 @@ export function migrateQuadrantData(legacyQuadrants: string | LegacyQuadrantData
  */
 export function migrateBookmarks(legacyBookmarks: string | any[]): any[] {
   try {
-    const bookmarks = typeof legacyBookmarks === 'string'
-      ? JSON.parse(legacyBookmarks)
-      : legacyBookmarks;
+    const bookmarks =
+      typeof legacyBookmarks === 'string' ? JSON.parse(legacyBookmarks) : legacyBookmarks;
 
     if (!Array.isArray(bookmarks)) {
       return [];
@@ -400,7 +400,7 @@ export function migrateBookmarks(legacyBookmarks: string | any[]): any[] {
       category: bookmark.category || 'general',
       createdAt: bookmark.createdAt || Date.now(),
       lastAccessed: bookmark.lastAccessed,
-      migrated: true
+      migrated: true,
     }));
   } catch (error) {
     console.error('Failed to migrate bookmarks:', error);
@@ -413,9 +413,7 @@ export function migrateBookmarks(legacyBookmarks: string | any[]): any[] {
  */
 export function migrateChatHistory(legacyChats: string | any[]): any[] {
   try {
-    const chats = typeof legacyChats === 'string'
-      ? JSON.parse(legacyChats)
-      : legacyChats;
+    const chats = typeof legacyChats === 'string' ? JSON.parse(legacyChats) : legacyChats;
 
     if (!Array.isArray(chats)) {
       return [];
@@ -428,7 +426,7 @@ export function migrateChatHistory(legacyChats: string | any[]): any[] {
       timestamp: chat.timestamp || Date.now(),
       provider: chat.provider || 'openai',
       model: chat.model,
-      migrated: true
+      migrated: true,
     }));
   } catch (error) {
     console.error('Failed to migrate chat history:', error);
@@ -441,9 +439,7 @@ export function migrateChatHistory(legacyChats: string | any[]): any[] {
  */
 export function migrateTasks(legacyTasks: string | any[]): any[] {
   try {
-    const tasks = typeof legacyTasks === 'string'
-      ? JSON.parse(legacyTasks)
-      : legacyTasks;
+    const tasks = typeof legacyTasks === 'string' ? JSON.parse(legacyTasks) : legacyTasks;
 
     if (!Array.isArray(tasks)) {
       return [];
@@ -460,7 +456,7 @@ export function migrateTasks(legacyTasks: string | any[]): any[] {
       progress: task.progress || 0,
       createdAt: task.createdAt || Date.now(),
       updatedAt: task.updatedAt || Date.now(),
-      migrated: true
+      migrated: true,
     }));
   } catch (error) {
     console.error('Failed to migrate tasks:', error);
@@ -473,9 +469,7 @@ export function migrateTasks(legacyTasks: string | any[]): any[] {
  */
 export function migrateTimerSettings(legacyTimer: string | any): any {
   try {
-    const timer = typeof legacyTimer === 'string'
-      ? JSON.parse(legacyTimer)
-      : legacyTimer;
+    const timer = typeof legacyTimer === 'string' ? JSON.parse(legacyTimer) : legacyTimer;
 
     return {
       workDuration: timer?.workDuration || 25,
@@ -486,7 +480,7 @@ export function migrateTimerSettings(legacyTimer: string | any): any {
       autoStartPomodoros: timer?.autoStartPomodoros || false,
       notifications: timer?.notifications !== false,
       soundEnabled: timer?.soundEnabled !== false,
-      migrated: true
+      migrated: true,
     };
   } catch (error) {
     console.error('Failed to migrate timer settings:', error);
@@ -499,9 +493,7 @@ export function migrateTimerSettings(legacyTimer: string | any): any {
  */
 export function migrateUserPreferences(legacyPrefs: string | any): UserPreferences {
   try {
-    const prefs = typeof legacyPrefs === 'string'
-      ? JSON.parse(legacyPrefs)
-      : legacyPrefs;
+    const prefs = typeof legacyPrefs === 'string' ? JSON.parse(legacyPrefs) : legacyPrefs;
 
     return {
       language: prefs?.language || 'en',
@@ -509,7 +501,7 @@ export function migrateUserPreferences(legacyPrefs: string | any): UserPreferenc
       debugMode: prefs?.debugMode || false,
       showTooltips: prefs?.showTooltips !== false,
       compactMode: prefs?.compactMode || false,
-      keyboardShortcutsEnabled: prefs?.keyboardShortcutsEnabled !== false
+      keyboardShortcutsEnabled: prefs?.keyboardShortcutsEnabled !== false,
     };
   } catch (error) {
     console.error('Failed to migrate preferences:', error);
@@ -519,7 +511,7 @@ export function migrateUserPreferences(legacyPrefs: string | any): UserPreferenc
       debugMode: false,
       showTooltips: true,
       compactMode: false,
-      keyboardShortcutsEnabled: true
+      keyboardShortcutsEnabled: true,
     };
   }
 }
@@ -535,7 +527,7 @@ export async function migrateVanillaState(): Promise<MigrationResult> {
   const startTime = Date.now();
   const errors: string[] = [];
   const warnings: string[] = [];
-  
+
   try {
     // Step 1: Detect legacy data
     const detection = detectLegacyData();
@@ -547,11 +539,13 @@ export async function migrateVanillaState(): Promise<MigrationResult> {
         data: generateDefaultData(),
         errors: [],
         warnings: ['No legacy data found - using defaults'],
-        report: generateMigrationReport({ data: generateDefaultData() }, startTime)
+        report: generateMigrationReport({ data: generateDefaultData() }, startTime),
       };
     }
 
-    console.log(`Found legacy data: ${detection.keys.length} keys, ${(detection.totalSize / 1024).toFixed(2)}KB`);
+    console.log(
+      `Found legacy data: ${detection.keys.length} keys, ${(detection.totalSize / 1024).toFixed(2)}KB`
+    );
 
     // Step 2: Collect all legacy data
     const legacyData: LegacyState = {};
@@ -585,7 +579,7 @@ export async function migrateVanillaState(): Promise<MigrationResult> {
       bookmarks: [] as any[],
       tasks: [] as any[],
       chatHistory: [] as any[],
-      timerSettings: null as any
+      timerSettings: null as any,
     };
 
     // Migrate quadrants/panels
@@ -639,7 +633,7 @@ export async function migrateVanillaState(): Promise<MigrationResult> {
       reducedMotion: false,
       gpuAcceleration: true,
       autoSaveInterval: 30000,
-      maxPanels: 20
+      maxPanels: 20,
     };
 
     // Generate report
@@ -657,9 +651,8 @@ export async function migrateVanillaState(): Promise<MigrationResult> {
       data: migrationData,
       errors,
       warnings,
-      report
+      report,
     };
-
   } catch (error) {
     console.error('Migration failed:', error);
     return {
@@ -669,7 +662,7 @@ export async function migrateVanillaState(): Promise<MigrationResult> {
       data: generateDefaultData(),
       errors: [`Migration failed: ${error instanceof Error ? error.message : 'Unknown error'}`],
       warnings,
-      report: generateMigrationReport({ errors: [`Migration failed: ${error}`] }, startTime)
+      report: generateMigrationReport({ errors: [`Migration failed: ${error}`] }, startTime),
     };
   }
 }
@@ -687,7 +680,7 @@ function generateDefaultData() {
       debugMode: false,
       showTooltips: true,
       compactMode: false,
-      keyboardShortcutsEnabled: true
+      keyboardShortcutsEnabled: true,
     },
     performance: {
       animations: true,
@@ -695,13 +688,13 @@ function generateDefaultData() {
       reducedMotion: false,
       gpuAcceleration: true,
       autoSaveInterval: 30000,
-      maxPanels: 20
+      maxPanels: 20,
     },
     theme: 'dark' as ThemeVariant,
     bookmarks: [],
     tasks: [],
     chatHistory: [],
-    timerSettings: null
+    timerSettings: null,
   };
 }
 
@@ -717,7 +710,7 @@ function archiveLegacyState(legacyState: LegacyState): void {
     };
 
     localStorage.setItem('lucaverse-legacy-archive', JSON.stringify(archive));
-    
+
     // Remove old keys
     Object.keys(legacyState).forEach(key => {
       localStorage.removeItem(key);
@@ -750,7 +743,7 @@ export function detectStateVersion(data: any): StateVersion {
       version: data.version,
       features: [],
       migrationRequired: data.version !== '2.0.0',
-      compatibleWith: ['1.0.0', '1.1.0', '1.2.0']
+      compatibleWith: ['1.0.0', '1.1.0', '1.2.0'],
     };
   }
 
@@ -760,7 +753,7 @@ export function detectStateVersion(data: any): StateVersion {
       version: '1.2.0',
       features: ['quadrants', 'preferences'],
       migrationRequired: true,
-      compatibleWith: ['1.0.0', '1.1.0']
+      compatibleWith: ['1.0.0', '1.1.0'],
     };
   }
 
@@ -769,7 +762,7 @@ export function detectStateVersion(data: any): StateVersion {
       version: '1.0.0',
       features: ['basic-quadrants'],
       migrationRequired: true,
-      compatibleWith: []
+      compatibleWith: [],
     };
   }
 
@@ -777,7 +770,7 @@ export function detectStateVersion(data: any): StateVersion {
     version: 'unknown',
     features: [],
     migrationRequired: true,
-    compatibleWith: []
+    compatibleWith: [],
   };
 }
 
@@ -789,7 +782,7 @@ export function calculateMigrationPath(fromVersion: string, toVersion: string): 
     '1.0.0': ['1.1.0', '1.2.0', '2.0.0'],
     '1.1.0': ['1.2.0', '2.0.0'],
     '1.2.0': ['2.0.0'],
-    '2.0.0': []
+    '2.0.0': [],
   };
 
   const path = versionPath[fromVersion];

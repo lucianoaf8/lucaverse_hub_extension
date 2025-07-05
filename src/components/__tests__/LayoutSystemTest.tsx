@@ -7,31 +7,26 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { DynamicLayout } from '../DynamicLayout';
 import { useLayoutStore } from '@/stores/layoutStore';
 import { PanelComponent } from '@/types/panel';
-import { 
-  checkCollision, 
-  findCollisions, 
+import {
+  checkCollision,
+  findCollisions,
   preventOverlap,
   isValidPosition,
-  SpatialIndex 
+  SpatialIndex,
 } from '@/utils/collisionDetection';
-import { 
-  snapToGrid, 
-  magneticSnapToGrid, 
-  isOnGrid, 
-  alignToGrid 
-} from '@/utils/gridSystem';
-import { 
-  findOptimalPosition, 
-  constrainPosition, 
-  calculateAvailableSpace 
+import { snapToGrid, magneticSnapToGrid, isOnGrid, alignToGrid } from '@/utils/gridSystem';
+import {
+  findOptimalPosition,
+  constrainPosition,
+  calculateAvailableSpace,
 } from '@/utils/panelBounds';
-import { 
-  calculateLayoutMetrics, 
-  optimizeLayout, 
-  exportLayout, 
-  importLayout, 
+import {
+  calculateLayoutMetrics,
+  optimizeLayout,
+  exportLayout,
+  importLayout,
   validateLayout,
-  performanceMonitor 
+  performanceMonitor,
 } from '@/utils/layoutUtils';
 import type { Position, Size } from '@/types/panel';
 
@@ -60,7 +55,7 @@ export const LayoutSystemTest: React.FC = () => {
     resetLayout,
     gridSettings,
     updateGridSettings,
-    selectedPanelIds
+    selectedPanelIds,
   } = useLayoutStore();
 
   const [testResults, setTestResults] = useState<TestResult[]>([]);
@@ -70,22 +65,22 @@ export const LayoutSystemTest: React.FC = () => {
   const [containerSize] = useState<Size>({ width: 1200, height: 800 });
 
   // Add test result
-  const addTestResult = useCallback((
-    category: string,
-    name: string,
-    passed: boolean,
-    message: string,
-    duration?: number
-  ) => {
-    setTestResults(prev => [...prev, {
-      category,
-      name,
-      passed,
-      message,
-      duration,
-      timestamp: Date.now()
-    }]);
-  }, []);
+  const addTestResult = useCallback(
+    (category: string, name: string, passed: boolean, message: string, duration?: number) => {
+      setTestResults(prev => [
+        ...prev,
+        {
+          category,
+          name,
+          passed,
+          message,
+          duration,
+          timestamp: Date.now(),
+        },
+      ]);
+    },
+    []
+  );
 
   // Calculate test statistics
   const testStats: TestStats = useMemo(() => {
@@ -93,7 +88,7 @@ export const LayoutSystemTest: React.FC = () => {
       total: testResults.length,
       passed: testResults.filter(r => r.passed).length,
       failed: testResults.filter(r => r.passed === false).length,
-      categories: {}
+      categories: {},
     };
 
     testResults.forEach(result => {
@@ -112,7 +107,7 @@ export const LayoutSystemTest: React.FC = () => {
   // Test collision detection system
   const testCollisionDetection = useCallback(async () => {
     setCurrentTest('Testing collision detection...');
-    
+
     try {
       // Test basic collision detection
       const panel1 = {
@@ -122,7 +117,7 @@ export const LayoutSystemTest: React.FC = () => {
         size: { width: 200, height: 150 },
         zIndex: 100,
         visible: true,
-        constraints: { minSize: { width: 100, height: 100 } }
+        constraints: { minSize: { width: 100, height: 100 } },
       };
 
       const panel2 = {
@@ -132,7 +127,7 @@ export const LayoutSystemTest: React.FC = () => {
         size: { width: 200, height: 150 },
         zIndex: 100,
         visible: true,
-        constraints: { minSize: { width: 100, height: 100 } }
+        constraints: { minSize: { width: 100, height: 100 } },
       };
 
       const panel3 = {
@@ -142,7 +137,7 @@ export const LayoutSystemTest: React.FC = () => {
         size: { width: 200, height: 150 },
         zIndex: 100,
         visible: true,
-        constraints: { minSize: { width: 100, height: 100 } }
+        constraints: { minSize: { width: 100, height: 100 } },
       };
 
       // Test overlapping panels
@@ -160,15 +155,17 @@ export const LayoutSystemTest: React.FC = () => {
         'Collision Detection',
         'Non-overlap detection',
         !noCollisionResult.colliding,
-        !noCollisionResult.colliding ? 'Correctly detected no collision' : 'False positive collision'
+        !noCollisionResult.colliding
+          ? 'Correctly detected no collision'
+          : 'False positive collision'
       );
 
       // Test position validation
-      const validPosition = isValidPosition(
-        { x: 500, y: 500 },
-        { width: 100, height: 100 },
-        [panel1, panel2, panel3]
-      );
+      const validPosition = isValidPosition({ x: 500, y: 500 }, { width: 100, height: 100 }, [
+        panel1,
+        panel2,
+        panel3,
+      ]);
       addTestResult(
         'Collision Detection',
         'Valid position check',
@@ -185,10 +182,10 @@ export const LayoutSystemTest: React.FC = () => {
         undefined,
         100
       );
-      
+
       const stillOverlaps = findCollisions([panel1, panel2], {
         position: preventedPosition,
-        size: { width: 100, height: 100 }
+        size: { width: 100, height: 100 },
       }).colliding;
 
       addTestResult(
@@ -211,7 +208,6 @@ export const LayoutSystemTest: React.FC = () => {
         nearbyPanels.length >= 1,
         `Found ${nearbyPanels.length} nearby panels`
       );
-
     } catch (error) {
       addTestResult(
         'Collision Detection',
@@ -225,13 +221,13 @@ export const LayoutSystemTest: React.FC = () => {
   // Test grid system
   const testGridSystem = useCallback(async () => {
     setCurrentTest('Testing grid system...');
-    
+
     try {
       // Test basic snapping
       const position = { x: 127, y: 143 };
       const gridSize = 20;
       const snapped = snapToGrid(position, gridSize);
-      
+
       addTestResult(
         'Grid System',
         'Basic snap to grid',
@@ -260,21 +256,18 @@ export const LayoutSystemTest: React.FC = () => {
       // Test batch alignment
       const testPanels = [
         { id: 'p1', position: { x: 127, y: 143 }, size: { width: 100, height: 100 } },
-        { id: 'p2', position: { x: 267, y: 283 }, size: { width: 100, height: 100 } }
+        { id: 'p2', position: { x: 267, y: 283 }, size: { width: 100, height: 100 } },
       ];
-      
+
       const aligned = alignToGrid(testPanels, gridSize);
-      const allAligned = aligned.every(panel => 
-        isOnGrid(panel.position, gridSize)
-      );
-      
+      const allAligned = aligned.every(panel => isOnGrid(panel.position, gridSize));
+
       addTestResult(
         'Grid System',
         'Batch alignment',
         allAligned,
         allAligned ? 'All panels aligned to grid' : 'Some panels not aligned'
       );
-
     } catch (error) {
       addTestResult(
         'Grid System',
@@ -288,20 +281,20 @@ export const LayoutSystemTest: React.FC = () => {
   // Test panel bounds calculation
   const testPanelBounds = useCallback(async () => {
     setCurrentTest('Testing panel bounds...');
-    
+
     try {
       // Test position constraining
       const bounds = {
         x: 0,
         y: 0,
         width: containerSize.width,
-        height: containerSize.height
+        height: containerSize.height,
       };
 
       const outOfBounds = { x: -50, y: -30 };
       const size = { width: 200, height: 150 };
       const constrained = constrainPosition(outOfBounds, size, bounds);
-      
+
       addTestResult(
         'Panel Bounds',
         'Position constraining',
@@ -318,8 +311,8 @@ export const LayoutSystemTest: React.FC = () => {
           size: { width: 300, height: 200 },
           zIndex: 100,
           visible: true,
-          constraints: { minSize: { width: 100, height: 100 } }
-        }
+          constraints: { minSize: { width: 100, height: 100 } },
+        },
       ];
 
       const optimalPosition = findOptimalPosition(
@@ -330,7 +323,7 @@ export const LayoutSystemTest: React.FC = () => {
 
       const hasOverlap = findCollisions(existingPanels, {
         position: optimalPosition,
-        size: { width: 200, height: 150 }
+        size: { width: 200, height: 150 },
       }).colliding;
 
       addTestResult(
@@ -348,7 +341,6 @@ export const LayoutSystemTest: React.FC = () => {
         availableSpace.totalArea > 0 && availableSpace.regions.length > 0,
         `Found ${availableSpace.regions.length} available regions`
       );
-
     } catch (error) {
       addTestResult(
         'Panel Bounds',
@@ -362,7 +354,7 @@ export const LayoutSystemTest: React.FC = () => {
   // Test layout utilities
   const testLayoutUtils = useCallback(async () => {
     setCurrentTest('Testing layout utilities...');
-    
+
     try {
       // Create test panels
       const testPanels = [
@@ -373,7 +365,7 @@ export const LayoutSystemTest: React.FC = () => {
           size: { width: 300, height: 200 },
           zIndex: 100,
           visible: true,
-          constraints: { minSize: { width: 100, height: 100 } }
+          constraints: { minSize: { width: 100, height: 100 } },
         },
         {
           id: 'layout2',
@@ -382,8 +374,8 @@ export const LayoutSystemTest: React.FC = () => {
           size: { width: 400, height: 350 },
           zIndex: 100,
           visible: true,
-          constraints: { minSize: { width: 100, height: 100 } }
-        }
+          constraints: { minSize: { width: 100, height: 100 } },
+        },
       ];
 
       // Test metrics calculation
@@ -400,7 +392,7 @@ export const LayoutSystemTest: React.FC = () => {
         containerSize,
         gridSize: 20,
         minimizeOverlaps: true,
-        compactLayout: true
+        compactLayout: true,
       });
 
       addTestResult(
@@ -413,7 +405,7 @@ export const LayoutSystemTest: React.FC = () => {
       // Test export/import
       const exported = exportLayout(testPanels, {
         name: 'Test Layout',
-        description: 'Test export'
+        description: 'Test export',
       });
 
       const imported = importLayout(exported);
@@ -432,7 +424,6 @@ export const LayoutSystemTest: React.FC = () => {
         validation.valid,
         validation.valid ? 'Layout is valid' : `${validation.errors.length} errors found`
       );
-
     } catch (error) {
       addTestResult(
         'Layout Utilities',
@@ -446,7 +437,7 @@ export const LayoutSystemTest: React.FC = () => {
   // Test performance with many panels
   const testPerformance = useCallback(async () => {
     setCurrentTest('Testing performance...');
-    
+
     try {
       const monitor = performanceMonitor();
       monitor.start('bulk-operations');
@@ -458,19 +449,22 @@ export const LayoutSystemTest: React.FC = () => {
           PanelComponent.SmartHub,
           PanelComponent.AIChat,
           PanelComponent.TaskManager,
-          PanelComponent.Productivity
+          PanelComponent.Productivity,
         ][i % 4],
         position: { x: (i % 5) * 150, y: Math.floor(i / 5) * 120 },
         size: { width: 140, height: 100 },
         zIndex: 100,
         visible: true,
-        constraints: { minSize: { width: 100, height: 100 } }
+        constraints: { minSize: { width: 100, height: 100 } },
       }));
 
       // Test collision detection performance
       const collisionStart = performance.now();
       manyPanels.forEach(panel => {
-        findCollisions(manyPanels.filter(p => p.id !== panel.id), panel);
+        findCollisions(
+          manyPanels.filter(p => p.id !== panel.id),
+          panel
+        );
       });
       const collisionTime = performance.now() - collisionStart;
 
@@ -486,7 +480,7 @@ export const LayoutSystemTest: React.FC = () => {
       optimizeLayout(manyPanels, {
         containerSize,
         gridSize: 20,
-        minimizeOverlaps: true
+        minimizeOverlaps: true,
       });
       const optimizeTime = performance.now() - optimizeStart;
 
@@ -504,7 +498,6 @@ export const LayoutSystemTest: React.FC = () => {
         perfResult.operationTime < 500,
         `Total operation time: ${perfResult.operationTime.toFixed(2)}ms`
       );
-
     } catch (error) {
       addTestResult(
         'Performance',
@@ -518,7 +511,7 @@ export const LayoutSystemTest: React.FC = () => {
   // Test layout store integration
   const testStoreIntegration = useCallback(async () => {
     setCurrentTest('Testing store integration...');
-    
+
     try {
       const initialPanelCount = panels.length;
 
@@ -529,7 +522,7 @@ export const LayoutSystemTest: React.FC = () => {
         size: { width: 400, height: 300 },
         zIndex: 100,
         visible: true,
-        constraints: { minSize: { width: 200, height: 150 } }
+        constraints: { minSize: { width: 200, height: 150 } },
       });
 
       // Wait for state update
@@ -545,9 +538,9 @@ export const LayoutSystemTest: React.FC = () => {
       // Test grid settings
       const originalGridSize = gridSettings.size;
       updateGridSettings({ size: 25 });
-      
+
       await new Promise(resolve => setTimeout(resolve, 100));
-      
+
       addTestResult(
         'Store Integration',
         'Update grid settings',
@@ -557,7 +550,6 @@ export const LayoutSystemTest: React.FC = () => {
 
       // Restore original grid size
       updateGridSettings({ size: originalGridSize });
-
     } catch (error) {
       addTestResult(
         'Store Integration',
@@ -571,29 +563,29 @@ export const LayoutSystemTest: React.FC = () => {
   // Add test panels for visual testing
   const addTestPanels = useCallback(() => {
     resetLayout();
-    
+
     // Add one of each panel type
     const panelConfigs = [
-      { 
-        component: PanelComponent.SmartHub, 
-        position: { x: 50, y: 50 }, 
-        size: { width: 500, height: 400 } 
+      {
+        component: PanelComponent.SmartHub,
+        position: { x: 50, y: 50 },
+        size: { width: 500, height: 400 },
       },
-      { 
-        component: PanelComponent.AIChat, 
-        position: { x: 600, y: 50 }, 
-        size: { width: 550, height: 450 } 
+      {
+        component: PanelComponent.AIChat,
+        position: { x: 600, y: 50 },
+        size: { width: 550, height: 450 },
       },
-      { 
-        component: PanelComponent.TaskManager, 
-        position: { x: 50, y: 500 }, 
-        size: { width: 500, height: 350 } 
+      {
+        component: PanelComponent.TaskManager,
+        position: { x: 50, y: 500 },
+        size: { width: 500, height: 350 },
       },
-      { 
-        component: PanelComponent.Productivity, 
-        position: { x: 600, y: 500 }, 
-        size: { width: 450, height: 400 } 
-      }
+      {
+        component: PanelComponent.Productivity,
+        position: { x: 600, y: 500 },
+        size: { width: 450, height: 400 },
+      },
     ];
 
     panelConfigs.forEach(config => {
@@ -605,8 +597,8 @@ export const LayoutSystemTest: React.FC = () => {
         visible: true,
         constraints: {
           minSize: { width: 300, height: 200 },
-          maxSize: { width: 800, height: 600 }
-        }
+          maxSize: { width: 800, height: 600 },
+        },
       });
     });
   }, [resetLayout, addPanel]);
@@ -615,14 +607,14 @@ export const LayoutSystemTest: React.FC = () => {
   const runAllTests = useCallback(async () => {
     setIsRunning(true);
     setTestResults([]);
-    
+
     const tests = [
       testCollisionDetection,
       testGridSystem,
       testPanelBounds,
       testLayoutUtils,
       testPerformance,
-      testStoreIntegration
+      testStoreIntegration,
     ];
 
     for (const test of tests) {
@@ -633,7 +625,7 @@ export const LayoutSystemTest: React.FC = () => {
         console.error('Test failed:', error);
       }
     }
-    
+
     setCurrentTest('All tests completed');
     setIsRunning(false);
   }, [
@@ -642,7 +634,7 @@ export const LayoutSystemTest: React.FC = () => {
     testPanelBounds,
     testLayoutUtils,
     testPerformance,
-    testStoreIntegration
+    testStoreIntegration,
   ]);
 
   // Auto-run tests on mount
@@ -663,7 +655,7 @@ export const LayoutSystemTest: React.FC = () => {
       <div className="w-1/3 bg-gray-900 border-r border-gray-700 flex flex-col">
         <div className="p-4 border-b border-gray-700">
           <h2 className="text-xl font-bold text-white mb-4">Layout System Tests</h2>
-          
+
           {/* Test Stats */}
           <div className="grid grid-cols-3 gap-2 mb-4">
             <div className="bg-green-500/20 p-2 rounded text-center">
@@ -702,7 +694,7 @@ export const LayoutSystemTest: React.FC = () => {
               <input
                 type="checkbox"
                 checked={showLayout}
-                onChange={(e) => setShowLayout(e.target.checked)}
+                onChange={e => setShowLayout(e.target.checked)}
                 className="mr-2"
               />
               <span className="text-white text-sm">Show Layout</span>
@@ -711,9 +703,7 @@ export const LayoutSystemTest: React.FC = () => {
 
           {/* Current Test */}
           {isRunning && (
-            <div className="bg-blue-500/20 p-2 rounded text-blue-300 text-sm">
-              {currentTest}
-            </div>
+            <div className="bg-blue-500/20 p-2 rounded text-blue-300 text-sm">{currentTest}</div>
           )}
         </div>
 
@@ -728,15 +718,15 @@ export const LayoutSystemTest: React.FC = () => {
                     {stats.passed}/{stats.total}
                   </span>
                 </div>
-                
+
                 {testResults
                   .filter(result => result.category === category)
                   .map((result, index) => (
                     <div
                       key={index}
                       className={`p-2 rounded text-sm ${
-                        result.passed 
-                          ? 'bg-green-500/20 text-green-300' 
+                        result.passed
+                          ? 'bg-green-500/20 text-green-300'
                           : 'bg-red-500/20 text-red-300'
                       }`}
                     >
@@ -749,12 +739,9 @@ export const LayoutSystemTest: React.FC = () => {
                           </span>
                         )}
                       </div>
-                      <div className="text-xs opacity-90 mt-1">
-                        {result.message}
-                      </div>
+                      <div className="text-xs opacity-90 mt-1">{result.message}</div>
                     </div>
-                  ))
-                }
+                  ))}
               </div>
             ))}
           </div>
@@ -773,7 +760,7 @@ export const LayoutSystemTest: React.FC = () => {
             enableGridSnapping={true}
             className="h-full"
           />
-          
+
           {/* Instructions Overlay */}
           <div className="absolute bottom-4 right-4 bg-black/80 p-4 rounded text-white text-sm max-w-md">
             <h4 className="font-bold mb-2">Test Instructions:</h4>

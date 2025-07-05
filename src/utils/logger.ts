@@ -62,7 +62,7 @@ class Logger {
     info: 1,
     warn: 2,
     error: 3,
-    fatal: 4
+    fatal: 4,
   };
 
   constructor(config: Partial<LoggerConfig> = {}) {
@@ -72,7 +72,9 @@ class Logger {
       enableRemote: process.env.NODE_ENV === 'production',
       enableStorage: true,
       maxStorageEntries: 1000,
-      remoteEndpoint: import.meta.env.VITE_API_BASE_URL ? `${import.meta.env.VITE_API_BASE_URL}/logs` : undefined,
+      remoteEndpoint: import.meta.env.VITE_API_BASE_URL
+        ? `${import.meta.env.VITE_API_BASE_URL}/logs`
+        : undefined,
       apiKey: import.meta.env.VITE_API_KEY,
       enableSensitiveDataFiltering: true,
       enableRateLimiting: true,
@@ -80,7 +82,7 @@ class Logger {
       rateLimitWindow: 60000, // 1 minute
       enableContextualLogging: true,
       enablePerformanceLogging: true,
-      ...config
+      ...config,
     };
 
     this.sessionId = this.generateSessionId();
@@ -120,7 +122,7 @@ class Logger {
       logContext.error = {
         name: error.name,
         message: error.message,
-        stack: error.stack
+        stack: error.stack,
       };
     }
     this.log('error', message, logContext);
@@ -135,7 +137,7 @@ class Logger {
       logContext.error = {
         name: error.name,
         message: error.message,
-        stack: error.stack
+        stack: error.stack,
       };
     }
     this.log('fatal', message, logContext);
@@ -185,8 +187,8 @@ class Logger {
         performance: {
           operation,
           duration,
-          ...metadata
-        }
+          ...metadata,
+        },
       });
     }
   }
@@ -199,9 +201,7 @@ class Logger {
 
     if (level) {
       const minPriority = this.levelPriority[level];
-      filteredLogs = this.storage.filter(entry => 
-        this.levelPriority[entry.level] >= minPriority
-      );
+      filteredLogs = this.storage.filter(entry => this.levelPriority[entry.level] >= minPriority);
     }
 
     if (limit) {
@@ -215,14 +215,18 @@ class Logger {
    * Export logs as JSON
    */
   exportLogs(): string {
-    return JSON.stringify({
-      sessionId: this.sessionId,
-      userId: this.userId,
-      platform: this.platform,
-      version: this.version,
-      timestamp: new Date().toISOString(),
-      logs: this.storage
-    }, null, 2);
+    return JSON.stringify(
+      {
+        sessionId: this.sessionId,
+        userId: this.userId,
+        platform: this.platform,
+        version: this.version,
+        timestamp: new Date().toISOString(),
+        logs: this.storage,
+      },
+      null,
+      2
+    );
   }
 
   /**
@@ -247,7 +251,7 @@ class Logger {
       info: 0,
       warn: 0,
       error: 0,
-      fatal: 0
+      fatal: 0,
     };
 
     this.storage.forEach(entry => {
@@ -259,15 +263,17 @@ class Logger {
     const errorRate = totalLogs > 0 ? (errorLogs / totalLogs) * 100 : 0;
 
     const storageUsage = JSON.stringify(this.storage).length;
-    const rateLimitHits = Array.from(this.rateLimitCounts.values())
-      .reduce((sum, entry) => sum + entry.count, 0);
+    const rateLimitHits = Array.from(this.rateLimitCounts.values()).reduce(
+      (sum, entry) => sum + entry.count,
+      0
+    );
 
     return {
       totalLogs,
       logsByLevel,
       errorRate,
       storageUsage,
-      rateLimitHits
+      rateLimitHits,
     };
   }
 
@@ -303,16 +309,20 @@ class Logger {
     }
   }
 
-  private createLogEntry(level: LogLevel, message: string, context?: Record<string, any>): LogEntry {
+  private createLogEntry(
+    level: LogLevel,
+    message: string,
+    context?: Record<string, any>
+  ): LogEntry {
     const timestamp = new Date().toISOString();
-    
+
     // Merge context stack with provided context
-    const mergedContext = this.config.enableContextualLogging 
+    const mergedContext = this.config.enableContextualLogging
       ? { ...this.getMergedContext(), ...context }
       : context;
 
     // Filter sensitive data
-    const filteredContext = this.config.enableSensitiveDataFiltering 
+    const filteredContext = this.config.enableSensitiveDataFiltering
       ? this.filterSensitiveData(mergedContext)
       : mergedContext;
 
@@ -330,11 +340,13 @@ class Logger {
         url: typeof window !== 'undefined' ? window.location.href : 'Unknown',
         component: filteredContext?.component,
         action: filteredContext?.action,
-        performance: this.config.enablePerformanceLogging ? {
-          memory: this.getMemoryUsage(),
-          timestamp: performance.now()
-        } : undefined
-      }
+        performance: this.config.enablePerformanceLogging
+          ? {
+              memory: this.getMemoryUsage(),
+              timestamp: performance.now(),
+            }
+          : undefined,
+      },
     };
   }
 
@@ -350,9 +362,9 @@ class Logger {
   private logToConsole(entry: LogEntry): void {
     const emoji = this.getLevelEmoji(entry.level);
     const timestamp = new Date(entry.timestamp).toLocaleTimeString();
-    
+
     const consoleMessage = `${emoji} [${timestamp}] ${entry.message}`;
-    
+
     switch (entry.level) {
       case 'debug':
         console.debug(consoleMessage, entry.context);
@@ -378,9 +390,9 @@ class Logger {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...(this.config.apiKey ? { 'Authorization': `Bearer ${this.config.apiKey}` } : {})
+          ...(this.config.apiKey ? { Authorization: `Bearer ${this.config.apiKey}` } : {}),
         },
-        body: JSON.stringify(entry)
+        body: JSON.stringify(entry),
       });
 
       if (!response.ok) {
@@ -401,13 +413,13 @@ class Logger {
     if (!entry || now > entry.resetTime) {
       this.rateLimitCounts.set(key, {
         count: 1,
-        resetTime: now + this.config.rateLimitWindow
+        resetTime: now + this.config.rateLimitWindow,
       });
       return false;
     }
 
     entry.count++;
-    
+
     if (entry.count > this.config.rateLimitMax) {
       return true;
     }
@@ -416,16 +428,23 @@ class Logger {
   }
 
   private getMergedContext(): Record<string, any> {
-    return this.contextStack.reduce((merged, context) => 
-      ({ ...merged, ...context }), {});
+    return this.contextStack.reduce((merged, context) => ({ ...merged, ...context }), {});
   }
 
   private filterSensitiveData(data: any): any {
     if (!this.config.enableSensitiveDataFiltering || !data) return data;
 
     const sensitiveKeys = [
-      'password', 'token', 'apiKey', 'secret', 'authorization',
-      'creditCard', 'ssn', 'email', 'phone', 'address'
+      'password',
+      'token',
+      'apiKey',
+      'secret',
+      'authorization',
+      'creditCard',
+      'ssn',
+      'email',
+      'phone',
+      'address',
     ];
 
     const filtered = JSON.parse(JSON.stringify(data));
@@ -457,7 +476,7 @@ class Logger {
 
   private getConfiguredLogLevel(): LogLevel {
     const envLevel = import.meta.env.VITE_LOGGING_LEVEL?.toLowerCase();
-    
+
     if (envLevel && this.levelPriority.hasOwnProperty(envLevel)) {
       return envLevel as LogLevel;
     }
@@ -471,7 +490,7 @@ class Logger {
       info: 'ℹ️',
       warn: '⚠️',
       error: '❌',
-      fatal: '💀'
+      fatal: '💀',
     };
     return emojis[level];
   }
@@ -498,21 +517,21 @@ class Logger {
   private initializeLogger(): void {
     // Handle unhandled promise rejections
     if (typeof window !== 'undefined') {
-      window.addEventListener('unhandledrejection', (event) => {
+      window.addEventListener('unhandledrejection', event => {
         this.error('Unhandled promise rejection', new Error(event.reason), {
           component: 'global',
-          action: 'unhandled-rejection'
+          action: 'unhandled-rejection',
         });
       });
 
       // Handle global errors
-      window.addEventListener('error', (event) => {
+      window.addEventListener('error', event => {
         this.error('Global error', new Error(event.message), {
           component: 'global',
           action: 'global-error',
           filename: event.filename,
           line: event.lineno,
-          column: event.colno
+          column: event.colno,
         });
       });
     }
@@ -524,8 +543,8 @@ class Logger {
       config: {
         level: this.config.level,
         enableRemote: this.config.enableRemote,
-        enableStorage: this.config.enableStorage
-      }
+        enableStorage: this.config.enableStorage,
+      },
     });
   }
 }
@@ -543,13 +562,17 @@ export const log = {
   debug: (message: string, context?: Record<string, any>) => globalLogger.debug(message, context),
   info: (message: string, context?: Record<string, any>) => globalLogger.info(message, context),
   warn: (message: string, context?: Record<string, any>) => globalLogger.warn(message, context),
-  error: (message: string, error?: Error, context?: Record<string, any>) => globalLogger.error(message, error, context),
-  fatal: (message: string, error?: Error, context?: Record<string, any>) => globalLogger.fatal(message, error, context),
-  performance: (operation: string, duration: number, metadata?: Record<string, any>) => globalLogger.logPerformance(operation, duration, metadata),
-  setUser: (userId: string, userContext?: Record<string, any>) => globalLogger.setUser(userId, userContext),
+  error: (message: string, error?: Error, context?: Record<string, any>) =>
+    globalLogger.error(message, error, context),
+  fatal: (message: string, error?: Error, context?: Record<string, any>) =>
+    globalLogger.fatal(message, error, context),
+  performance: (operation: string, duration: number, metadata?: Record<string, any>) =>
+    globalLogger.logPerformance(operation, duration, metadata),
+  setUser: (userId: string, userContext?: Record<string, any>) =>
+    globalLogger.setUser(userId, userContext),
   pushContext: (context: Record<string, any>) => globalLogger.pushContext(context),
   popContext: () => globalLogger.popContext(),
-  clearContext: () => globalLogger.clearContext()
+  clearContext: () => globalLogger.clearContext(),
 };
 
 export default Logger;

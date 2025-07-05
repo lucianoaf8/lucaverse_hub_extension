@@ -27,11 +27,9 @@ export interface DraggablePanelProps {
 }
 
 // Custom constraint modifiers for panel-specific boundaries
-const createPanelConstraints = (
-  constraints?: DraggablePanelProps['dragConstraints']
-) => {
+const createPanelConstraints = (constraints?: DraggablePanelProps['dragConstraints']) => {
   const modifiers = [];
-  
+
   if (!constraints) {
     modifiers.push(restrictToWindowEdges);
     return modifiers;
@@ -67,15 +65,9 @@ export const DraggablePanel: React.FC<DraggablePanelProps> = ({
   dragHandle,
 }) => {
   const { dragState } = useDragDropContext();
-  
+
   // Setup draggable functionality
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    isDragging,
-  } = useDraggable({
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id,
     disabled,
     data: {
@@ -89,10 +81,10 @@ export const DraggablePanel: React.FC<DraggablePanelProps> = ({
 
   // Calculate transform styles
   const transformStyle = CSS.Translate.toString(transform);
-  
+
   // Determine if this panel is currently being dragged
   const isActivelyDragging = dragState.activeId === id;
-  
+
   // Handle drag start callback
   React.useEffect(() => {
     if (isActivelyDragging && onDragStart) {
@@ -153,7 +145,7 @@ export const DraggablePanel: React.FC<DraggablePanelProps> = ({
   );
 
   // Drag handle attributes - apply to entire panel if no specific handle
-  const dragProps = dragHandle 
+  const dragProps = dragHandle
     ? {} // Will be applied to specific handle element
     : { ...listeners, ...attributes };
 
@@ -178,12 +170,10 @@ export const DraggablePanel: React.FC<DraggablePanelProps> = ({
           aria-label="Drag handle"
         />
       )}
-      
+
       {/* Panel Content */}
-      <div className="relative w-full h-full overflow-hidden">
-        {children}
-      </div>
-      
+      <div className="relative w-full h-full overflow-hidden">{children}</div>
+
       {/* Drag State Indicator */}
       {isDragging && (
         <div className="absolute top-2 right-2 px-2 py-1 bg-blue-500/80 text-white text-xs rounded backdrop-blur-sm">

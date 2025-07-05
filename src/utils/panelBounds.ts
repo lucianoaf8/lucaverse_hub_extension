@@ -50,7 +50,7 @@ export const calculateViewportBounds = (
     y: padding.top,
     width: containerSize.width - padding.left - padding.right,
     height: containerSize.height - padding.top - padding.bottom,
-    padding
+    padding,
   };
 };
 
@@ -62,7 +62,7 @@ export const getPanelBounds = (panel: PanelLayout): ViewportBounds => {
     x: panel.position.x,
     y: panel.position.y,
     width: panel.size.width,
-    height: panel.size.height
+    height: panel.size.height,
   };
 };
 
@@ -81,7 +81,7 @@ export const constrainPosition = (
 
   return {
     x: Math.max(minX, Math.min(maxX, position.x)),
-    y: Math.max(minY, Math.min(maxY, position.y))
+    y: Math.max(minY, Math.min(maxY, position.y)),
   };
 };
 
@@ -108,14 +108,14 @@ export const constrainSize = (
   if (position) {
     const maxWidthInViewport = bounds.x + bounds.width - position.x;
     const maxHeightInViewport = bounds.y + bounds.height - position.y;
-    
+
     constrainedWidth = Math.min(constrainedWidth, maxWidthInViewport);
     constrainedHeight = Math.min(constrainedHeight, maxHeightInViewport);
   }
 
   return {
     width: Math.max(minSize.width, constrainedWidth),
-    height: Math.max(minSize.height, constrainedHeight)
+    height: Math.max(minSize.height, constrainedHeight),
   };
 };
 
@@ -128,19 +128,27 @@ export const calculateAvailableSpace = (
   padding = { top: 0, right: 0, bottom: 0, left: 0 }
 ): AvailableSpace => {
   const bounds = calculateViewportBounds(containerSize, padding);
-  
+
   // Create a grid to track occupied space
   const cellSize = 20; // Use smaller cells for better accuracy
   const gridWidth = Math.ceil(bounds.width / cellSize);
   const gridHeight = Math.ceil(bounds.height / cellSize);
-  const occupiedGrid: boolean[][] = Array(gridHeight).fill(null).map(() => Array(gridWidth).fill(false));
+  const occupiedGrid: boolean[][] = Array(gridHeight)
+    .fill(null)
+    .map(() => Array(gridWidth).fill(false));
 
   // Mark occupied cells
   for (const panel of panels) {
     const startX = Math.floor((panel.position.x - bounds.x) / cellSize);
     const startY = Math.floor((panel.position.y - bounds.y) / cellSize);
-    const endX = Math.min(gridWidth - 1, Math.floor((panel.position.x + panel.size.width - bounds.x) / cellSize));
-    const endY = Math.min(gridHeight - 1, Math.floor((panel.position.y + panel.size.height - bounds.y) / cellSize));
+    const endX = Math.min(
+      gridWidth - 1,
+      Math.floor((panel.position.x + panel.size.width - bounds.x) / cellSize)
+    );
+    const endY = Math.min(
+      gridHeight - 1,
+      Math.floor((panel.position.y + panel.size.height - bounds.y) / cellSize)
+    );
 
     for (let y = Math.max(0, startY); y <= endY; y++) {
       for (let x = Math.max(0, startX); x <= endX; x++) {
@@ -151,7 +159,9 @@ export const calculateAvailableSpace = (
 
   // Find rectangular regions of available space
   const regions: AvailableSpace['regions'] = [];
-  const visited: boolean[][] = Array(gridHeight).fill(null).map(() => Array(gridWidth).fill(false));
+  const visited: boolean[][] = Array(gridHeight)
+    .fill(null)
+    .map(() => Array(gridWidth).fill(false));
 
   for (let y = 0; y < gridHeight; y++) {
     for (let x = 0; x < gridWidth; x++) {
@@ -164,7 +174,7 @@ export const calculateAvailableSpace = (
             y: bounds.y + region.y * cellSize,
             width: region.width * cellSize,
             height: region.height * cellSize,
-            area: region.width * region.height * cellSize * cellSize
+            area: region.width * region.height * cellSize * cellSize,
           });
         }
       }
@@ -175,16 +185,15 @@ export const calculateAvailableSpace = (
   const totalArea = regions.reduce((sum, region) => sum + region.area, 0);
 
   // Find largest region
-  const largestRegion = regions.length > 0 
-    ? regions.reduce((largest, current) => 
-        current.area > largest.area ? current : largest
-      )
-    : null;
+  const largestRegion =
+    regions.length > 0
+      ? regions.reduce((largest, current) => (current.area > largest.area ? current : largest))
+      : null;
 
   return {
     regions,
     totalArea,
-    largestRegion
+    largestRegion,
   };
 };
 
@@ -205,11 +214,11 @@ const findLargestRectangle = (
   // Try different rectangle sizes starting from this point
   for (let height = 1; startY + height <= gridHeight; height++) {
     let width = 0;
-    
+
     // Find maximum width for this height
     for (let x = startX; x < gridWidth; x++) {
       let canExtend = true;
-      
+
       // Check if we can extend to this width for the current height
       for (let y = startY; y < startY + height; y++) {
         if (occupiedGrid[y][x] || visited[y][x]) {
@@ -217,7 +226,7 @@ const findLargestRectangle = (
           break;
         }
       }
-      
+
       if (canExtend) {
         width++;
       } else {
@@ -259,11 +268,7 @@ export const findOptimalPosition = (
     preferLargestSpace?: boolean;
   } = {}
 ): Position => {
-  const {
-    alignment = 'top-left',
-    avoidOverlap = true,
-    preferLargestSpace = true
-  } = preferences;
+  const { alignment = 'top-left', avoidOverlap = true, preferLargestSpace = true } = preferences;
 
   const bounds = calculateViewportBounds(containerSize, padding);
 
@@ -277,7 +282,7 @@ export const findOptimalPosition = (
 
   if (preferLargestSpace && availableSpace.largestRegion) {
     const region = availableSpace.largestRegion;
-    
+
     // Check if the panel fits in the largest region
     if (region.width >= size.width && region.height >= size.height) {
       return getAlignedPositionInRegion(size, region, alignment);
@@ -316,14 +321,14 @@ const getAlignedPosition = (
     case 'bottom-left':
       return { x: bounds.x, y: bounds.y + bounds.height - size.height };
     case 'bottom-right':
-      return { 
-        x: bounds.x + bounds.width - size.width, 
-        y: bounds.y + bounds.height - size.height 
+      return {
+        x: bounds.x + bounds.width - size.width,
+        y: bounds.y + bounds.height - size.height,
       };
     case 'center':
       return {
         x: bounds.x + (bounds.width - size.width) / 2,
-        y: bounds.y + (bounds.height - size.height) / 2
+        y: bounds.y + (bounds.height - size.height) / 2,
       };
     default:
       return { x: bounds.x, y: bounds.y };
@@ -342,9 +347,9 @@ const getAlignedPositionInRegion = (
     x: region.x,
     y: region.y,
     width: region.width,
-    height: region.height
+    height: region.height,
   };
-  
+
   return getAlignedPosition(size, regionBounds, alignment);
 };
 
@@ -358,7 +363,7 @@ const getCascadePosition = (
   cascadeOffset = 30
 ): Position => {
   const basePosition = { x: bounds.x + 20, y: bounds.y + 20 };
-  
+
   if (existingPanels.length === 0) {
     return basePosition;
   }
@@ -366,20 +371,23 @@ const getCascadePosition = (
   // Find a position that doesn't overlap with existing panels
   for (let i = 0; i < existingPanels.length + 10; i++) {
     const testPosition = {
-      x: basePosition.x + (i * cascadeOffset),
-      y: basePosition.y + (i * cascadeOffset)
+      x: basePosition.x + i * cascadeOffset,
+      y: basePosition.y + i * cascadeOffset,
     };
 
     // Check if position is within bounds
-    if (testPosition.x + size.width <= bounds.x + bounds.width &&
-        testPosition.y + size.height <= bounds.y + bounds.height) {
-      
+    if (
+      testPosition.x + size.width <= bounds.x + bounds.width &&
+      testPosition.y + size.height <= bounds.y + bounds.height
+    ) {
       // Check for overlaps
       const hasOverlap = existingPanels.some(panel => {
-        return !(testPosition.x + size.width <= panel.position.x ||
-                testPosition.x >= panel.position.x + panel.size.width ||
-                testPosition.y + size.height <= panel.position.y ||
-                testPosition.y >= panel.position.y + panel.size.height);
+        return !(
+          testPosition.x + size.width <= panel.position.x ||
+          testPosition.x >= panel.position.x + panel.size.width ||
+          testPosition.y + size.height <= panel.position.y ||
+          testPosition.y >= panel.position.y + panel.size.height
+        );
       });
 
       if (!hasOverlap) {
@@ -416,7 +424,7 @@ export const calculateMinimumBounds = (panels: PanelLayout[]): ViewportBounds =>
     x: minX,
     y: minY,
     width: maxX - minX,
-    height: maxY - minY
+    height: maxY - minY,
   };
 };
 
@@ -439,19 +447,21 @@ export const validatePanelConstraints = (
     violations.push('Panel position is outside viewport bounds');
   }
 
-  if (panel.position.x + panel.size.width > bounds.x + bounds.width ||
-      panel.position.y + panel.size.height > bounds.y + bounds.height) {
+  if (
+    panel.position.x + panel.size.width > bounds.x + bounds.width ||
+    panel.position.y + panel.size.height > bounds.y + bounds.height
+  ) {
     violations.push('Panel extends beyond viewport bounds');
   }
 
   // Check size constraints
   if (panel.constraints) {
     const { minSize, maxSize } = panel.constraints;
-    
+
     if (panel.size.width < minSize.width || panel.size.height < minSize.height) {
       violations.push('Panel size is below minimum constraints');
     }
-    
+
     if (maxSize && (panel.size.width > maxSize.width || panel.size.height > maxSize.height)) {
       violations.push('Panel size exceeds maximum constraints');
     }
@@ -460,10 +470,10 @@ export const validatePanelConstraints = (
   // Create adjusted panel if there are violations
   if (violations.length > 0) {
     adjustedPanel = { ...panel };
-    
+
     // Adjust position
     adjustedPanel.position = constrainPosition(panel.position, panel.size, bounds);
-    
+
     // Adjust size if needed
     if (panel.constraints) {
       adjustedPanel.size = constrainSize(
@@ -479,6 +489,6 @@ export const validatePanelConstraints = (
   return {
     valid: violations.length === 0,
     violations,
-    adjustedPanel
+    adjustedPanel,
   };
 };

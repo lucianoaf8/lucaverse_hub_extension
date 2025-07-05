@@ -9,16 +9,14 @@ import { getPlatformAPI } from './index.ts';
 // Storage Management Utilities
 export class StorageManager {
   private api: StorageAPI;
-  
+
   constructor(storageAPI: StorageAPI) {
     this.api = storageAPI;
   }
 
   // Batch operations
   async setBatch(items: Record<string, any>): Promise<void> {
-    const promises = Object.entries(items).map(([key, value]) => 
-      this.api.set(key, value)
-    );
+    const promises = Object.entries(items).map(([key, value]) => this.api.set(key, value));
     await Promise.all(promises);
   }
 
@@ -35,15 +33,12 @@ export class StorageManager {
 
   // Size management
   async getStorageUsage(): Promise<{ used: number; quota: number; percentage: number }> {
-    const [used, quota] = await Promise.all([
-      this.api.getSize(),
-      this.api.getQuota()
-    ]);
-    
+    const [used, quota] = await Promise.all([this.api.getSize(), this.api.getQuota()]);
+
     return {
       used,
       quota,
-      percentage: quota > 0 ? (used / quota) * 100 : 0
+      percentage: quota > 0 ? (used / quota) * 100 : 0,
     };
   }
 
@@ -54,7 +49,9 @@ export class StorageManager {
   }
 
   // Data migration utilities
-  async migrateData(migrations: Array<{ from: string; to: string; transform?: (data: any) => any }>): Promise<void> {
+  async migrateData(
+    migrations: Array<{ from: string; to: string; transform?: (data: any) => any }>
+  ): Promise<void> {
     for (const migration of migrations) {
       try {
         const data = await this.api.get(migration.from);
@@ -70,7 +67,11 @@ export class StorageManager {
   }
 
   // JSON schema validation
-  async setWithValidation<T>(key: string, value: T, validator?: (data: T) => boolean): Promise<void> {
+  async setWithValidation<T>(
+    key: string,
+    value: T,
+    validator?: (data: T) => boolean
+  ): Promise<void> {
     if (validator && !validator(value)) {
       throw new Error(`Validation failed for key: ${key}`);
     }
@@ -82,7 +83,7 @@ export class StorageManager {
     const versionedData = {
       data: value,
       version,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
     await this.api.set(key, versionedData);
   }
@@ -94,7 +95,9 @@ export class StorageManager {
     }
 
     if (expectedVersion && versionedData.version !== expectedVersion) {
-      throw new Error(`Version mismatch for key ${key}: expected ${expectedVersion}, got ${versionedData.version}`);
+      throw new Error(
+        `Version mismatch for key ${key}: expected ${expectedVersion}, got ${versionedData.version}`
+      );
     }
 
     return versionedData.data;
@@ -129,7 +132,7 @@ export class NotificationQueue {
 
     while (this.queue.length > 0) {
       const item = this.queue.shift()!;
-      
+
       try {
         const result = await this.createWithRetry(item.options);
         item.resolve(result);
@@ -195,7 +198,7 @@ export class KeyboardShortcuts {
   private handleKeyDown(event: KeyboardEvent): void {
     const shortcut = this.getShortcutString(event);
     const handler = this.handlers.get(shortcut);
-    
+
     if (handler) {
       event.preventDefault();
       handler(event);
@@ -204,14 +207,14 @@ export class KeyboardShortcuts {
 
   private getShortcutString(event: KeyboardEvent): string {
     const parts: string[] = [];
-    
+
     if (event.ctrlKey || (this.platform === 'chrome' && event.metaKey)) parts.push('Ctrl');
     if (event.altKey) parts.push('Alt');
     if (event.shiftKey) parts.push('Shift');
     if (event.metaKey && this.platform !== 'chrome') parts.push('Meta');
-    
+
     parts.push(event.key);
-    
+
     return parts.join('+');
   }
 
@@ -219,14 +222,14 @@ export class KeyboardShortcuts {
     // Normalize shortcut for platform
     const normalizedShortcut = this.normalizeShortcut(shortcut);
     this.handlers.set(normalizedShortcut, handler);
-    
+
     return () => this.handlers.delete(normalizedShortcut);
   }
 
   private normalizeShortcut(shortcut: string): string {
     // Convert platform-specific modifiers
     let normalized = shortcut;
-    
+
     if (this.platform === 'chrome') {
       normalized = normalized.replace(/Cmd\+/g, 'Ctrl+');
     } else if (this.platform === 'web') {
@@ -234,7 +237,7 @@ export class KeyboardShortcuts {
         normalized = normalized.replace(/Ctrl\+/g, 'Meta+');
       }
     }
-    
+
     return normalized;
   }
 
@@ -254,36 +257,36 @@ export class WindowStatePersistence {
   }
 
   async saveWindowState(windowId: string, state: any): Promise<void> {
-    const allStates = await this.storage.get(this.storageKey) || {};
+    const allStates = (await this.storage.get(this.storageKey)) || {};
     allStates[windowId] = {
       ...state,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
     await this.storage.set(this.storageKey, allStates);
   }
 
   async getWindowState(windowId: string): Promise<any | null> {
-    const allStates = await this.storage.get(this.storageKey) || {};
+    const allStates = (await this.storage.get(this.storageKey)) || {};
     return allStates[windowId] || null;
   }
 
   async removeWindowState(windowId: string): Promise<void> {
-    const allStates = await this.storage.get(this.storageKey) || {};
+    const allStates = (await this.storage.get(this.storageKey)) || {};
     delete allStates[windowId];
     await this.storage.set(this.storageKey, allStates);
   }
 
   async cleanupOldStates(maxAge: number = 7 * 24 * 60 * 60 * 1000): Promise<void> {
-    const allStates = await this.storage.get(this.storageKey) || {};
+    const allStates = (await this.storage.get(this.storageKey)) || {};
     const now = Date.now();
-    
+
     Object.keys(allStates).forEach(windowId => {
       const state = allStates[windowId];
-      if (state.timestamp && (now - state.timestamp) > maxAge) {
+      if (state.timestamp && now - state.timestamp > maxAge) {
         delete allStates[windowId];
       }
     });
-    
+
     await this.storage.set(this.storageKey, allStates);
   }
 }
@@ -304,13 +307,16 @@ export class PlatformErrorHandler {
       this.registerHandler('QUOTA_EXCEEDED', this.handleQuotaExceeded.bind(this));
       this.registerHandler('CONTEXT_INVALIDATED', this.handleContextInvalidated.bind(this));
     }
-    
+
     // Web platform specific errors
     if (this.platform === 'web') {
       this.registerHandler('STORAGE_QUOTA_EXCEEDED', this.handleWebStorageQuota.bind(this));
-      this.registerHandler('NOTIFICATION_PERMISSION_DENIED', this.handleNotificationPermission.bind(this));
+      this.registerHandler(
+        'NOTIFICATION_PERMISSION_DENIED',
+        this.handleNotificationPermission.bind(this)
+      );
     }
-    
+
     // Electron specific errors
     if (this.platform === 'electron') {
       this.registerHandler('IPC_ERROR', this.handleIPCError.bind(this));
@@ -379,24 +385,28 @@ export async function createPlatformUtils(): Promise<{
   errorHandler: PlatformErrorHandler;
 }> {
   const platformAPI = await getPlatformAPI();
-  
+
   return {
     storage: new StorageManager(platformAPI.storage),
     notifications: new NotificationQueue(platformAPI.notifications),
     shortcuts: new KeyboardShortcuts(platformAPI.type),
     windowState: new WindowStatePersistence(platformAPI.storage),
-    errorHandler: new PlatformErrorHandler(platformAPI.type)
+    errorHandler: new PlatformErrorHandler(platformAPI.type),
   };
 }
 
 // Convenience functions
-export async function withStorageManager<T>(fn: (storage: StorageManager) => Promise<T>): Promise<T> {
+export async function withStorageManager<T>(
+  fn: (storage: StorageManager) => Promise<T>
+): Promise<T> {
   const platformAPI = await getPlatformAPI();
   const storage = new StorageManager(platformAPI.storage);
   return fn(storage);
 }
 
-export async function withNotificationQueue<T>(fn: (queue: NotificationQueue) => Promise<T>): Promise<T> {
+export async function withNotificationQueue<T>(
+  fn: (queue: NotificationQueue) => Promise<T>
+): Promise<T> {
   const platformAPI = await getPlatformAPI();
   const queue = new NotificationQueue(platformAPI.notifications);
   return fn(queue);
@@ -405,7 +415,10 @@ export async function withNotificationQueue<T>(fn: (queue: NotificationQueue) =>
 // Platform detection helpers
 export function isMobile(): boolean {
   if (typeof window === 'undefined') return false;
-  return window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  return (
+    window.innerWidth <= 768 ||
+    /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+  );
 }
 
 export function isTouchDevice(): boolean {
@@ -417,7 +430,7 @@ export function getViewportSize(): { width: number; height: number } {
   if (typeof window === 'undefined') return { width: 0, height: 0 };
   return {
     width: window.innerWidth,
-    height: window.innerHeight
+    height: window.innerHeight,
   };
 }
 
@@ -427,7 +440,7 @@ export class PlatformPerformanceMonitor {
 
   startTiming(operation: string): () => void {
     const start = performance.now();
-    
+
     return () => {
       const duration = performance.now() - start;
       this.recordMetric(operation, duration);
@@ -437,24 +450,24 @@ export class PlatformPerformanceMonitor {
   recordMetric(operation: string, value: number): void {
     const existing = this.metrics.get(operation) || [];
     existing.push(value);
-    
+
     // Keep only last 100 measurements
     if (existing.length > 100) {
       existing.shift();
     }
-    
+
     this.metrics.set(operation, existing);
   }
 
   getMetrics(operation: string): { avg: number; min: number; max: number; count: number } | null {
     const values = this.metrics.get(operation);
     if (!values || values.length === 0) return null;
-    
+
     return {
       avg: values.reduce((sum, val) => sum + val, 0) / values.length,
       min: Math.min(...values),
       max: Math.max(...values),
-      count: values.length
+      count: values.length,
     };
   }
 

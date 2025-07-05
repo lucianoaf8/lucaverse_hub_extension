@@ -115,11 +115,11 @@ export class PanelManager {
     } = {}
   ): string {
     const panelId = `panel-${component.toLowerCase()}-${nanoid()}`;
-    
+
     const defaultPositions = this.calculateOptimalPosition(options.size);
     const position = options.position || defaultPositions;
     const size = options.size || this.getDefaultSize(component);
-    const zIndex = options.layer 
+    const zIndex = options.layer
       ? zIndexUtils.getNextZIndex(this.getPanelArray(), options.layer)
       : zIndexUtils.getNextZIndex(this.getPanelArray());
 
@@ -154,7 +154,7 @@ export class PanelManager {
 
     this.panels.set(panelId, panel);
     this.initializePerformanceMetrics(panelId);
-    
+
     console.log(`Created panel ${panelId} (${component})`);
     return panelId;
   }
@@ -184,7 +184,10 @@ export class PanelManager {
     }
 
     // Check for conflicts
-    const conflicts = this.detectCollisions(updatedPanel, this.getPanelArray().filter(p => p.id !== panelId));
+    const conflicts = this.detectCollisions(
+      updatedPanel,
+      this.getPanelArray().filter(p => p.id !== panelId)
+    );
     if (conflicts.length > 0 && !updates.position) {
       console.warn(`Panel update would cause collisions for ${panelId}`);
     }
@@ -204,8 +207,8 @@ export class PanelManager {
     if (!panel) return false;
 
     // Check for group dependencies
-    const dependentGroups = Array.from(this.groups.values()).filter(
-      group => group.panelIds.includes(panelId)
+    const dependentGroups = Array.from(this.groups.values()).filter(group =>
+      group.panelIds.includes(panelId)
     );
 
     // Remove from groups
@@ -293,13 +296,13 @@ export class PanelManager {
             success = this.updatePanel(panelId, { visible: true });
             break;
           case 'lock':
-            success = this.updatePanel(panelId, { 
-              metadata: { locked: true } 
+            success = this.updatePanel(panelId, {
+              metadata: { locked: true },
             });
             break;
           case 'unlock':
-            success = this.updatePanel(panelId, { 
-              metadata: { locked: false } 
+            success = this.updatePanel(panelId, {
+              metadata: { locked: false },
             });
             break;
           case 'duplicate':
@@ -317,14 +320,16 @@ export class PanelManager {
           result.failed.push({ panelId, error: `Failed to ${operation} panel` });
         }
       } catch (error) {
-        result.failed.push({ 
-          panelId, 
-          error: error instanceof Error ? error.message : 'Unknown error' 
+        result.failed.push({
+          panelId,
+          error: error instanceof Error ? error.message : 'Unknown error',
         });
       }
     });
 
-    console.log(`Bulk ${operation} completed: ${result.successful.length} successful, ${result.failed.length} failed`);
+    console.log(
+      `Bulk ${operation} completed: ${result.successful.length} successful, ${result.failed.length} failed`
+    );
     return result;
   }
 
@@ -373,7 +378,7 @@ export class PanelManager {
   invertSelection(): void {
     const allIds = new Set(this.panels.keys());
     const currentSelected = new Set(this.selectedPanelIds);
-    
+
     this.selectedPanelIds.clear();
     allIds.forEach(id => {
       if (!currentSelected.has(id)) {
@@ -391,7 +396,7 @@ export class PanelManager {
    */
   optimizeLayout(options: LayoutOptimizationOptions): PanelLayout[] {
     const panels = this.getPanelArray();
-    
+
     switch (options.algorithm) {
       case 'auto-arrange':
         return this.autoArrangeLayout(panels, options);
@@ -411,10 +416,15 @@ export class PanelManager {
   /**
    * Auto-arrange panels to minimize overlaps and optimize space
    */
-  private autoArrangeLayout(panels: PanelLayout[], options: LayoutOptimizationOptions): PanelLayout[] {
+  private autoArrangeLayout(
+    panels: PanelLayout[],
+    options: LayoutOptimizationOptions
+  ): PanelLayout[] {
     const viewport = { width: 1920, height: 1080 }; // Could be dynamic
-    const sortedPanels = [...panels].sort((a, b) => a.size.width * a.size.height - b.size.width * b.size.height);
-    
+    const sortedPanels = [...panels].sort(
+      (a, b) => a.size.width * a.size.height - b.size.width * b.size.height
+    );
+
     let currentX = options.padding;
     let currentY = options.padding;
     let rowHeight = 0;
@@ -441,9 +451,12 @@ export class PanelManager {
   /**
    * Grid-align layout
    */
-  private gridAlignLayout(panels: PanelLayout[], options: LayoutOptimizationOptions): PanelLayout[] {
+  private gridAlignLayout(
+    panels: PanelLayout[],
+    options: LayoutOptimizationOptions
+  ): PanelLayout[] {
     const gridSize = 50; // Could be configurable
-    
+
     return panels.map(panel => ({
       ...panel,
       position: {
@@ -458,12 +471,12 @@ export class PanelManager {
    */
   private cascadeLayout(panels: PanelLayout[], options: LayoutOptimizationOptions): PanelLayout[] {
     const offset = 30;
-    
+
     return panels.map((panel, index) => ({
       ...panel,
       position: {
-        x: options.padding + (index * offset),
-        y: options.padding + (index * offset),
+        x: options.padding + index * offset,
+        y: options.padding + index * offset,
       },
     }));
   }
@@ -475,14 +488,16 @@ export class PanelManager {
     const viewport = { width: 1920, height: 1080 };
     const cols = Math.ceil(Math.sqrt(panels.length));
     const rows = Math.ceil(panels.length / cols);
-    
-    const tileWidth = (viewport.width - options.padding * 2 - (cols - 1) * options.groupSpacing) / cols;
-    const tileHeight = (viewport.height - options.padding * 2 - (rows - 1) * options.groupSpacing) / rows;
+
+    const tileWidth =
+      (viewport.width - options.padding * 2 - (cols - 1) * options.groupSpacing) / cols;
+    const tileHeight =
+      (viewport.height - options.padding * 2 - (rows - 1) * options.groupSpacing) / rows;
 
     return panels.map((panel, index) => {
       const col = index % cols;
       const row = Math.floor(index / cols);
-      
+
       return {
         ...panel,
         position: {
@@ -497,7 +512,10 @@ export class PanelManager {
   /**
    * Minimize gaps between panels
    */
-  private minimizeGapsLayout(panels: PanelLayout[], options: LayoutOptimizationOptions): PanelLayout[] {
+  private minimizeGapsLayout(
+    panels: PanelLayout[],
+    options: LayoutOptimizationOptions
+  ): PanelLayout[] {
     // Implement gap minimization algorithm
     // This is a simplified version - a real implementation would use more sophisticated packing algorithms
     return this.autoArrangeLayout(panels, { ...options, groupSpacing: 5 });
@@ -520,8 +538,10 @@ export class PanelManager {
           panel.metadata?.title,
           panel.metadata?.description,
           panel.component,
-        ].join(' ').toLowerCase();
-        
+        ]
+          .join(' ')
+          .toLowerCase();
+
         if (!searchableText.includes(query)) return false;
       }
 
@@ -554,7 +574,8 @@ export class PanelManager {
           panel.size.width > maxWidth ||
           panel.size.height < minHeight ||
           panel.size.height > maxHeight
-        ) return false;
+        )
+          return false;
       }
 
       // Position range filter
@@ -565,7 +586,8 @@ export class PanelManager {
           panel.position.x > maxX ||
           panel.position.y < minY ||
           panel.position.y > maxY
-        ) return false;
+        )
+          return false;
       }
 
       // Tags filter
@@ -588,7 +610,12 @@ export class PanelManager {
   /**
    * Get panels in viewport
    */
-  getPanelsInViewport(viewport: { x: number; y: number; width: number; height: number }): PanelLayout[] {
+  getPanelsInViewport(viewport: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  }): PanelLayout[] {
     return this.getPanelArray().filter(panel => {
       const panelRight = panel.position.x + panel.size.width;
       const panelBottom = panel.position.y + panel.size.height;
@@ -627,20 +654,29 @@ export class PanelManager {
     );
 
     // Average size
-    const totalArea = panels.reduce((sum, p) => sum + (p.size.width * p.size.height), 0);
-    const averageSize = panels.length > 0 ? {
-      width: panels.reduce((sum, p) => sum + p.size.width, 0) / panels.length,
-      height: panels.reduce((sum, p) => sum + p.size.height, 0) / panels.length,
-    } : { width: 0, height: 0 };
+    const totalArea = panels.reduce((sum, p) => sum + p.size.width * p.size.height, 0);
+    const averageSize =
+      panels.length > 0
+        ? {
+            width: panels.reduce((sum, p) => sum + p.size.width, 0) / panels.length,
+            height: panels.reduce((sum, p) => sum + p.size.height, 0) / panels.length,
+          }
+        : { width: 0, height: 0 };
 
     // Overlapping panels
-    const overlappingPanels = panels.filter(panel => 
-      this.detectCollisions(panel, panels.filter(p => p.id !== panel.id)).length > 0
+    const overlappingPanels = panels.filter(
+      panel =>
+        this.detectCollisions(
+          panel,
+          panels.filter(p => p.id !== panel.id)
+        ).length > 0
     ).length;
 
     // Grouped panels
-    const groupedPanels = Array.from(this.groups.values())
-      .reduce((count, group) => count + group.panelIds.length, 0);
+    const groupedPanels = Array.from(this.groups.values()).reduce(
+      (count, group) => count + group.panelIds.length,
+      0
+    );
 
     // Z-index conflicts
     const zIndexConflicts = this.zIndexManager.detectConflicts(panels).length;
@@ -690,19 +726,27 @@ export class PanelManager {
     // Size constraints
     if (panel.constraints?.minSize) {
       if (panel.size.width < panel.constraints.minSize.width) {
-        errors.push(`Width ${panel.size.width} is below minimum ${panel.constraints.minSize.width}`);
+        errors.push(
+          `Width ${panel.size.width} is below minimum ${panel.constraints.minSize.width}`
+        );
       }
       if (panel.size.height < panel.constraints.minSize.height) {
-        errors.push(`Height ${panel.size.height} is below minimum ${panel.constraints.minSize.height}`);
+        errors.push(
+          `Height ${panel.size.height} is below minimum ${panel.constraints.minSize.height}`
+        );
       }
     }
 
     if (panel.constraints?.maxSize) {
       if (panel.size.width > panel.constraints.maxSize.width) {
-        warnings.push(`Width ${panel.size.width} exceeds maximum ${panel.constraints.maxSize.width}`);
+        warnings.push(
+          `Width ${panel.size.width} exceeds maximum ${panel.constraints.maxSize.width}`
+        );
       }
       if (panel.size.height > panel.constraints.maxSize.height) {
-        warnings.push(`Height ${panel.size.height} exceeds maximum ${panel.constraints.maxSize.height}`);
+        warnings.push(
+          `Height ${panel.size.height} exceeds maximum ${panel.constraints.maxSize.height}`
+        );
       }
     }
 
@@ -744,10 +788,10 @@ export class PanelManager {
   } {
     const issues: string[] = [];
     const recommendations: string[] = [];
-    
+
     const stats = this.getStatistics();
     const validationResults = this.validateAllPanels();
-    
+
     // Check for validation errors
     const errorCount = validationResults.filter(r => !r.isValid).length;
     if (errorCount > 0) {
@@ -769,8 +813,10 @@ export class PanelManager {
 
     // Check memory usage
     const totalMetrics = Array.from(this.performanceMetrics.values());
-    const avgMemoryUsage = totalMetrics.reduce((sum, m) => sum + m.memoryUsage, 0) / totalMetrics.length;
-    if (avgMemoryUsage > 100) { // MB threshold
+    const avgMemoryUsage =
+      totalMetrics.reduce((sum, m) => sum + m.memoryUsage, 0) / totalMetrics.length;
+    if (avgMemoryUsage > 100) {
+      // MB threshold
       issues.push('High memory usage detected');
       recommendations.push('Consider reducing panel count or optimizing panel content');
     }
@@ -794,7 +840,7 @@ export class PanelManager {
     this.clipboard = panelIds
       .map(id => this.panels.get(id))
       .filter((panel): panel is PanelLayout => panel !== undefined);
-    
+
     console.log(`Copied ${this.clipboard.length} panels to clipboard`);
   }
 
@@ -803,7 +849,7 @@ export class PanelManager {
    */
   pasteFromClipboard(offset: Position = { x: 20, y: 20 }): string[] {
     const newPanelIds: string[] = [];
-    
+
     this.clipboard.forEach(panel => {
       const newId = this.createPanel(panel.component, {
         position: {
@@ -881,21 +927,21 @@ export class PanelManager {
   private calculateOptimalPosition(size?: Size): Position {
     const defaultSize = size || { width: 400, height: 300 };
     const existingPanels = this.getPanelArray();
-    
+
     // Simple algorithm: try positions in a grid pattern
     const gridSize = 50;
     const maxAttempts = 100;
-    
+
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       const x = (attempt % 10) * gridSize + 50;
       const y = Math.floor(attempt / 10) * gridSize + 50;
       const position = { x, y };
-      
+
       if (this.isPositionFree(position, defaultSize, existingPanels)) {
         return position;
       }
     }
-    
+
     // Fallback to random position
     return {
       x: Math.random() * 500 + 50,
@@ -912,7 +958,7 @@ export class PanelManager {
       zIndex: 1,
       visible: true,
     };
-    
+
     return this.detectCollisions(testPanel, existingPanels).length === 0;
   }
 
@@ -934,11 +980,11 @@ export class PanelManager {
 
   private findNonConflictingPosition(preferredPosition: Position, size: Size): Position {
     const existingPanels = this.getPanelArray();
-    
+
     if (this.isPositionFree(preferredPosition, size, existingPanels)) {
       return preferredPosition;
     }
-    
+
     return this.calculateOptimalPosition(size);
   }
 
@@ -1091,7 +1137,7 @@ export const panelUtils = {
    */
   getNearestPanels: (targetPanel: PanelLayout, count: number = 3): PanelLayout[] => {
     const allPanels = panelManager.getPanelArray().filter(p => p.id !== targetPanel.id);
-    
+
     return allPanels
       .map(panel => ({ panel, distance: panelUtils.getDistance(targetPanel, panel) }))
       .sort((a, b) => a.distance - b.distance)

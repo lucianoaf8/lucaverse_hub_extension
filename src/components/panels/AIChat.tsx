@@ -26,7 +26,18 @@ interface ChatSession {
 }
 
 type AIProvider = 'claude' | 'gpt4' | 'gemini' | 'local';
-type AIModel = 'sonnet' | 'haiku' | 'opus' | 'gpt4-turbo' | 'gpt4' | 'gpt3.5-turbo' | 'gemini-pro' | 'gemini-ultra' | 'llama2' | 'codellama' | 'mistral';
+type AIModel =
+  | 'sonnet'
+  | 'haiku'
+  | 'opus'
+  | 'gpt4-turbo'
+  | 'gpt4'
+  | 'gpt3.5-turbo'
+  | 'gemini-pro'
+  | 'gemini-ultra'
+  | 'llama2'
+  | 'codellama'
+  | 'mistral';
 
 export interface AIChatProps {
   id: string;
@@ -43,7 +54,7 @@ export const AIChat: React.FC<AIChatProps> = ({
   size,
   onMove,
   onResize,
-  className = ''
+  className = '',
 }) => {
   // State management
   const [chatSessions, setChatSessions] = useState<Record<string, ChatSession>>({});
@@ -85,7 +96,7 @@ export const AIChat: React.FC<AIChatProps> = ({
       if (stored) {
         const sessions = JSON.parse(stored);
         setChatSessions(sessions);
-        
+
         // Find the most recent session
         const sessionArray = Object.values(sessions) as ChatSession[];
         if (sessionArray.length > 0) {
@@ -122,14 +133,16 @@ export const AIChat: React.FC<AIChatProps> = ({
     const newChat: ChatSession = {
       id: chatId,
       title: 'New Chat',
-      messages: [{
-        id: `msg_${Date.now()}`,
-        type: 'assistant',
-        content: '🚀 Hello! I\'m your AI assistant. How can I help you today?',
-        timestamp: Date.now()
-      }],
+      messages: [
+        {
+          id: `msg_${Date.now()}`,
+          type: 'assistant',
+          content: "🚀 Hello! I'm your AI assistant. How can I help you today?",
+          timestamp: Date.now(),
+        },
+      ],
       createdAt: Date.now(),
-      updatedAt: Date.now()
+      updatedAt: Date.now(),
     };
 
     const updatedSessions = { ...chatSessions, [chatId]: newChat };
@@ -167,7 +180,7 @@ export const AIChat: React.FC<AIChatProps> = ({
       id: `msg_${Date.now()}`,
       type: 'user',
       content: message,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     // Add user message to active chat
@@ -178,9 +191,8 @@ export const AIChat: React.FC<AIChatProps> = ({
 
       // Update title if this is the first user message
       if (updatedSessions[activeChatId].title === 'New Chat') {
-        updatedSessions[activeChatId].title = message.length > 30 
-          ? message.substring(0, 30) + '...' 
-          : message;
+        updatedSessions[activeChatId].title =
+          message.length > 30 ? message.substring(0, 30) + '...' : message;
       }
     }
 
@@ -192,12 +204,12 @@ export const AIChat: React.FC<AIChatProps> = ({
     // Simulate AI response
     try {
       const response = await generateAIResponse(message, aiProvider, aiModel);
-      
+
       const assistantMessage: ChatMessage = {
         id: `msg_${Date.now() + 1}`,
         type: 'assistant',
         content: response,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
 
       const finalSessions = { ...updatedSessions };
@@ -210,12 +222,12 @@ export const AIChat: React.FC<AIChatProps> = ({
       saveChatSessions(finalSessions);
     } catch (error) {
       console.error('Failed to get AI response:', error);
-      
+
       const errorMessage: ChatMessage = {
         id: `msg_${Date.now() + 1}`,
         type: 'assistant',
         content: '❌ Sorry, I encountered an error. Please try again.',
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
 
       const errorSessions = { ...updatedSessions };
@@ -229,54 +241,68 @@ export const AIChat: React.FC<AIChatProps> = ({
     } finally {
       setIsThinking(false);
     }
-  }, [currentMessage, activeChatId, isThinking, chatSessions, aiProvider, aiModel, saveChatSessions]);
+  }, [
+    currentMessage,
+    activeChatId,
+    isThinking,
+    chatSessions,
+    aiProvider,
+    aiModel,
+    saveChatSessions,
+  ]);
 
   // Generate AI response (simulation)
-  const generateAIResponse = useCallback(async (message: string, _provider: AIProvider, _model: AIModel): Promise<string> => {
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 2000));
+  const generateAIResponse = useCallback(
+    async (message: string, _provider: AIProvider, _model: AIModel): Promise<string> => {
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 2000));
 
-    const responses = [
-      "I understand your question. Based on current best practices, here's my analysis:",
-      "That's an excellent point. Let me break this down into actionable steps for you.",
-      "I've analyzed your request and here are my recommendations with examples.",
-      "Interesting challenge! Here's a comprehensive solution approach.",
-      "Great question! This relates to several key concepts in modern development.",
-      "Let me help you with that. Here's what I recommend:",
-      "Based on the latest information, here's my technical analysis:",
-      "I can assist with that implementation. Here's the optimal approach:"
-    ];
+      const responses = [
+        "I understand your question. Based on current best practices, here's my analysis:",
+        "That's an excellent point. Let me break this down into actionable steps for you.",
+        "I've analyzed your request and here are my recommendations with examples.",
+        "Interesting challenge! Here's a comprehensive solution approach.",
+        'Great question! This relates to several key concepts in modern development.',
+        "Let me help you with that. Here's what I recommend:",
+        "Based on the latest information, here's my technical analysis:",
+        "I can assist with that implementation. Here's the optimal approach:",
+      ];
 
-    const baseResponse = responses[Math.floor(Math.random() * responses.length)];
+      const baseResponse = responses[Math.floor(Math.random() * responses.length)];
 
-    // Add contextual response based on message content
-    if (message.toLowerCase().includes('code')) {
-      return `${baseResponse}\n\n\`\`\`javascript\n// Example implementation\nconst solution = () => {\n  // Your optimized code here\n  return result;\n};\n\`\`\`\n\nThis approach ensures maintainability and performance.`;
-    } else if (message.toLowerCase().includes('debug')) {
-      return `${baseResponse}\n\n1. **Check for common issues**\n2. **Verify input validation**\n3. **Review error handling**\n4. **Test edge cases**\n\nWould you like me to elaborate on any of these steps?`;
-    } else if (message.toLowerCase().includes('optimize')) {
-      return `${baseResponse}\n\n• **Performance improvements**\n• **Memory optimization**\n• **Code refactoring suggestions**\n• **Best practices implementation**\n\nLet me know which area you'd like to focus on first.`;
-    }
+      // Add contextual response based on message content
+      if (message.toLowerCase().includes('code')) {
+        return `${baseResponse}\n\n\`\`\`javascript\n// Example implementation\nconst solution = () => {\n  // Your optimized code here\n  return result;\n};\n\`\`\`\n\nThis approach ensures maintainability and performance.`;
+      } else if (message.toLowerCase().includes('debug')) {
+        return `${baseResponse}\n\n1. **Check for common issues**\n2. **Verify input validation**\n3. **Review error handling**\n4. **Test edge cases**\n\nWould you like me to elaborate on any of these steps?`;
+      } else if (message.toLowerCase().includes('optimize')) {
+        return `${baseResponse}\n\n• **Performance improvements**\n• **Memory optimization**\n• **Code refactoring suggestions**\n• **Best practices implementation**\n\nLet me know which area you'd like to focus on first.`;
+      }
 
-    return `${baseResponse}\n\nRegarding "${message.split(' ').slice(-3).join(' ')}", I'd be happy to provide more specific guidance if you can share additional context.`;
-  }, []);
+      return `${baseResponse}\n\nRegarding "${message.split(' ').slice(-3).join(' ')}", I'd be happy to provide more specific guidance if you can share additional context.`;
+    },
+    []
+  );
 
   // Handle keyboard shortcuts
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-      e.preventDefault();
-      sendMessage();
-    }
-  }, [sendMessage]);
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        sendMessage();
+      }
+    },
+    [sendMessage]
+  );
 
   // Use message template
   const useTemplate = useCallback((templateType: string) => {
     const templates = {
-      explain: "Please explain this concept in simple terms: ",
-      code: "Please review this code and suggest improvements: ",
-      debug: "Help me debug this issue: ",
-      optimize: "How can I optimize this for better performance: ",
-      translate: "Please translate this to "
+      explain: 'Please explain this concept in simple terms: ',
+      code: 'Please review this code and suggest improvements: ',
+      debug: 'Help me debug this issue: ',
+      optimize: 'How can I optimize this for better performance: ',
+      translate: 'Please translate this to ',
     };
 
     if (templates[templateType as keyof typeof templates]) {
@@ -289,7 +315,7 @@ export const AIChat: React.FC<AIChatProps> = ({
   const formatTime = useCallback((timestamp: number) => {
     return new Date(timestamp).toLocaleTimeString('en-US', {
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   }, []);
 
@@ -313,22 +339,22 @@ export const AIChat: React.FC<AIChatProps> = ({
       claude: [
         { value: 'sonnet', label: 'Claude 3.5 Sonnet' },
         { value: 'haiku', label: 'Claude 3 Haiku' },
-        { value: 'opus', label: 'Claude 3 Opus' }
+        { value: 'opus', label: 'Claude 3 Opus' },
       ],
       gpt4: [
         { value: 'gpt4-turbo', label: 'GPT-4 Turbo' },
         { value: 'gpt4', label: 'GPT-4' },
-        { value: 'gpt3.5-turbo', label: 'GPT-3.5 Turbo' }
+        { value: 'gpt3.5-turbo', label: 'GPT-3.5 Turbo' },
       ],
       gemini: [
         { value: 'gemini-pro', label: 'Gemini Pro' },
-        { value: 'gemini-ultra', label: 'Gemini Ultra' }
+        { value: 'gemini-ultra', label: 'Gemini Ultra' },
       ],
       local: [
         { value: 'llama2', label: 'Llama 2 70B' },
         { value: 'codellama', label: 'Code Llama' },
-        { value: 'mistral', label: 'Mistral 7B' }
-      ]
+        { value: 'mistral', label: 'Mistral 7B' },
+      ],
     };
 
     return modelOptions[provider] || modelOptions.claude;
@@ -358,7 +384,7 @@ export const AIChat: React.FC<AIChatProps> = ({
       className={className}
       constraints={{
         minSize: { width: 400, height: 400 },
-        maxSize: { width: 800, height: 800 }
+        maxSize: { width: 800, height: 800 },
       }}
     >
       <div className="h-full flex">
@@ -385,7 +411,7 @@ export const AIChat: React.FC<AIChatProps> = ({
             <div className="space-y-2">
               <select
                 value={aiProvider}
-                onChange={(e) => setAIProvider(e.target.value as AIProvider)}
+                onChange={e => setAIProvider(e.target.value as AIProvider)}
                 className="w-full px-2 py-1 bg-white bg-opacity-10 border border-white border-opacity-20 rounded text-white text-xs focus:outline-none focus:ring-1 focus:ring-blue-400"
               >
                 <option value="claude">Claude</option>
@@ -393,10 +419,10 @@ export const AIChat: React.FC<AIChatProps> = ({
                 <option value="gemini">Gemini</option>
                 <option value="local">Local Models</option>
               </select>
-              
+
               <select
                 value={aiModel}
-                onChange={(e) => setAIModel(e.target.value as AIModel)}
+                onChange={e => setAIModel(e.target.value as AIModel)}
                 className="w-full px-2 py-1 bg-white bg-opacity-10 border border-white border-opacity-20 rounded text-white text-xs focus:outline-none focus:ring-1 focus:ring-blue-400"
               >
                 {getModelOptions(aiProvider).map(option => (
@@ -412,9 +438,10 @@ export const AIChat: React.FC<AIChatProps> = ({
           <div className="flex-1 overflow-auto">
             {chatSessionsArray.map(session => {
               const lastMessage = session.messages[session.messages.length - 1];
-              const preview = lastMessage?.content && lastMessage.content.length > 40 
-                ? lastMessage.content.substring(0, 40) + '...' 
-                : lastMessage?.content || 'New conversation';
+              const preview =
+                lastMessage?.content && lastMessage.content.length > 40
+                  ? lastMessage.content.substring(0, 40) + '...'
+                  : lastMessage?.content || 'New conversation';
 
               return (
                 <div
@@ -427,9 +454,7 @@ export const AIChat: React.FC<AIChatProps> = ({
                   <div className="text-white text-sm font-medium truncate mb-1">
                     {session.title}
                   </div>
-                  <div className="text-white text-opacity-60 text-xs truncate mb-1">
-                    {preview}
-                  </div>
+                  <div className="text-white text-opacity-60 text-xs truncate mb-1">{preview}</div>
                   <div className="text-white text-opacity-40 text-xs">
                     {getTimeAgo(session.updatedAt)}
                   </div>
@@ -448,7 +473,7 @@ export const AIChat: React.FC<AIChatProps> = ({
                 { key: 'explain', label: '📝 Explain', emoji: '📝' },
                 { key: 'code', label: '💻 Code Review', emoji: '💻' },
                 { key: 'debug', label: '🐛 Debug', emoji: '🐛' },
-                { key: 'optimize', label: '⚡ Optimize', emoji: '⚡' }
+                { key: 'optimize', label: '⚡ Optimize', emoji: '⚡' },
               ].map(template => (
                 <button
                   key={template.key}
@@ -468,24 +493,22 @@ export const AIChat: React.FC<AIChatProps> = ({
                 key={message.id}
                 className={`message ${message.type === 'user' ? 'ml-8' : 'mr-8'}`}
               >
-                <div className={`p-3 rounded-lg ${
-                  message.type === 'user'
-                    ? 'bg-blue-500 bg-opacity-20 text-blue-100 ml-auto'
-                    : 'bg-white bg-opacity-10 text-white'
-                }`}>
+                <div
+                  className={`p-3 rounded-lg ${
+                    message.type === 'user'
+                      ? 'bg-blue-500 bg-opacity-20 text-blue-100 ml-auto'
+                      : 'bg-white bg-opacity-10 text-white'
+                  }`}
+                >
                   <div className="font-medium text-sm mb-1">
                     {message.type === 'user' ? 'You' : '🤖 Lucaverse AI'}
                   </div>
-                  <div className="text-sm whitespace-pre-wrap">
-                    {message.content}
-                  </div>
-                  <div className="text-xs opacity-60 mt-2">
-                    {formatTime(message.timestamp)}
-                  </div>
+                  <div className="text-sm whitespace-pre-wrap">{message.content}</div>
+                  <div className="text-xs opacity-60 mt-2">{formatTime(message.timestamp)}</div>
                 </div>
               </div>
             ))}
-            
+
             {/* Thinking indicator */}
             {isThinking && (
               <div className="mr-8">
@@ -494,15 +517,24 @@ export const AIChat: React.FC<AIChatProps> = ({
                   <div className="flex items-center space-x-2">
                     <span className="text-sm">Thinking</span>
                     <div className="flex space-x-1">
-                      <div className="w-1 h-1 bg-white rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                      <div className="w-1 h-1 bg-white rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                      <div className="w-1 h-1 bg-white rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                      <div
+                        className="w-1 h-1 bg-white rounded-full animate-bounce"
+                        style={{ animationDelay: '0ms' }}
+                      ></div>
+                      <div
+                        className="w-1 h-1 bg-white rounded-full animate-bounce"
+                        style={{ animationDelay: '150ms' }}
+                      ></div>
+                      <div
+                        className="w-1 h-1 bg-white rounded-full animate-bounce"
+                        style={{ animationDelay: '300ms' }}
+                      ></div>
                     </div>
                   </div>
                 </div>
               </div>
             )}
-            
+
             <div ref={messagesEndRef} />
           </div>
 
@@ -512,9 +544,11 @@ export const AIChat: React.FC<AIChatProps> = ({
               <textarea
                 ref={textareaRef}
                 value={currentMessage}
-                onChange={(e) => setCurrentMessage(e.target.value)}
+                onChange={e => setCurrentMessage(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder={isThinking ? '🤖 AI is thinking...' : 'Ask me anything... (Ctrl+Enter to send)'}
+                placeholder={
+                  isThinking ? '🤖 AI is thinking...' : 'Ask me anything... (Ctrl+Enter to send)'
+                }
                 disabled={isThinking}
                 rows={1}
                 className="flex-1 px-3 py-2 bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg text-white placeholder-white placeholder-opacity-60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent resize-none"

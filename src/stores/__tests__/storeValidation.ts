@@ -107,11 +107,10 @@ export async function validateStoreOperations(): Promise<{
     }
 
     const success = errors.length === 0;
-    
-    console.log(success ? '✅ All store validations passed!' : '❌ Some validations failed');
-    
-    return { success, results, errors };
 
+    console.log(success ? '✅ All store validations passed!' : '❌ Some validations failed');
+
+    return { success, results, errors };
   } catch (error) {
     errors.push(`Validation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     return { success: false, results, errors };
@@ -121,14 +120,18 @@ export async function validateStoreOperations(): Promise<{
 /**
  * Test store initialization
  */
-async function testStoreInitialization(): Promise<{ success: boolean; errors: string[]; data: any }> {
+async function testStoreInitialization(): Promise<{
+  success: boolean;
+  errors: string[];
+  data: any;
+}> {
   const errors: string[] = [];
   let data: any = {};
 
   try {
     // Reset stores first
     resetAllStores();
-    
+
     // Initialize stores
     const initResult = await initializeStores();
     data.initResult = initResult;
@@ -161,9 +164,10 @@ async function testStoreInitialization(): Promise<{ success: boolean; errors: st
       autoSave: appStore.preferences.autoSave,
       notificationCount: appStore.notifications.length,
     };
-
   } catch (error) {
-    errors.push(`Initialization test failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    errors.push(
+      `Initialization test failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 
   return { success: errors.length === 0, errors, data };
@@ -172,17 +176,21 @@ async function testStoreInitialization(): Promise<{ success: boolean; errors: st
 /**
  * Test layout store operations
  */
-async function testLayoutStoreOperations(): Promise<{ success: boolean; errors: string[]; data: any }> {
+async function testLayoutStoreOperations(): Promise<{
+  success: boolean;
+  errors: string[];
+  data: any;
+}> {
   const errors: string[] = [];
   let data: any = {};
 
   try {
     const layoutStore = useLayoutStore.getState();
-    
+
     // Test adding panels
     const initialCount = layoutStore.panels.length;
     layoutStore.addPanel(testPanel);
-    
+
     if (layoutStore.panels.length !== initialCount + 1) {
       errors.push('Panel was not added to store');
     }
@@ -192,7 +200,7 @@ async function testLayoutStoreOperations(): Promise<{ success: boolean; errors: 
       errors.push('Added panel not found in store');
       return { success: false, errors, data };
     }
-    
+
     data.addedPanel = {
       id: addedPanel.id,
       component: addedPanel.component,
@@ -208,7 +216,7 @@ async function testLayoutStoreOperations(): Promise<{ success: boolean; errors: 
     // Test panel updates
     const newPosition = { x: 200, y: 200 };
     layoutStore.updatePanel(addedPanel.id, { position: newPosition });
-    
+
     const updatedPanel = layoutStore.getPanel(addedPanel.id);
     if (!updatedPanel || updatedPanel.position.x !== newPosition.x) {
       errors.push('Panel was not updated correctly');
@@ -243,9 +251,10 @@ async function testLayoutStoreOperations(): Promise<{ success: boolean; errors: 
       dragOperations: '✅',
       removePanel: '✅',
     };
-
   } catch (error) {
-    errors.push(`Layout store test failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    errors.push(
+      `Layout store test failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 
   return { success: errors.length === 0, errors, data };
@@ -254,7 +263,11 @@ async function testLayoutStoreOperations(): Promise<{ success: boolean; errors: 
 /**
  * Test app store operations
  */
-async function testAppStoreOperations(): Promise<{ success: boolean; errors: string[]; data: any }> {
+async function testAppStoreOperations(): Promise<{
+  success: boolean;
+  errors: string[];
+  data: any;
+}> {
   const errors: string[] = [];
   let data: any = {};
 
@@ -298,9 +311,9 @@ async function testAppStoreOperations(): Promise<{ success: boolean; errors: str
       errors.push('Notification not found after adding');
       return { success: false, errors, data };
     }
-    
+
     appStore.markNotificationAsRead(notification.id);
-    
+
     const updatedNotification = appStore.notifications.find(n => n.id === notification.id);
     if (!updatedNotification || !updatedNotification.read) {
       errors.push('Notification was not marked as read');
@@ -326,9 +339,10 @@ async function testAppStoreOperations(): Promise<{ success: boolean; errors: str
       notificationCount: appStore.notifications.length,
       shortcutCount: Object.keys(appStore.shortcuts).length,
     };
-
   } catch (error) {
-    errors.push(`App store test failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    errors.push(
+      `App store test failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 
   return { success: errors.length === 0, errors, data };
@@ -385,9 +399,10 @@ async function testPersistence(): Promise<{ success: boolean; errors: string[]; 
         errors.push('Persisted app data is not valid JSON');
       }
     }
-
   } catch (error) {
-    errors.push(`Persistence test failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    errors.push(
+      `Persistence test failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 
   return { success: errors.length === 0, errors, data };
@@ -446,9 +461,10 @@ async function testStateMigration(): Promise<{ success: boolean; errors: string[
 
     // Clean up
     localStorage.removeItem('lucaverse-state');
-
   } catch (error) {
-    errors.push(`Migration test failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    errors.push(
+      `Migration test failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 
   return { success: errors.length === 0, errors, data };
@@ -457,7 +473,11 @@ async function testStateMigration(): Promise<{ success: boolean; errors: string[
 /**
  * Test cross-store communication
  */
-async function testCrossStoreCommunication(): Promise<{ success: boolean; errors: string[]; data: any }> {
+async function testCrossStoreCommunication(): Promise<{
+  success: boolean;
+  errors: string[];
+  data: any;
+}> {
   const errors: string[] = [];
   let data: any = {};
 
@@ -468,15 +488,17 @@ async function testCrossStoreCommunication(): Promise<{ success: boolean; errors
     // Test event emission when panels change
     let eventReceived = false;
     const unsubscribe = useLayoutStore.subscribe(
-      (state) => state.panels,
-      () => { eventReceived = true; }
+      state => state.panels,
+      () => {
+        eventReceived = true;
+      }
     );
 
     layoutStore.addPanel(testPanel);
-    
+
     // Wait for subscription to trigger
     await new Promise(resolve => setTimeout(resolve, 10));
-    
+
     if (!eventReceived) {
       errors.push('Layout store subscription did not trigger');
     }
@@ -486,7 +508,7 @@ async function testCrossStoreCommunication(): Promise<{ success: boolean; errors
     // Test theme change propagation
     const originalTheme = appStore.theme;
     appStore.toggleTheme();
-    
+
     // Check if theme was applied to DOM (if available)
     if (typeof document !== 'undefined') {
       const themeAttribute = document.documentElement.getAttribute('data-theme');
@@ -499,9 +521,10 @@ async function testCrossStoreCommunication(): Promise<{ success: boolean; errors
       subscriptionTriggered: eventReceived,
       themeApplied: appStore.theme !== originalTheme,
     };
-
   } catch (error) {
-    errors.push(`Cross-store communication test failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    errors.push(
+      `Cross-store communication test failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 
   return { success: errors.length === 0, errors, data };
@@ -510,17 +533,21 @@ async function testCrossStoreCommunication(): Promise<{ success: boolean; errors
 /**
  * Test performance with large datasets
  */
-async function testPerformanceWithLargeDataSets(): Promise<{ success: boolean; errors: string[]; data: any }> {
+async function testPerformanceWithLargeDataSets(): Promise<{
+  success: boolean;
+  errors: string[];
+  data: any;
+}> {
   const errors: string[] = [];
   let data: any = {};
 
   try {
     const layoutStore = useLayoutStore.getState();
-    
+
     // Test adding many panels
     const startTime = performance.now();
     const panelCount = 15; // More than the success criteria of >10
-    
+
     for (let i = 0; i < panelCount; i++) {
       layoutStore.addPanel({
         ...testPanel,
@@ -531,23 +558,23 @@ async function testPerformanceWithLargeDataSets(): Promise<{ success: boolean; e
         },
       });
     }
-    
+
     const addTime = performance.now() - startTime;
-    
+
     // Test selection performance
     const selectionStartTime = performance.now();
     const panelIds = layoutStore.panels.map(p => p.id);
     panelIds.forEach(id => layoutStore.selectPanel(id, true));
     const selectionTime = performance.now() - selectionStartTime;
-    
+
     // Test update performance
     const updateStartTime = performance.now();
     layoutStore.panels.forEach(panel => {
-      layoutStore.updatePanel(panel.id, { 
-        position: { 
-          x: panel.position.x + 10, 
-          y: panel.position.y + 10 
-        } 
+      layoutStore.updatePanel(panel.id, {
+        position: {
+          x: panel.position.x + 10,
+          y: panel.position.y + 10,
+        },
       });
     });
     const updateTime = performance.now() - updateStartTime;
@@ -572,9 +599,10 @@ async function testPerformanceWithLargeDataSets(): Promise<{ success: boolean; e
     if (updateTime > 1000) {
       errors.push(`Updating ${panelCount} panels took too long: ${updateTime}ms`);
     }
-
   } catch (error) {
-    errors.push(`Performance test failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    errors.push(
+      `Performance test failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 
   return { success: errors.length === 0, errors, data };
@@ -588,18 +616,18 @@ export async function runStoreValidation(): Promise<void> {
   console.log('='.repeat(60));
 
   const result = await validateStoreOperations();
-  
+
   console.log('\n📊 Validation Results:');
   console.log('-'.repeat(40));
-  
+
   Object.entries(result.results).forEach(([testName, testResult]) => {
     const status = testResult.success !== false ? '✅' : '❌';
     console.log(`${status} ${testName}`);
-    
+
     if (testResult.data) {
       console.log(`   Data:`, testResult.data);
     }
-    
+
     if (testResult.errors && testResult.errors.length > 0) {
       console.log(`   Errors:`, testResult.errors);
     }
@@ -608,14 +636,14 @@ export async function runStoreValidation(): Promise<void> {
   console.log('\n🏁 Final Results:');
   console.log(`Success: ${result.success ? '✅' : '❌'}`);
   console.log(`Total Errors: ${result.errors.length}`);
-  
+
   if (result.errors.length > 0) {
     console.log('\n❌ Errors:');
     result.errors.forEach(error => console.log(`  - ${error}`));
   }
 
   console.log('\n' + '='.repeat(60));
-  
+
   // Store results globally for inspection
   if (typeof window !== 'undefined') {
     (window as any).__LUCAVERSE_VALIDATION_RESULTS__ = result;

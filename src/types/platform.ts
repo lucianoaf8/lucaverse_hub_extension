@@ -103,7 +103,7 @@ export interface PlatformAPI {
   storage: StorageAPI;
   notifications: NotificationAPI;
   window: WindowAPI;
-  
+
   // Platform-specific methods
   initialize(): Promise<void>;
   destroy(): Promise<void>;

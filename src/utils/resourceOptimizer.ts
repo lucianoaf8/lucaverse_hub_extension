@@ -47,7 +47,7 @@ class ResourceOptimizer {
       compressionLevel: 'medium',
       targetFormats: ['webp', 'avif'],
       platform: 'web',
-      ...config
+      ...config,
     };
 
     this.metrics = {
@@ -55,7 +55,7 @@ class ResourceOptimizer {
       optimizedResources: 0,
       totalSavings: 0,
       loadTimeImprovement: 0,
-      cacheHitRate: 0
+      cacheHitRate: 0,
     };
 
     this.initializeOptimizer();
@@ -64,12 +64,15 @@ class ResourceOptimizer {
   /**
    * Optimize images with format selection and quality adjustment
    */
-  async optimizeImage(imageUrl: string, options: {
-    quality?: number;
-    width?: number;
-    height?: number;
-    format?: 'webp' | 'avif' | 'jpeg' | 'png';
-  } = {}): Promise<OptimizationResult> {
+  async optimizeImage(
+    imageUrl: string,
+    options: {
+      quality?: number;
+      width?: number;
+      height?: number;
+      format?: 'webp' | 'avif' | 'jpeg' | 'png';
+    } = {}
+  ): Promise<OptimizationResult> {
     if (!this.config.enableImageOptimization) {
       return this.createEmptyResult('image-optimization-disabled');
     }
@@ -102,7 +105,7 @@ class ResourceOptimizer {
 
     for (const fontUrl of fontUrls) {
       const cacheKey = `font-${fontUrl}`;
-      
+
       if (this.optimizationCache.has(cacheKey)) {
         results.push(this.optimizationCache.get(cacheKey)!);
         continue;
@@ -125,11 +128,14 @@ class ResourceOptimizer {
   /**
    * Optimize CSS with minification and unused style removal
    */
-  async optimizeCss(cssContent: string, options: {
-    removeUnused?: boolean;
-    minify?: boolean;
-    purgeSelectors?: string[];
-  } = {}): Promise<OptimizationResult> {
+  async optimizeCss(
+    cssContent: string,
+    options: {
+      removeUnused?: boolean;
+      minify?: boolean;
+      purgeSelectors?: string[];
+    } = {}
+  ): Promise<OptimizationResult> {
     if (!this.config.enableCssOptimization) {
       return this.createEmptyResult('css-optimization-disabled');
     }
@@ -153,11 +159,14 @@ class ResourceOptimizer {
   /**
    * Optimize JavaScript with minification and dead code elimination
    */
-  async optimizeJavaScript(jsContent: string, options: {
-    minify?: boolean;
-    removeDeadCode?: boolean;
-    removeComments?: boolean;
-  } = {}): Promise<OptimizationResult> {
+  async optimizeJavaScript(
+    jsContent: string,
+    options: {
+      minify?: boolean;
+      removeDeadCode?: boolean;
+      removeComments?: boolean;
+    } = {}
+  ): Promise<OptimizationResult> {
     const cacheKey = `js-${this.hashString(jsContent)}-${JSON.stringify(options)}`;
     if (this.optimizationCache.has(cacheKey)) {
       return this.optimizationCache.get(cacheKey)!;
@@ -186,7 +195,7 @@ class ResourceOptimizer {
       if ('serviceWorker' in navigator) {
         const registration = await navigator.serviceWorker.register('/sw.js');
         console.log('Service Worker registered successfully:', registration);
-        
+
         // Configure caching strategies
         await this.configureServiceWorkerStrategies(registration);
       }
@@ -217,7 +226,7 @@ class ResourceOptimizer {
    */
   async optimizeCompression(content: string, contentType: string): Promise<OptimizationResult> {
     const cacheKey = `compression-${this.hashString(content)}-${contentType}-${this.config.compressionLevel}`;
-    
+
     if (this.optimizationCache.has(cacheKey)) {
       return this.optimizationCache.get(cacheKey)!;
     }
@@ -236,17 +245,19 @@ class ResourceOptimizer {
   /**
    * Configure resource loading priority and scheduling
    */
-  configureLoadingPriority(resources: Array<{
-    url: string;
-    type: 'script' | 'style' | 'image' | 'font';
-    priority: 'high' | 'medium' | 'low';
-    critical: boolean;
-  }>): void {
+  configureLoadingPriority(
+    resources: Array<{
+      url: string;
+      type: 'script' | 'style' | 'image' | 'font';
+      priority: 'high' | 'medium' | 'low';
+      critical: boolean;
+    }>
+  ): void {
     // Sort resources by priority and criticality
     const sortedResources = resources.sort((a, b) => {
       if (a.critical && !b.critical) return -1;
       if (!a.critical && b.critical) return 1;
-      
+
       const priorityOrder = { high: 0, medium: 1, low: 2 };
       return priorityOrder[a.priority] - priorityOrder[b.priority];
     });
@@ -266,18 +277,20 @@ class ResourceOptimizer {
     averageSavings: number;
   } {
     const cacheSize = this.optimizationCache.size;
-    const optimizationRate = this.metrics.totalResources > 0 
-      ? (this.metrics.optimizedResources / this.metrics.totalResources) * 100 
-      : 0;
-    const averageSavings = this.metrics.optimizedResources > 0 
-      ? this.metrics.totalSavings / this.metrics.optimizedResources 
-      : 0;
+    const optimizationRate =
+      this.metrics.totalResources > 0
+        ? (this.metrics.optimizedResources / this.metrics.totalResources) * 100
+        : 0;
+    const averageSavings =
+      this.metrics.optimizedResources > 0
+        ? this.metrics.totalSavings / this.metrics.optimizedResources
+        : 0;
 
     return {
       ...this.metrics,
       cacheSize,
       optimizationRate,
-      averageSavings
+      averageSavings,
     };
   }
 
@@ -293,12 +306,12 @@ class ResourceOptimizer {
 
     let clearedCount = 0;
     const cutoff = Date.now() - olderThan;
-    
+
     // Note: In a real implementation, we'd store timestamps with cache entries
     // For now, just clear all cache if olderThan is specified
     clearedCount = this.optimizationCache.size;
     this.optimizationCache.clear();
-    
+
     return clearedCount;
   }
 
@@ -314,9 +327,9 @@ class ResourceOptimizer {
         key,
         technique: result.technique,
         savings: result.savings,
-        savingsPercentage: result.savingsPercentage
+        savingsPercentage: result.savingsPercentage,
       })),
-      recommendations: this.generateOptimizationRecommendations()
+      recommendations: this.generateOptimizationRecommendations(),
     };
 
     return JSON.stringify(report, null, 2);
@@ -324,7 +337,10 @@ class ResourceOptimizer {
 
   // Private methods
 
-  private async performImageOptimization(imageUrl: string, options: any): Promise<OptimizationResult> {
+  private async performImageOptimization(
+    imageUrl: string,
+    options: any
+  ): Promise<OptimizationResult> {
     // Simulate image optimization
     const originalSize = 500000; // 500KB original
     let optimizedSize = originalSize;
@@ -339,7 +355,7 @@ class ResourceOptimizer {
     // Apply quality optimization
     const quality = options.quality || 85;
     if (quality < 85) {
-      optimizedSize *= (quality / 100);
+      optimizedSize *= quality / 100;
     }
 
     // Apply dimension optimization
@@ -357,7 +373,7 @@ class ResourceOptimizer {
       savingsPercentage,
       format: options.format,
       quality,
-      technique: 'image-optimization'
+      technique: 'image-optimization',
     };
   }
 
@@ -380,11 +396,14 @@ class ResourceOptimizer {
       optimizedSize,
       savings,
       savingsPercentage,
-      technique: 'font-subsetting-woff2'
+      technique: 'font-subsetting-woff2',
     };
   }
 
-  private async performCssOptimization(cssContent: string, options: any): Promise<OptimizationResult> {
+  private async performCssOptimization(
+    cssContent: string,
+    options: any
+  ): Promise<OptimizationResult> {
     const originalSize = cssContent.length;
     let optimizedContent = cssContent;
 
@@ -407,11 +426,14 @@ class ResourceOptimizer {
       optimizedSize,
       savings,
       savingsPercentage,
-      technique: 'css-minification-purge'
+      technique: 'css-minification-purge',
     };
   }
 
-  private async performJavaScriptOptimization(jsContent: string, options: any): Promise<OptimizationResult> {
+  private async performJavaScriptOptimization(
+    jsContent: string,
+    options: any
+  ): Promise<OptimizationResult> {
     const originalSize = jsContent.length;
     let optimizedContent = jsContent;
 
@@ -428,7 +450,10 @@ class ResourceOptimizer {
 
     // Dead code elimination (simulated)
     if (options.removeDeadCode) {
-      optimizedContent = optimizedContent.replace(/function\s+unused\w+\s*\([^)]*\)\s*\{[^}]*\}/g, '');
+      optimizedContent = optimizedContent.replace(
+        /function\s+unused\w+\s*\([^)]*\)\s*\{[^}]*\}/g,
+        ''
+      );
     }
 
     const optimizedSize = optimizedContent.length;
@@ -440,33 +465,52 @@ class ResourceOptimizer {
       optimizedSize,
       savings,
       savingsPercentage,
-      technique: 'js-minification-tree-shaking'
+      technique: 'js-minification-tree-shaking',
     };
   }
 
-  private async performCompression(content: string, contentType: string): Promise<OptimizationResult> {
+  private async performCompression(
+    content: string,
+    contentType: string
+  ): Promise<OptimizationResult> {
     const originalSize = content.length;
-    
+
     // Simulate compression based on content type and compression level
     let compressionRatio = 0.7; // Default 30% reduction
 
     switch (contentType) {
       case 'text/javascript':
       case 'application/javascript':
-        compressionRatio = this.config.compressionLevel === 'high' ? 0.3 : 
-                          this.config.compressionLevel === 'medium' ? 0.4 : 0.5;
+        compressionRatio =
+          this.config.compressionLevel === 'high'
+            ? 0.3
+            : this.config.compressionLevel === 'medium'
+              ? 0.4
+              : 0.5;
         break;
       case 'text/css':
-        compressionRatio = this.config.compressionLevel === 'high' ? 0.4 : 
-                          this.config.compressionLevel === 'medium' ? 0.5 : 0.6;
+        compressionRatio =
+          this.config.compressionLevel === 'high'
+            ? 0.4
+            : this.config.compressionLevel === 'medium'
+              ? 0.5
+              : 0.6;
         break;
       case 'text/html':
-        compressionRatio = this.config.compressionLevel === 'high' ? 0.4 : 
-                          this.config.compressionLevel === 'medium' ? 0.5 : 0.6;
+        compressionRatio =
+          this.config.compressionLevel === 'high'
+            ? 0.4
+            : this.config.compressionLevel === 'medium'
+              ? 0.5
+              : 0.6;
         break;
       case 'application/json':
-        compressionRatio = this.config.compressionLevel === 'high' ? 0.3 : 
-                          this.config.compressionLevel === 'medium' ? 0.4 : 0.5;
+        compressionRatio =
+          this.config.compressionLevel === 'high'
+            ? 0.3
+            : this.config.compressionLevel === 'medium'
+              ? 0.4
+              : 0.5;
         break;
     }
 
@@ -479,11 +523,13 @@ class ResourceOptimizer {
       optimizedSize,
       savings,
       savingsPercentage,
-      technique: `${this.config.compressionLevel}-compression`
+      technique: `${this.config.compressionLevel}-compression`,
     };
   }
 
-  private async configureServiceWorkerStrategies(registration: ServiceWorkerRegistration): Promise<void> {
+  private async configureServiceWorkerStrategies(
+    registration: ServiceWorkerRegistration
+  ): Promise<void> {
     // Send configuration to service worker
     if (registration.active) {
       registration.active.postMessage({
@@ -492,8 +538,8 @@ class ResourceOptimizer {
           static: 'CacheFirst',
           api: 'NetworkFirst',
           images: 'CacheFirst',
-          fonts: 'CacheFirst'
-        }
+          fonts: 'CacheFirst',
+        },
       });
     }
   }
@@ -501,16 +547,16 @@ class ResourceOptimizer {
   private setupCdnAssetDistribution(cdnConfig: any): void {
     // Configure CDN asset URLs
     const originalFetch = window.fetch;
-    
+
     window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = typeof input === 'string' ? input : input.toString();
-      
+
       // Redirect asset requests to CDN
       if (this.isAssetUrl(url)) {
         const cdnUrl = this.transformToCdnUrl(url, cdnConfig.baseUrl);
         return originalFetch(cdnUrl, init);
       }
-      
+
       return originalFetch(input, init);
     };
   }
@@ -521,7 +567,7 @@ class ResourceOptimizer {
       const commonAssets = [
         '/css/critical.css',
         '/js/vendor-react.js',
-        '/fonts/Inter-Regular.woff2'
+        '/fonts/Inter-Regular.woff2',
       ];
 
       commonAssets.forEach(asset => {
@@ -535,18 +581,23 @@ class ResourceOptimizer {
 
   private applyResourcePriority(resource: any, index: number): void {
     const link = document.createElement('link');
-    
+
     if (resource.critical && index < 3) {
       link.rel = 'preload';
-      link.as = resource.type === 'script' ? 'script' : 
-               resource.type === 'style' ? 'style' :
-               resource.type === 'font' ? 'font' : 'image';
+      link.as =
+        resource.type === 'script'
+          ? 'script'
+          : resource.type === 'style'
+            ? 'style'
+            : resource.type === 'font'
+              ? 'font'
+              : 'image';
       link.href = resource.url;
-      
+
       if (resource.type === 'font') {
         link.crossOrigin = 'anonymous';
       }
-      
+
       document.head.appendChild(link);
     } else if (resource.priority === 'high') {
       link.rel = 'prefetch';
@@ -589,7 +640,7 @@ class ResourceOptimizer {
       optimizedSize: 0,
       savings: 0,
       savingsPercentage: 0,
-      technique
+      technique,
     };
   }
 
@@ -606,7 +657,7 @@ class ResourceOptimizer {
     if (str.length === 0) return hash.toString();
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash; // Convert to 32-bit integer
     }
     return hash.toString();
@@ -657,15 +708,22 @@ class ResourceOptimizer {
     const metrics = this.getMetrics();
 
     if (metrics.optimizationRate < 50) {
-      recommendations.push('Low optimization rate detected. Consider enabling more optimization features.');
+      recommendations.push(
+        'Low optimization rate detected. Consider enabling more optimization features.'
+      );
     }
 
-    if (metrics.averageSavings < 10000) { // Less than 10KB average savings
-      recommendations.push('Low average savings per resource. Review optimization settings and target larger files.');
+    if (metrics.averageSavings < 10000) {
+      // Less than 10KB average savings
+      recommendations.push(
+        'Low average savings per resource. Review optimization settings and target larger files.'
+      );
     }
 
     if (metrics.cacheHitRate < 30) {
-      recommendations.push('Low cache hit rate. Consider increasing cache retention or improving cache strategies.');
+      recommendations.push(
+        'Low cache hit rate. Consider increasing cache retention or improving cache strategies.'
+      );
     }
 
     if (!this.config.enableServiceWorker && this.config.platform === 'web') {
@@ -673,7 +731,9 @@ class ResourceOptimizer {
     }
 
     if (!this.config.enableImageOptimization) {
-      recommendations.push('Image optimization is disabled. Enable it for significant file size reductions.');
+      recommendations.push(
+        'Image optimization is disabled. Enable it for significant file size reductions.'
+      );
     }
 
     return recommendations;
@@ -688,8 +748,12 @@ export const globalResourceOptimizer = new ResourceOptimizer({
   enableServiceWorker: true,
   compressionLevel: 'medium',
   targetFormats: ['webp', 'avif'],
-  platform: typeof window !== 'undefined' && (window as any).chrome?.runtime ? 'extension' :
-           typeof window !== 'undefined' && (window as any).require ? 'electron' : 'web'
+  platform:
+    typeof window !== 'undefined' && (window as any).chrome?.runtime
+      ? 'extension'
+      : typeof window !== 'undefined' && (window as any).require
+        ? 'electron'
+        : 'web',
 });
 
 // Make resource optimizer available globally for debugging

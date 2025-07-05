@@ -6,7 +6,12 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  arrayMove,
+  useSortable,
+} from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Panel } from '@/components/ui';
 import { usePanelSelection } from '@/hooks/usePanelInteractions';
@@ -44,7 +49,7 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
   size,
   onMove,
   onResize,
-  className = ''
+  className = '',
 }) => {
   // State management
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -66,26 +71,16 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
       'Check emails and messages',
       'Review daily priorities',
       'Team standup meeting',
-      'Plan tomorrow\'s tasks'
+      "Plan tomorrow's tasks",
     ],
     meeting: [
       'Prepare meeting agenda',
       'Schedule follow-up',
       'Share meeting notes',
-      'Send action items'
+      'Send action items',
     ],
-    research: [
-      'Literature review',
-      'Competitive analysis',
-      'Document findings',
-      'Present results'
-    ],
-    code: [
-      'Code review',
-      'Write unit tests',
-      'Update documentation',
-      'Deploy to staging'
-    ]
+    research: ['Literature review', 'Competitive analysis', 'Document findings', 'Present results'],
+    code: ['Code review', 'Write unit tests', 'Update documentation', 'Deploy to staging'],
   };
 
   // Load tasks on mount
@@ -116,7 +111,7 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
             category: 'Work',
             tags: ['important', 'deadline'],
             createdAt: Date.now() - 86400000,
-            updatedAt: Date.now()
+            updatedAt: Date.now(),
           },
           {
             id: 2,
@@ -127,7 +122,7 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
             category: 'Development',
             tags: ['code', 'review'],
             createdAt: Date.now() - 172800000,
-            updatedAt: Date.now()
+            updatedAt: Date.now(),
           },
           {
             id: 3,
@@ -138,8 +133,8 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
             category: 'Development',
             tags: ['docs'],
             createdAt: Date.now() - 259200000,
-            updatedAt: Date.now()
-          }
+            updatedAt: Date.now(),
+          },
         ];
         setTasks(sampleTasks);
       }
@@ -162,56 +157,63 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
   // -------------------------
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
 
-  
-  const handleDragEnd = useCallback(({ active, over }: any) => {
-    if (!over || active.id === over.id) return;
+  const handleDragEnd = useCallback(
+    ({ active, over }: any) => {
+      if (!over || active.id === over.id) return;
 
-    setTasks(prev => {
-      // Get main tasks (root-level tasks) from current state
-      const currentMainTasks = prev.filter(t => !t.parentId);
-      const oldIndex = currentMainTasks.findIndex(t => t.id === active.id);
-      const newIndex = currentMainTasks.findIndex(t => t.id === over.id);
-      
-      if (oldIndex === -1 || newIndex === -1) return prev;
+      setTasks(prev => {
+        // Get main tasks (root-level tasks) from current state
+        const currentMainTasks = prev.filter(t => !t.parentId);
+        const oldIndex = currentMainTasks.findIndex(t => t.id === active.id);
+        const newIndex = currentMainTasks.findIndex(t => t.id === over.id);
 
-      const newOrder = arrayMove(currentMainTasks, oldIndex, newIndex);
-      const otherTasks = prev.filter(t => t.parentId); // keep subtasks order unchanged
-      return [...newOrder, ...otherTasks];
-    });
-  }, [setTasks]);
+        if (oldIndex === -1 || newIndex === -1) return prev;
+
+        const newOrder = arrayMove(currentMainTasks, oldIndex, newIndex);
+        const otherTasks = prev.filter(t => t.parentId); // keep subtasks order unchanged
+        return [...newOrder, ...otherTasks];
+      });
+    },
+    [setTasks]
+  );
 
   // Add new task
-  const addTask = useCallback((text: string, priority: 1 | 2 | 3 | 4 | 5 = 3, parentId?: number, category?: string) => {
-    const newTask: Task = {
-      id: Date.now() + Math.random(),
-      text: text.trim(),
-      completed: false,
-      priority,
-      parentId: parentId || undefined,
-      progress: 0,
-      category,
-      createdAt: Date.now(),
-      updatedAt: Date.now()
-    };
+  const addTask = useCallback(
+    (text: string, priority: 1 | 2 | 3 | 4 | 5 = 3, parentId?: number, category?: string) => {
+      const newTask: Task = {
+        id: Date.now() + Math.random(),
+        text: text.trim(),
+        completed: false,
+        priority,
+        parentId: parentId || undefined,
+        progress: 0,
+        category,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      };
 
-    setTasks(prev => [...prev, newTask]);
-    return newTask.id;
-  }, []);
+      setTasks(prev => [...prev, newTask]);
+      return newTask.id;
+    },
+    []
+  );
 
   // Toggle task completion
   const toggleTask = useCallback((taskId: number) => {
-    setTasks(prev => prev.map(task => {
-      if (task.id === taskId) {
-        const completed = !task.completed;
-        return {
-          ...task,
-          completed,
-          progress: completed ? 100 : task.progress,
-          updatedAt: Date.now()
-        };
-      }
-      return task;
-    }));
+    setTasks(prev =>
+      prev.map(task => {
+        if (task.id === taskId) {
+          const completed = !task.completed;
+          return {
+            ...task,
+            completed,
+            progress: completed ? 100 : task.progress,
+            updatedAt: Date.now(),
+          };
+        }
+        return task;
+      })
+    );
   }, []);
 
   // Delete task
@@ -221,22 +223,27 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
 
   // Update task progress
   const updateTaskProgress = useCallback((taskId: number, progress: number) => {
-    setTasks(prev => prev.map(task => 
-      task.id === taskId 
-        ? { ...task, progress, completed: progress === 100, updatedAt: Date.now() }
-        : task
-    ));
+    setTasks(prev =>
+      prev.map(task =>
+        task.id === taskId
+          ? { ...task, progress, completed: progress === 100, updatedAt: Date.now() }
+          : task
+      )
+    );
   }, []);
 
   // Add task template
-  const addTaskTemplate = useCallback((template: TaskTemplate) => {
-    const templateTasks = taskTemplates[template];
-    templateTasks.forEach((taskText, index) => {
-      setTimeout(() => {
-        addTask(taskText, 3, undefined, template);
-      }, index * 100); // Stagger creation for visual effect
-    });
-  }, [addTask, taskTemplates]);
+  const addTaskTemplate = useCallback(
+    (template: TaskTemplate) => {
+      const templateTasks = taskTemplates[template];
+      templateTasks.forEach((taskText, index) => {
+        setTimeout(() => {
+          addTask(taskText, 3, undefined, template);
+        }, index * 100); // Stagger creation for visual effect
+      });
+    },
+    [addTask, taskTemplates]
+  );
 
   // -------------------------
   // SortableTaskItem component
@@ -247,7 +254,9 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
   }
 
   const SortableTaskItem: React.FC<SortableTaskProps> = ({ id: sortableId, children }) => {
-    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: sortableId });
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+      id: sortableId,
+    });
     const style: React.CSSProperties = {
       transform: CSS.Transform.toString(transform),
       transition,
@@ -263,11 +272,11 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
   // -------------------------
   // Get filtered and sorted tasksxt
   const editTask = useCallback((taskId: number, newText: string) => {
-    setTasks(prev => prev.map(task => 
-      task.id === taskId 
-        ? { ...task, text: newText.trim(), updatedAt: Date.now() }
-        : task
-    ));
+    setTasks(prev =>
+      prev.map(task =>
+        task.id === taskId ? { ...task, text: newText.trim(), updatedAt: Date.now() } : task
+      )
+    );
   }, []);
 
   // Get filtered and sorted tasks
@@ -277,17 +286,17 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
       if (searchQuery && !task.text.toLowerCase().includes(searchQuery.toLowerCase())) {
         return false;
       }
-      
+
       // Filter by category
       if (filterCategory && task.category !== filterCategory) {
         return false;
       }
-      
+
       // Filter by completion status
       if (!showCompleted && task.completed) {
         return false;
       }
-      
+
       return true;
     });
 
@@ -305,17 +314,23 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
 
   // Get main tasks and subtasks
   const mainTasks = filteredTasks.filter(task => !task.parentId);
-  const getSubTasks = useCallback((parentId: number) => {
-    return filteredTasks.filter(task => task.parentId === parentId);
-  }, [filteredTasks]);
+  const getSubTasks = useCallback(
+    (parentId: number) => {
+      return filteredTasks.filter(task => task.parentId === parentId);
+    },
+    [filteredTasks]
+  );
 
   // Function to get tasks by parent ID, handles null for main tasks
-  const getTasksByParent = useCallback((parentId: number | null) => {
-    if (parentId === null) {
-      return filteredTasks.filter(task => !task.parentId);
-    }
-    return filteredTasks.filter(task => task.parentId === parentId);
-  }, [filteredTasks]);
+  const getTasksByParent = useCallback(
+    (parentId: number | null) => {
+      if (parentId === null) {
+        return filteredTasks.filter(task => !task.parentId);
+      }
+      return filteredTasks.filter(task => task.parentId === parentId);
+    },
+    [filteredTasks]
+  );
 
   // Get available categories
   const availableCategories = useMemo(() => {
@@ -330,7 +345,7 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
       2: { text: '🟠 High', class: 'text-orange-400 bg-orange-500 bg-opacity-20' },
       3: { text: '🟡 Medium', class: 'text-yellow-400 bg-yellow-500 bg-opacity-20' },
       4: { text: '🟢 Low', class: 'text-green-400 bg-green-500 bg-opacity-20' },
-      5: { text: '🔵 Optional', class: 'text-blue-400 bg-blue-500 bg-opacity-20' }
+      5: { text: '🔵 Optional', class: 'text-blue-400 bg-blue-500 bg-opacity-20' },
     };
     return priorityMap[priority as keyof typeof priorityMap] || priorityMap[3];
   }, []);
@@ -341,15 +356,26 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
     const completed = tasks.filter(task => task.completed).length;
     const critical = tasks.filter(task => task.priority === 1 && !task.completed).length;
     const high = tasks.filter(task => task.priority === 2 && !task.completed).length;
-    
-    return { total, completed, critical, high, completionRate: total > 0 ? (completed / total) * 100 : 0 };
+
+    return {
+      total,
+      completed,
+      critical,
+      high,
+      completionRate: total > 0 ? (completed / total) * 100 : 0,
+    };
   }, [tasks]);
 
   // Handle add task form submit
   const handleAddTask = useCallback(() => {
     if (!newTaskText.trim()) return;
-    
-    addTask(newTaskText, newTaskPriority, selectedTaskId || undefined, newTaskCategory || undefined);
+
+    addTask(
+      newTaskText,
+      newTaskPriority,
+      selectedTaskId || undefined,
+      newTaskCategory || undefined
+    );
     setNewTaskText('');
     setNewTaskPriority(3);
     setNewTaskCategory('');
@@ -357,12 +383,15 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
   }, [newTaskText, newTaskPriority, selectedTaskId, newTaskCategory, addTask]);
 
   // Handle task double-click for editing
-  const handleTaskDoubleClick = useCallback((task: Task) => {
-    const newText = prompt('Edit task:', task.text);
-    if (newText && newText.trim() !== task.text) {
-      editTask(task.id, newText);
-    }
-  }, [editTask]);
+  const handleTaskDoubleClick = useCallback(
+    (task: Task) => {
+      const newText = prompt('Edit task:', task.text);
+      if (newText && newText.trim() !== task.text) {
+        editTask(task.id, newText);
+      }
+    },
+    [editTask]
+  );
 
   return (
     <Panel
@@ -377,7 +406,7 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
       className={className}
       constraints={{
         minSize: { width: 400, height: 400 },
-        maxSize: { width: 800, height: 800 }
+        maxSize: { width: 800, height: 800 },
       }}
     >
       <div className="h-full flex flex-col">
@@ -398,7 +427,9 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
               <div className="text-xs text-white text-opacity-60">Critical</div>
             </div>
             <div className="text-center">
-              <div className="text-lg font-bold text-white">{Math.round(taskStats.completionRate)}%</div>
+              <div className="text-lg font-bold text-white">
+                {Math.round(taskStats.completionRate)}%
+              </div>
               <div className="text-xs text-white text-opacity-60">Complete</div>
             </div>
           </div>
@@ -409,27 +440,29 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
               type="text"
               placeholder="Search tasks..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
               className="w-full px-3 py-2 bg-white bg-opacity-10 border border-white border-opacity-20 rounded text-white placeholder-white placeholder-opacity-60 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
-            
+
             <div className="flex space-x-2">
               <select
                 value={filterCategory}
-                onChange={(e) => setFilterCategory(e.target.value)}
+                onChange={e => setFilterCategory(e.target.value)}
                 className="flex-1 px-2 py-1 bg-white bg-opacity-10 border border-white border-opacity-20 rounded text-white text-xs focus:outline-none focus:ring-1 focus:ring-blue-400"
               >
                 <option value="">All Categories</option>
                 {availableCategories.map(category => (
-                  <option key={category} value={category}>{category}</option>
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
                 ))}
               </select>
-              
+
               <button
                 onClick={() => setShowCompleted(!showCompleted)}
                 className={`px-3 py-1 rounded text-xs transition-colors ${
-                  showCompleted 
-                    ? 'bg-green-500 bg-opacity-20 text-green-300' 
+                  showCompleted
+                    ? 'bg-green-500 bg-opacity-20 text-green-300'
                     : 'bg-white bg-opacity-10 text-white text-opacity-60'
                 }`}
               >
@@ -446,7 +479,7 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
             >
               + Add Task
             </button>
-            
+
             <div className="relative group">
               <button className="px-3 py-2 bg-green-500 bg-opacity-20 text-green-300 rounded text-sm hover:bg-opacity-30 transition-colors">
                 Templates ⋯
@@ -474,7 +507,7 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
               const subtasks = getTasksByParent(task.id);
               const completedSubtasks = subtasks.filter(st => st.completed).length;
               const priorityInfo = getPriorityInfo(task.priority);
-              
+
               return (
                 <div
                   key={task.id}
@@ -487,13 +520,13 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
                   <div className="flex items-start space-x-3">
                     {/* Checkbox */}
                     <button
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         toggleTask(task.id);
                       }}
                       className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-colors ${
-                        task.completed 
-                          ? 'bg-green-500 border-green-500 text-white' 
+                        task.completed
+                          ? 'bg-green-500 border-green-500 text-white'
                           : 'border-white border-opacity-40 hover:border-opacity-60'
                       }`}
                     >
@@ -502,21 +535,23 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
 
                     {/* Task Content */}
                     <div className="flex-1 min-w-0">
-                      <div className={`text-white font-medium ${task.completed ? 'line-through opacity-60' : ''}`}>
+                      <div
+                        className={`text-white font-medium ${task.completed ? 'line-through opacity-60' : ''}`}
+                      >
                         {task.text}
                       </div>
-                      
+
                       <div className="flex items-center space-x-2 mt-1">
                         <span className={`px-2 py-1 rounded text-xs ${priorityInfo.class}`}>
                           {priorityInfo.text}
                         </span>
-                        
+
                         {task.category && (
                           <span className="px-2 py-1 bg-white bg-opacity-10 text-white text-opacity-80 rounded text-xs">
                             {task.category}
                           </span>
                         )}
-                        
+
                         {subtasks.length > 0 && (
                           <span className="text-white text-opacity-60 text-xs">
                             {completedSubtasks}/{subtasks.length} subtasks
@@ -526,7 +561,7 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
 
                       {/* Progress Bar */}
                       <div className="w-full bg-white bg-opacity-10 rounded-full h-2 mt-2">
-                        <div 
+                        <div
                           className="bg-blue-500 h-2 rounded-full transition-all duration-300"
                           style={{ width: `${task.progress}%` }}
                         />
@@ -540,13 +575,13 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
                         min="0"
                         max="100"
                         value={task.progress}
-                        onChange={(e) => updateTaskProgress(task.id, parseInt(e.target.value))}
+                        onChange={e => updateTaskProgress(task.id, parseInt(e.target.value))}
                         className="w-16 h-1"
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={e => e.stopPropagation()}
                       />
-                      
+
                       <button
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation();
                           deleteTask(task.id);
                         }}
@@ -573,20 +608,22 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
                               <button
                                 onClick={() => toggleTask(subtask.id)}
                                 className={`w-4 h-4 border-2 rounded flex items-center justify-center transition-colors ${
-                                  subtask.completed 
-                                    ? 'bg-green-500 border-green-500 text-white' 
+                                  subtask.completed
+                                    ? 'bg-green-500 border-green-500 text-white'
                                     : 'border-white border-opacity-40 hover:border-opacity-60'
                                 }`}
                               >
                                 {subtask.completed && '✓'}
                               </button>
-                              
+
                               <div className="flex-1">
-                                <span className={`text-white text-sm ${subtask.completed ? 'line-through opacity-60' : ''}`}>
+                                <span
+                                  className={`text-white text-sm ${subtask.completed ? 'line-through opacity-60' : ''}`}
+                                >
                                   {subtask.text}
                                 </span>
                               </div>
-                              
+
                               <button
                                 onClick={() => deleteTask(subtask.id)}
                                 className="w-5 h-5 flex items-center justify-center text-white text-opacity-40 hover:text-red-400 hover:bg-red-500 hover:bg-opacity-20 rounded transition-colors"
@@ -612,27 +649,31 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
               <h3 className="text-lg font-bold text-white mb-4">
                 {selectedTaskId ? 'Add Subtask' : 'Add New Task'}
               </h3>
-              
+
               <div className="space-y-4">
                 <input
                   type="text"
                   placeholder="Task description..."
                   value={newTaskText}
-                  onChange={(e) => setNewTaskText(e.target.value)}
+                  onChange={e => setNewTaskText(e.target.value)}
                   className="w-full px-3 py-2 bg-white bg-opacity-10 border border-white border-opacity-20 rounded text-white placeholder-white placeholder-opacity-60 focus:outline-none focus:ring-2 focus:ring-blue-400"
                   autoFocus
-                  onKeyDown={(e) => {
+                  onKeyDown={e => {
                     if (e.key === 'Enter') handleAddTask();
                     if (e.key === 'Escape') setShowAddTaskDialog(false);
                   }}
                 />
-                
+
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-white text-opacity-80 text-sm mb-1">Priority</label>
+                    <label className="block text-white text-opacity-80 text-sm mb-1">
+                      Priority
+                    </label>
                     <select
                       value={newTaskPriority}
-                      onChange={(e) => setNewTaskPriority(parseInt(e.target.value) as 1 | 2 | 3 | 4 | 5)}
+                      onChange={e =>
+                        setNewTaskPriority(parseInt(e.target.value) as 1 | 2 | 3 | 4 | 5)
+                      }
                       className="w-full px-2 py-2 bg-white bg-opacity-10 border border-white border-opacity-20 rounded text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                     >
                       <option value={1}>🔴 Critical</option>
@@ -642,20 +683,22 @@ export const TaskManager: React.FC<TaskManagerProps> = ({
                       <option value={5}>🔵 Optional</option>
                     </select>
                   </div>
-                  
+
                   <div>
-                    <label className="block text-white text-opacity-80 text-sm mb-1">Category</label>
+                    <label className="block text-white text-opacity-80 text-sm mb-1">
+                      Category
+                    </label>
                     <input
                       type="text"
                       placeholder="Optional..."
                       value={newTaskCategory}
-                      onChange={(e) => setNewTaskCategory(e.target.value)}
+                      onChange={e => setNewTaskCategory(e.target.value)}
                       className="w-full px-2 py-2 bg-white bg-opacity-10 border border-white border-opacity-20 rounded text-white placeholder-white placeholder-opacity-60 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                     />
                   </div>
                 </div>
               </div>
-              
+
               <div className="flex space-x-3 mt-6">
                 <button
                   onClick={handleAddTask}
