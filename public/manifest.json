@@ -1,0 +1,116 @@
+{
+  "manifest_version": 3,
+  "name": "Lucaverse Hub - Productivity Dashboard",
+  "version": "2.0.0",
+  "description": "Enhanced productivity dashboard with AI chat, smart bookmarks, task management, and advanced panel system",
+  
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Lucaverse Hub",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_end",
+      "all_frames": false
+    }
+  ],
+  
+  "permissions": [
+    "storage",
+    "tabs",
+    "activeTab",
+    "scripting",
+    "notifications",
+    "alarms",
+    "contextMenus",
+    "bookmarks",
+    "history",
+    "unlimitedStorage"
+  ],
+  
+  "host_permissions": [
+    "https://api.openai.com/*",
+    "https://api.anthropic.com/*",
+    "https://generativelanguage.googleapis.com/*",
+    "https://*.googleapis.com/*",
+    "https://api.github.com/*",
+    "https://api.notion.com/*",
+    "https://api.trello.com/*",
+    "https://*.slack.com/*"
+  ],
+  
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  
+  "options_page": "options.html",
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "assets/*",
+        "icons/*",
+        "*.js",
+        "*.css",
+        "*.html"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; connect-src 'self' https: wss: data:; worker-src 'self'; frame-src 'self' https:;"
+  },
+  
+  "commands": {
+    "toggle_popup": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+L",
+        "mac": "Command+Shift+L"
+      },
+      "description": "Toggle Lucaverse Hub popup"
+    },
+    "open_dashboard": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+D",
+        "mac": "Command+Shift+D"
+      },
+      "description": "Open Lucaverse Hub dashboard"
+    }
+  },
+  
+  "externally_connectable": {
+    "matches": [
+      "https://localhost:*/*",
+      "https://127.0.0.1:*/*",
+      "https://*.lucaverse.com/*"
+    ]
+  },
+  
+  "minimum_chrome_version": "88"
+}

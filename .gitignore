@@ -1,0 +1,190 @@
+# === Node ===
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+.pnpm-debug.log
+
+# === Build Artifacts ===
+dist/
+build/
+out/
+coverage/
+.cache/
+.temp/
+.tmp/
+.esbuild/
+.vite/
+.next/
+.svelte-kit/
+.sass-cache/
+lib/
+cjs/
+esm/
+*.tsbuildinfo
+
+# === Test Coverage & Jest ===
+coverage/
+.nyc_output/
+jest-html-reporters-*.html
+jest-*.xml
+test-results/
+*.lcov
+__snapshots__/
+*.spec.*
+*.test.*
+*.log
+
+# === Environment Files ===
+.env*
+!.env.example
+!.env.sample
+
+# === OS & Editor Junk ===
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+Desktop.ini
+$RECYCLE.BIN/
+*.swp
+*.swo
+*.tmp
+*.bak
+*.old
+*.orig
+
+# === VSCode ===
+.vscode/
+.history/
+
+# === Logs & Reports ===
+*.log
+logs/
+*.log.*
+*.out
+*.pid
+*.seed
+*.pid.lock
+
+# === Misc (Generated/Temp/Cache) ===
+.idea/
+*.iml
+*.sublime-workspace
+*.sublime-project
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.orig
+*.rej
+*.patch
+*.bak
+*.tmp
+*.backup
+*.orig
+*.save
+*.seed
+*.pid
+*.pid.lock
+
+# === Electron ===
+electron/dist/
+electron/out/
+electron/*.local
+
+# === Public (generated assets) ===
+public/*.js
+public/*.map
+public/*.ts
+public/*.d.ts
+
+# === System files ===
+*.psd
+*.ai
+*.sketch
+*.pdf
+*.xcf
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.gif
+*.ico
+*.bmp
+*.tiff
+
+# === Misc large binary and generated files ===
+*.db
+*.sqlite
+*.sqlite3
+*.bak
+*.zip
+*.tar
+*.gz
+*.rar
+*.7z
+*.tgz
+
+# === Lint/Formatter ===
+.eslintcache
+.prettiercache
+
+# === Python & Shell Artifacts (for scripts) ===
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# === Mac OS X ===
+.AppleDouble
+.LSOverride
+
+# === npm package ===
+*.tgz
+
+# === Icon folders (empty, generated) ===
+public/icons/
+src/assets/icons/
+src/assets/.DS_Store
+
+# === User/project state ===
+*.sublime-*
+*.code-workspace
+
+# === React/Vite specific ===
+*.module.css.d.ts
+.vite/
+*.vite.svg
+
+# === VSCode launch configs (optional) ===
+.launch/
+
+# === Dashboard screenshots (large image files) ===
+current_dashbaord.png
+original_dashbaord.png
+
+# === Markdown structure ===
+project_structure.md
+
+# === Ignore binaries/scripts output ===
+scripts/*.exe
+scripts/*.out
+scripts/*.bin
+
+# === Other ===
+*.orig
+
+# === Keep empty directories ===
+!*/.gitkeep
+
+.claude/
+docs/

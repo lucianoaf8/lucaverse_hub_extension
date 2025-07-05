@@ -1,0 +1,293 @@
+{
+  "name": "lucaverse-hub-extension",
+  "version": "2.0.0",
+  "description": "Enhanced Productivity Hub - React TypeScript Architecture",
+  "private": true,
+  "type": "module",
+  "main": "dist/electron/main.js",
+  "scripts": {
+    "dev": "vite",
+    "dev:extension": "vite --mode extension",
+    "dev:electron": "vite --mode electron",
+    "build": "tsc && vite build",
+    "build:web": "tsc && vite build --mode web",
+    "build:extension": "tsc && vite build --mode extension",
+    "build:electron": "tsc && vite build --mode electron",
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:panels": "jest --testPathPattern=panelOperations",
+    "test:dragdrop": "jest --testPathPattern=dragDrop",
+    "test:resize": "jest --testPathPattern=resize",
+    "test:persistence": "jest --testPathPattern=statePersistence",
+    "test:platform": "jest --testPathPattern=platformAPI",
+    "test:integration": "jest --testPathPattern=masterTestSuite",
+    "test:visual": "jest --testPathPattern=visual",
+    "test:performance": "jest --testPathPattern=performance",
+    "test:extension": "jest --testPathPattern=extension",
+    "test:devtools": "jest --testPathPattern=devToolsTest",
+    "test:migration": "node -e \"import('./src/utils/__tests__/migrationTest.js').then(m => m.runMigrationTests())\"",
+    "test:features": "npm run dev & echo 'Open http://localhost:5173 and run window.__runTests__() in console'",
+    "test:all": "node -e \"import('./src/utils/testRunner.js').then(m => m.runAllTests())\"",
+    "test:manual": "node -e \"import('./src/utils/testRunner.js').then(m => m.runManualTestingGuidance())\"",
+    "analyze:bundle": "node scripts/bundleAnalyzer.js",
+    "analyze:web": "npm run build:web && rollup-plugin-visualizer --filename dist/web/bundle-analysis.html --open",
+    "analyze:extension": "npm run build:extension && rollup-plugin-visualizer --filename dist/extension/bundle-analysis.html --open",
+    "analyze:electron": "npm run build:electron && rollup-plugin-visualizer --filename dist/electron/bundle-analysis.html --open",
+    "build:all": "npm run build:web && npm run build:extension && npm run build:electron",
+    "validate:performance": "node scripts/validatePerformanceBudgets.js",
+    "validate:budgets": "npm run build:all && npm run validate:performance",
+    "validate:optimization": "node scripts/validateOptimization.js",
+    "validate:all": "npm run build:all && npm run validate:optimization && npm run validate:performance",
+    "legacy:dev": "node dev-server.js",
+    "legacy:serve": "npx http-server . -p 3000 -c-1 --cors",
+    "electron:dev": "concurrently \"npm run dev:electron\" \"wait-on http://localhost:5173 && cross-env NODE_ENV=development electron dist/electron/main.js\"",
+    "electron:build": "npm run build:electron && electron-builder",
+    "electron:build:win": "npm run build:electron && electron-builder --win",
+    "electron:build:mac": "npm run build:electron && electron-builder --mac",
+    "electron:build:linux": "npm run build:electron && electron-builder --linux",
+    "electron:dist": "npm run build:electron && electron-builder --publish=never",
+    "electron:dist:win": "npm run build:electron && electron-builder --win --publish=never",
+    "electron:dist:mac": "npm run build:electron && electron-builder --mac --publish=never",
+    "electron:dist:linux": "npm run build:electron && electron-builder --linux --publish=never",
+    "electron:pack": "npm run build:electron && electron-builder --dir",
+    "electron:start": "cross-env NODE_ENV=development electron dist/electron/main.js"
+  },
+  "dependencies": {
+    "@dnd-kit/accessibility": "^3.1.1",
+    "@dnd-kit/core": "^6.1.0",
+    "@dnd-kit/modifiers": "^9.0.0",
+    "@dnd-kit/sortable": "^8.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "@sentry/integrations": "^7.114.0",
+    "@sentry/react": "^9.35.0",
+    "@sentry/tracing": "^7.120.3",
+    "clsx": "^2.1.1",
+    "framer-motion": "^10.16.4",
+    "nanoid": "^5.0.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hotkeys-hook": "^4.4.1",
+    "react-resizable-panels": "^0.0.55",
+    "tailwind-merge": "^3.3.1",
+    "zustand": "^4.4.7"
+  },
+  "devDependencies": {
+    "@crxjs/vite-plugin": "^2.0.0-beta.21",
+    "@redux-devtools/extension": "^3.3.0",
+    "@tailwindcss/forms": "^0.5.7",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/chrome": "^0.0.251",
+    "@types/electron": "^1.4.38",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^20.10.4",
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.16",
+    "concurrently": "^9.2.0",
+    "cross-env": "^7.0.3",
+    "electron": "^37.2.0",
+    "electron-builder": "^26.0.12",
+    "electron-debug": "^4.1.0",
+    "electron-devtools-installer": "^4.0.0",
+    "electron-is-dev": "^3.0.1",
+    "eslint": "^8.55.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "http-server": "^14.1.1",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^30.0.4",
+    "postcss": "^8.4.32",
+    "rollup-plugin-visualizer": "^6.0.3",
+    "tailwindcss": "^3.3.6",
+    "ts-jest": "^29.4.0",
+    "typescript": "^5.2.2",
+    "vite": "^7.0.2",
+    "wait-on": "^8.0.3",
+    "webpack-bundle-analyzer": "^4.10.2"
+  },
+  "keywords": [
+    "productivity",
+    "browser-extension",
+    "react",
+    "typescript",
+    "vite",
+    "modular",
+    "glassmorphism",
+    "dashboard"
+  ],
+  "author": "Lucaverse",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lucaverse/hub-extension"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 Firefox versions",
+    "last 2 Safari versions",
+    "last 2 Edge versions"
+  ],
+  "build": {
+    "appId": "com.lucaverse.hub",
+    "productName": "Lucaverse Hub",
+    "copyright": "Copyright © 2025 Lucaverse",
+    "directories": {
+      "output": "release",
+      "buildResources": "assets"
+    },
+    "files": [
+      "dist/electron/**/*",
+      "assets/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "extraMetadata": {
+      "main": "dist/electron/main.js"
+    },
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        {
+          "target": "default",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "icon": "assets/icons/icon.icns",
+      "entitlementsInherit": "assets/entitlements.mac.inherit.plist",
+      "entitlements": "assets/entitlements.mac.plist",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "notarize": {
+        "teamId": "TEAM_ID"
+      }
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "msi",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icons/icon.ico",
+      "publisherName": "Lucaverse",
+      "verifyUpdateCodeSignature": false,
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "rpm",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "snap",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icons/",
+      "category": "Office",
+      "description": "Enhanced productivity dashboard with AI chat, smart bookmarks, and task management",
+      "desktop": {
+        "StartupNotify": "true",
+        "Encoding": "UTF-8",
+        "MimeType": "x-scheme-handler/lucaverse"
+      }
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Lucaverse Hub",
+      "include": "assets/installer.nsh",
+      "warningsAsErrors": false
+    },
+    "msi": {
+      "oneClick": false,
+      "perMachine": false,
+      "runAfterFinish": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "menuCategory": "Productivity"
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-portable.${ext}"
+    },
+    "appImage": {
+      "license": "LICENSE",
+      "category": "Office"
+    },
+    "snap": {
+      "summary": "Enhanced productivity dashboard",
+      "grade": "stable",
+      "confinement": "strict",
+      "plugs": [
+        "default",
+        "home",
+        "network",
+        "network-bind",
+        "removable-media"
+      ]
+    },
+    "publish": {
+      "provider": "generic",
+      "url": "https://releases.lucaverse.com",
+      "channel": "latest"
+    },
+    "afterSign": "scripts/notarize.js",
+    "compression": "maximum",
+    "removePackageScripts": false,
+    "nodeGypRebuild": false,
+    "buildDependenciesFromSource": false,
+    "npmRebuild": false
+  }
+}
