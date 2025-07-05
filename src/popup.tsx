@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
-import { PanelManagementTest } from './components/__tests__/PanelManagementTest';
 import { useTemplateStore } from './stores/templateStore';
 import { workspaceManager } from './utils/workspaceManager';
 import './styles/globals.css';

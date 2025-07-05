@@ -27,7 +27,7 @@ export { PanelContextMenu, useContextMenu } from './PanelContextMenu';
 export type { PanelContextMenuProps } from './PanelContextMenu';
 
 // Test components (development only)
-export { PanelManagementTest } from '../__tests__';
+export { UnifiedTestSuite, PanelSystemTests, InteractionTests } from '../__tests__';
 
 // Utilities
 export * from './utils';

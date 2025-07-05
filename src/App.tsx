@@ -1,5 +1,5 @@
 import './styles/globals.css';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { initializeStores } from './stores';
 import './stores/simpleTest'; // Load store test functions
 
@@ -12,13 +12,10 @@ import {
   type PlatformDetectionResult,
 } from './platform';
 
-// Import component test
-import ComponentTest from './components/__tests__/ComponentTest';
-import PanelMigrationTest from './components/__tests__/PanelMigrationTest';
-import LayoutSystemTest from './components/__tests__/LayoutSystemTest';
-import { DragDropTest } from './components/__tests__/DragDropTest';
-import { ResizeTest } from './components/__tests__/ResizeTest';
-import { PanelManagementTest } from './components/__tests__/PanelManagementTest';
+// Import consolidated test components
+import { UnifiedTestSuite } from './components/__tests__/UnifiedTestSuite';
+import { PanelSystemTests } from './components/__tests__/PanelSystemTests';
+import { InteractionTests } from './components/__tests__/InteractionTests';
 
 // Import main layout component
 import DynamicLayout from './components/DynamicLayout';
@@ -37,12 +34,9 @@ interface PlatformInfo {
 
 type AppView =
   | 'home'
-  | 'component-test'
-  | 'panel-test'
-  | 'layout-test'
-  | 'drag-drop-test'
-  | 'resize-test'
-  | 'panel-management-test'
+  | 'unified-test'
+  | 'panel-system-test'
+  | 'interaction-test'
   | 'dashboard';
 
 // Initialize default panels for the dashboard
@@ -119,6 +113,7 @@ function App() {
     error: null,
   });
 
+  // ALL HOOKS MUST BE CALLED BEFORE ANY CONDITIONAL LOGIC
   useEffect(() => {
     // Initialize stores on app startup
     initializeStores().then(result => {
@@ -136,6 +131,13 @@ function App() {
 
     return removeErrorHandler;
   }, []);
+
+  // MOVED THIS HOOK TO PREVENT HOOK ORDER VIOLATION
+  useEffect(() => {
+    if (currentView === 'dashboard') {
+      initializeDefaultPanels();
+    }
+  }, [currentView]);
 
   const initializePlatform = async () => {
     try {
@@ -205,7 +207,7 @@ function App() {
   };
 
   // Render different views based on current view
-  if (currentView === 'component-test') {
+  if (currentView === 'unified-test') {
     return (
       <div className="h-full relative">
         <button
@@ -214,12 +216,12 @@ function App() {
         >
           ← Back to Home
         </button>
-        <ComponentTest />
+        <UnifiedTestSuite />
       </div>
     );
   }
 
-  if (currentView === 'panel-test') {
+  if (currentView === 'panel-system-test') {
     return (
       <div className="h-full relative">
         <button
@@ -228,12 +230,12 @@ function App() {
         >
           ← Back to Home
         </button>
-        <PanelMigrationTest />
+        <PanelSystemTests />
       </div>
     );
   }
 
-  if (currentView === 'layout-test') {
+  if (currentView === 'interaction-test') {
     return (
       <div className="h-full relative">
         <button
@@ -242,59 +244,10 @@ function App() {
         >
           ← Back to Home
         </button>
-        <LayoutSystemTest />
+        <InteractionTests />
       </div>
     );
   }
-
-  if (currentView === 'drag-drop-test') {
-    return (
-      <div className="h-full relative">
-        <button
-          className="absolute top-4 left-4 z-50 glass-button px-4 py-2 glow-hover text-sm"
-          onClick={() => setCurrentView('home')}
-        >
-          ← Back to Home
-        </button>
-        <DragDropTest />
-      </div>
-    );
-  }
-
-  if (currentView === 'resize-test') {
-    return (
-      <div className="h-full relative">
-        <button
-          className="absolute top-4 left-4 z-50 glass-button px-4 py-2 glow-hover text-sm"
-          onClick={() => setCurrentView('home')}
-        >
-          ← Back to Home
-        </button>
-        <ResizeTest />
-      </div>
-    );
-  }
-
-  if (currentView === 'panel-management-test') {
-    return (
-      <div className="h-full relative">
-        <button
-          className="absolute top-4 left-4 z-50 glass-button px-4 py-2 glow-hover text-sm"
-          onClick={() => setCurrentView('home')}
-        >
-          ← Back to Home
-        </button>
-        <PanelManagementTest />
-      </div>
-    );
-  }
-
-  // Initialize default panels when dashboard is selected
-  useEffect(() => {
-    if (currentView === 'dashboard') {
-      initializeDefaultPanels();
-    }
-  }, [currentView]);
 
   if (currentView === 'dashboard') {
     return (
@@ -461,39 +414,21 @@ function App() {
           </button>
           <button
             className="glass-button px-6 py-2 glow-hover"
-            onClick={() => setCurrentView('component-test')}
+            onClick={() => setCurrentView('unified-test')}
           >
-            Component Test Suite
+            Unified Test Suite
           </button>
           <button
             className="glass-button px-6 py-2 glow-hover"
-            onClick={() => setCurrentView('panel-test')}
+            onClick={() => setCurrentView('panel-system-test')}
           >
-            Panel Migration Test
+            Panel System Tests
           </button>
           <button
             className="glass-button px-6 py-2 glow-hover"
-            onClick={() => setCurrentView('layout-test')}
+            onClick={() => setCurrentView('interaction-test')}
           >
-            Layout System Test
-          </button>
-          <button
-            className="glass-button px-6 py-2 glow-hover"
-            onClick={() => setCurrentView('drag-drop-test')}
-          >
-            Drag & Drop Test
-          </button>
-          <button
-            className="glass-button px-6 py-2 glow-hover"
-            onClick={() => setCurrentView('resize-test')}
-          >
-            Panel Resize Test
-          </button>
-          <button
-            className="glass-button px-6 py-2 glow-hover"
-            onClick={() => setCurrentView('panel-management-test')}
-          >
-            Panel Management Test
+            Interaction Tests
           </button>
           <button
             className="glass-button px-6 py-2 glow-hover"
