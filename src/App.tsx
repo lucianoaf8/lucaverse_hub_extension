@@ -1,7 +1,6 @@
 import './styles/globals.css';
 import { useEffect, useState } from 'react';
 import { initializeStores } from './stores';
-import './stores/simpleTest'; // Load store test functions
 
 // Import platform abstraction
 import {

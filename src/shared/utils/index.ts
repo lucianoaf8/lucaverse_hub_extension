@@ -8,7 +8,6 @@ export * from '@/utils/styleUtils';
 export * from '@/utils/logger';
 export * from '@/utils/analytics';
 export * from '@/utils/errorTracker';
-export * from '@/utils/healthMonitor';
 export * from '@/utils/security';
 export * from '@/utils/assetPreloader';
 
