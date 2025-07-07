@@ -19,6 +19,10 @@ import { InteractionTests } from './components/__tests__/InteractionTests';
 // Import main layout component
 import DynamicLayout from './components/DynamicLayout';
 
+// Import theme system
+import { useTheme } from './hooks/useTheme';
+import ThemeSwitcher from './components/ThemeSwitcher';
+
 // Import stores
 import { useLayoutStore } from './stores/layoutStore';
 import { PanelComponent } from './types/panel';
@@ -111,6 +115,9 @@ function App() {
     systemInfo: null,
     error: null,
   });
+
+  // Use theme context to demonstrate theme integration
+  const { themeConfig } = useTheme();
 
   // ALL HOOKS MUST BE CALLED BEFORE ANY CONDITIONAL LOGIC
   useEffect(() => {
@@ -401,6 +408,12 @@ function App() {
               Platform info
             </div>
           </div>
+        </div>
+
+        {/* Theme Switcher */}
+        <div className="glass-panel p-4 mb-6">
+          <div className="text-sm text-white/70 mb-3">Theme Controls</div>
+          <ThemeSwitcher showDetails={true} />
         </div>
 
         <div className="flex gap-3 justify-center flex-wrap">

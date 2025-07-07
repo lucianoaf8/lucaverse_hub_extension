@@ -2,6 +2,10 @@ import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 
+// Import theme system
+import { ThemeProvider } from './contexts/ThemeContext.tsx';
+import { ThemeVariant } from './types/components';
+
 // Import platform abstraction and testing
 import { getPlatformAPI, detectPlatform, platformDev, initializePlatform } from './platform';
 import { testPlatformAPIs } from './platform/__tests__/platformValidation.ts';
@@ -73,35 +77,39 @@ initializeApp()
   .then(() => {
     ReactDOM.createRoot(document.getElementById('root')!).render(
       <StrictMode>
-        <App />
+        <ThemeProvider defaultTheme={ThemeVariant.Dark}>
+          <App />
+        </ThemeProvider>
       </StrictMode>
     );
   })
   .catch(error => {
     console.error('Application initialization failed:', error);
 
-    // Emergency fallback render
+    // Emergency fallback render with theme provider
     ReactDOM.createRoot(document.getElementById('root')!).render(
       <StrictMode>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100vh',
-            backgroundColor: '#1a1a1a',
-            color: 'white',
-            fontFamily: 'Arial, sans-serif',
-          }}
-        >
-          <div style={{ textAlign: 'center', padding: '2rem' }}>
-            <h1>Lucaverse Hub</h1>
-            <p>Initialization error occurred. Check console for details.</p>
-            <p style={{ fontSize: '0.8em', opacity: 0.7 }}>
-              Error: {error instanceof Error ? error.message : 'Unknown error'}
-            </p>
+        <ThemeProvider defaultTheme={ThemeVariant.Dark}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100vh',
+              backgroundColor: 'var(--color-background, #1a1a1a)',
+              color: 'var(--color-text, white)',
+              fontFamily: 'Arial, sans-serif',
+            }}
+          >
+            <div style={{ textAlign: 'center', padding: '2rem' }}>
+              <h1>Lucaverse Hub</h1>
+              <p>Initialization error occurred. Check console for details.</p>
+              <p style={{ fontSize: '0.8em', opacity: 0.7 }}>
+                Error: {error instanceof Error ? error.message : 'Unknown error'}
+              </p>
+            </div>
           </div>
-        </div>
+        </ThemeProvider>
       </StrictMode>
     );
   });

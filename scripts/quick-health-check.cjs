@@ -23,15 +23,17 @@ try {
   const appContent = fs.readFileSync(appFilePath, 'utf8');
   
   const hasApplyFunction = themeContent.includes('applyThemeToDocument');
-  const isCalledInMain = mainContent.includes('applyThemeToDocument');
-  const isCalledInApp = appContent.includes('applyThemeToDocument');
+  const hasThemeProvider = mainContent.includes('ThemeProvider') || appContent.includes('ThemeProvider');
+  const hasThemeContextImport = mainContent.includes('ThemeContext') || mainContent.includes('useTheme');
   
   console.log(`  - applyThemeToDocument exists: ${hasApplyFunction ? '✅' : '❌'}`);
-  console.log(`  - Called in main.tsx: ${isCalledInMain ? '✅' : '❌'}`);
-  console.log(`  - Called in App.tsx: ${isCalledInApp ? '✅' : '❌'}`);
+  console.log(`  - ThemeProvider in app: ${hasThemeProvider ? '✅' : '❌'}`);
+  console.log(`  - Theme context imported: ${hasThemeContextImport ? '✅' : '❌'}`);
   
-  if (!isCalledInMain && !isCalledInApp) {
-    console.log('  ⚠️  Theme system not integrated!\n');
+  if (hasApplyFunction && hasThemeProvider) {
+    console.log('  ✅ Theme system integrated!\n');
+  } else {
+    console.log('  ⚠️  Theme system not fully integrated!\n');
   }
 } catch (error) {
   console.log('  ❌ Error checking theme system\n');
