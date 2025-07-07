@@ -270,8 +270,8 @@ function App() {
   }
 
   return (
-    <div className="h-full flex items-center justify-center">
-      <div className="glass-card p-8 max-w-2xl w-full mx-4">
+    <div className="h-full overflow-y-auto flex items-center justify-center py-8">
+      <div className="glass-card p-8 max-w-2xl w-full mx-4 my-auto">
         <h1 className="text-3xl font-display font-bold text-white text-center mb-4 text-shadow">
           Lucaverse Hub
         </h1>
