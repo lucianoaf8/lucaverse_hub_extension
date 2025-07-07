@@ -7,7 +7,6 @@ import React, { createContext, useContext, useEffect, useState, useCallback, Rea
 import {
   Theme,
   ThemeVariant,
-  themes,
   getTheme,
   getSystemThemePreference,
   subscribeToSystemThemeChanges,
@@ -30,7 +29,6 @@ interface ThemeContextValue {
 interface ThemeProviderProps {
   children: ReactNode;
   defaultTheme?: ThemeVariant;
-  storageKey?: string;
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
@@ -66,7 +64,6 @@ const saveThemeToStorage = (theme: ThemeVariant): void => {
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   children,
   defaultTheme = ThemeVariant.Dark,
-  storageKey = STORAGE_KEY,
 }) => {
   // Initialize theme from storage or default
   const [currentTheme, setCurrentThemeState] = useState<ThemeVariant>(() =>
@@ -119,7 +116,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     const themeOrder = [ThemeVariant.Dark, ThemeVariant.Light, ThemeVariant.Auto];
     const currentIndex = themeOrder.indexOf(currentTheme);
     const nextIndex = (currentIndex + 1) % themeOrder.length;
-    setTheme(themeOrder[nextIndex]);
+    const nextTheme = themeOrder[nextIndex];
+    if (nextTheme) {
+      setTheme(nextTheme);
+    }
   }, [currentTheme, setTheme]);
 
   // Reset to system theme

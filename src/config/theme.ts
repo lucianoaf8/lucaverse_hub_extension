@@ -227,4 +227,7 @@ export const themeConfig = {
   applyThemeToDocument,
 } as const;
 
+// Re-export ThemeVariant for convenience
+export { ThemeVariant } from '@/types/components';
+
 export type ThemeConfig = typeof themeConfig;
