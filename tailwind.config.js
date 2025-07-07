@@ -9,45 +9,6 @@ export default {
     extend: {
       // Enhanced color system matching original CSS variables
       colors: {
-        // Original cyan/blue theme colors
-        primary: {
-          50: '#ecfeff',
-          100: '#cffafe', 
-          200: '#a5f3fc',
-          300: '#67e8f9',
-          400: '#22d3ee', // --accent-primary: #00bcd4 equivalent
-          500: '#06b6d4',
-          600: '#0891b2',
-          700: '#0e7490',
-          800: '#155e75',
-          900: '#164e63',
-          950: '#083344',
-        },
-        secondary: {
-          50: '#f0fdff',
-          100: '#ccf7fe',
-          200: '#99eefd',
-          300: '#66e2fa',
-          400: '#22d3ee', // --accent-success: #00ffff equivalent
-          500: '#00bcd4', // Original --accent-primary
-          600: '#0891b2',
-          700: '#0e7490',
-          800: '#155e75',
-          900: '#164e63',
-        },
-        accent: {
-          50: '#f0fdff',
-          100: '#ccf7fe',
-          200: '#99eefd',
-          300: '#66e2fa',
-          400: '#22d3ee',
-          500: '#00e5ff', // --accent-info
-          600: '#00bcd4',
-          700: '#0891b2',
-          800: '#0e7490',
-          900: '#164e63',
-        },
-        
         // Priority colors from original system
         priority: {
           1: '#ff1744', // Critical
@@ -57,34 +18,97 @@ export default {
           5: '#00ffff', // Minimal
         },
         
-        // Alert colors
-        success: '#00ffff',
-        warning: '#ffc107', 
-        danger: '#ff1744',
-        info: '#00e5ff',
-        
-        // Text colors matching original variables
+        // Theme-aware colors (CSS custom properties)
+        primary: {
+          DEFAULT: 'var(--color-primary)',
+          50: 'var(--color-primary-alpha-2)',
+          100: 'var(--color-primary-alpha-4)',
+          200: 'var(--color-primary-alpha-8)',
+          300: 'var(--color-primary-alpha-12)',
+          400: 'var(--color-primary)',
+          500: 'var(--color-primary)',
+          600: 'var(--color-primary)',
+          700: 'var(--color-primary)',
+          800: 'var(--color-primary)',
+          900: 'var(--color-primary)',
+        },
+        secondary: {
+          DEFAULT: 'var(--color-secondary)',
+          50: 'var(--color-secondary-alpha-2)',
+          100: 'var(--color-secondary-alpha-4)',
+          200: 'var(--color-secondary-alpha-8)',
+          300: 'var(--color-secondary-alpha-12)',
+          400: 'var(--color-secondary)',
+          500: 'var(--color-secondary)',
+          600: 'var(--color-secondary)',
+          700: 'var(--color-secondary)',
+          800: 'var(--color-secondary)',
+          900: 'var(--color-secondary)',
+        },
+        accent: {
+          DEFAULT: 'var(--color-accent)',
+          50: 'var(--color-accent-alpha-2)',
+          100: 'var(--color-accent-alpha-4)',
+          200: 'var(--color-accent-alpha-8)',
+          300: 'var(--color-accent-alpha-12)',
+          400: 'var(--color-accent)',
+          500: 'var(--color-accent)',
+          600: 'var(--color-accent)',
+          700: 'var(--color-accent)',
+          800: 'var(--color-accent)',
+          900: 'var(--color-accent)',
+        },
+        background: 'var(--color-background)',
+        surface: 'var(--color-surface)',
         text: {
-          primary: '#f4f4f5',
-          secondary: '#d4d4d8',
-          muted: 'rgba(244, 244, 245, 0.6)',
-          disabled: 'rgba(244, 244, 245, 0.3)',
+          DEFAULT: 'var(--color-text)',
+          primary: 'var(--color-text)',
+          secondary: 'var(--color-textSecondary)',
+          muted: 'var(--color-textSecondary)',
+          disabled: 'var(--color-textSecondary)',
+        },
+        textSecondary: 'var(--color-textSecondary)', 
+        border: 'var(--color-border)',
+        error: {
+          DEFAULT: 'var(--color-error)',
+          400: 'var(--color-error)',
+          500: 'var(--color-error)',
+          600: 'var(--color-error)',
+        },
+        warning: {
+          DEFAULT: 'var(--color-warning)',
+          400: 'var(--color-warning)',
+          500: 'var(--color-warning)',
+          600: 'var(--color-warning)',
+        },
+        success: {
+          DEFAULT: 'var(--color-success)',
+          400: 'var(--color-success)',
+          500: 'var(--color-success)',
+          600: 'var(--color-success)',
+        },
+        info: {
+          DEFAULT: 'var(--color-info)',
+          400: 'var(--color-info)',
+          500: 'var(--color-info)',
+          600: 'var(--color-info)',
         },
         
-        // Glass effect colors
+        // Glass effect colors - using theme-aware CSS custom properties
         glass: {
-          border: 'rgba(0, 255, 255, 0.1)',
-          light: 'rgba(0, 255, 255, 0.08)',
-          medium: 'rgba(0, 255, 255, 0.15)',
-          dark: 'rgba(0, 255, 255, 0.25)',
-          overlay: 'rgba(0, 229, 255, 0.02)',
+          border: 'var(--color-border)',
+          light: 'var(--color-primary-alpha-8)',
+          medium: 'var(--color-primary-alpha-12)',
+          dark: 'var(--color-primary-alpha-20)',
+          overlay: 'var(--color-accent-alpha-2)',
         },
         
-        // Background system
+        // Background system - using theme-aware CSS custom properties
         background: {
-          primary: '#0a0f1a',
-          secondary: '#0f1419', 
-          tertiary: '#050b12',
+          DEFAULT: 'var(--color-background)',
+          primary: 'var(--color-background)',
+          secondary: 'var(--color-surface)',
+          tertiary: 'var(--color-background)',
         },
       },
       
@@ -151,13 +175,13 @@ export default {
         '4xl': '2rem',
       },
       
-      // Box shadow system matching original
+      // Box shadow system matching original - using theme-aware CSS custom properties
       boxShadow: {
-        'glass-sm': '0 2px 8px rgba(0, 255, 255, 0.1)',
-        'glass-md': '0 4px 20px rgba(0, 255, 255, 0.15)',
-        'glass-lg': '0 8px 40px rgba(0, 255, 255, 0.2)',
-        'glass-glow': '0 0 20px rgba(0, 255, 255, 0.6)',
-        'glass-hover': '0 0 30px rgba(0, 255, 255, 0.5)',
+        'glass-sm': 'var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.1))',
+        'glass-md': 'var(--shadow-md, 0 4px 20px rgba(0, 0, 0, 0.15))',
+        'glass-lg': 'var(--shadow-lg, 0 8px 40px rgba(0, 0, 0, 0.2))',
+        'glass-glow': 'var(--shadow-xl, 0 0 20px rgba(0, 0, 0, 0.6))',
+        'glass-hover': '0 0 30px var(--color-primary-alpha-50)',
       },
       
       // Backdrop blur for glassmorphism
@@ -223,8 +247,8 @@ export default {
           '50%': { opacity: '0.8' },
         },
         glowPulse: {
-          '0%, 100%': { boxShadow: '0 0 20px rgba(0, 255, 255, 0.3)' },
-          '50%': { boxShadow: '0 0 40px rgba(0, 255, 255, 0.6)' },
+          '0%, 100%': { boxShadow: '0 0 20px var(--color-primary-alpha-30)' },
+          '50%': { boxShadow: '0 0 40px var(--color-primary-alpha-60)' },
         },
         glassAppear: {
           '0%': { 

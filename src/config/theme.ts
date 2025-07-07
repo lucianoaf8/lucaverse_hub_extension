@@ -197,14 +197,52 @@ export const subscribeToSystemThemeChanges = (
   };
 };
 
+/**
+ * Utility function to convert hex color to RGB values
+ * @param hex - Hex color string (e.g., '#3B82F6')
+ * @returns RGB values as an array [r, g, b]
+ */
+const hexToRgb = (hex: string): [number, number, number] | null => {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)]
+    : null;
+};
+
+/**
+ * Generate alpha variations of a color
+ * @param colorName - Name of the color (e.g., 'primary')
+ * @param hexColor - Hex color value (e.g., '#3B82F6')
+ * @param root - Document root element
+ */
+const generateAlphaVariations = (colorName: string, hexColor: string, root: HTMLElement): void => {
+  const rgb = hexToRgb(hexColor);
+  if (!rgb) return;
+
+  const [r, g, b] = rgb;
+  // Extended alpha values to cover all CSS usage
+  const alphaValues = [2, 3, 4, 6, 8, 10, 12, 20, 30, 40, 50, 60, 70, 80, 90];
+  
+  alphaValues.forEach(alpha => {
+    const alphaDecimal = alpha / 100;
+    root.style.setProperty(
+      `--color-${colorName}-alpha-${alpha}`,
+      `rgba(${r}, ${g}, ${b}, ${alphaDecimal})`
+    );
+  });
+};
+
 export const applyThemeToDocument = (theme: Theme): void => {
   if (typeof document === 'undefined') return;
 
   const root = document.documentElement;
 
-  // Apply CSS custom properties
+  // Apply CSS custom properties for colors
   Object.entries(theme.colors).forEach(([key, value]) => {
     root.style.setProperty(`--color-${key}`, value);
+    
+    // Generate alpha variations for each color
+    generateAlphaVariations(key, value, root);
   });
 
   // Apply glass morphism properties
@@ -212,10 +250,47 @@ export const applyThemeToDocument = (theme: Theme): void => {
   root.style.setProperty('--glass-opacity', theme.glass.opacity.toString());
   root.style.setProperty('--glass-border', theme.glass.border);
 
+  // Apply shadow properties
+  root.style.setProperty('--shadow-sm', theme.shadows.sm);
+  root.style.setProperty('--shadow-md', theme.shadows.md);
+  root.style.setProperty('--shadow-lg', theme.shadows.lg);
+  root.style.setProperty('--shadow-xl', theme.shadows.xl);
+
   // Apply animation properties
   root.style.setProperty('--animation-fast', `${theme.animations.duration.fast}ms`);
   root.style.setProperty('--animation-normal', `${theme.animations.duration.normal}ms`);
   root.style.setProperty('--animation-slow', `${theme.animations.duration.slow}ms`);
+
+  // Apply special content script variables for extension context
+  // These provide fallbacks when CSS custom properties aren't available
+  root.style.setProperty('--lucaverse-primary', theme.colors.primary);
+  root.style.setProperty('--lucaverse-accent', theme.colors.accent);
+  root.style.setProperty('--lucaverse-success', theme.colors.success);
+  root.style.setProperty('--lucaverse-error', theme.colors.error);
+  root.style.setProperty('--lucaverse-success-dark', theme.variant === ThemeVariant.Dark ? '#059669' : '#10b981');
+  root.style.setProperty('--lucaverse-error-dark', theme.variant === ThemeVariant.Dark ? '#DC2626' : '#ef4444');
+  
+  // Generate lucaverse-specific alpha variations for content scripts
+  const lucaverseColors = {
+    primary: theme.colors.primary,
+    accent: theme.colors.accent,
+    success: theme.colors.success,
+    error: theme.colors.error,
+  };
+  
+  Object.entries(lucaverseColors).forEach(([key, value]) => {
+    const rgb = hexToRgb(value);
+    if (rgb) {
+      const [r, g, b] = rgb;
+      [10, 20, 30, 40, 50].forEach(alpha => {
+        const alphaDecimal = alpha / 100;
+        root.style.setProperty(
+          `--lucaverse-${key}-alpha-${alpha}`,
+          `rgba(${r}, ${g}, ${b}, ${alphaDecimal})`
+        );
+      });
+    }
+  });
 };
 
 export const themeConfig = {
@@ -229,5 +304,8 @@ export const themeConfig = {
 
 // Re-export ThemeVariant for convenience
 export { ThemeVariant } from '@/types/components';
+
+// Re-export for backwards compatibility
+export type { Theme, ThemeColors } from '@/types/components';
 
 export type ThemeConfig = typeof themeConfig;

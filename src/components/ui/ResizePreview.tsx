@@ -53,7 +53,7 @@ const DimensionDisplay: React.FC<{
     <div className="absolute z-50 pointer-events-none">
       {/* Main dimension display */}
       <div
-        className="absolute bg-black/90 text-white text-sm px-3 py-2 rounded-lg shadow-lg backdrop-blur-sm"
+        className="absolute bg-surface/90 text-text text-sm px-3 py-2 rounded-lg shadow-lg backdrop-blur-sm"
         style={{
           left: position.x + size.width + 10,
           top: position.y,
@@ -63,7 +63,7 @@ const DimensionDisplay: React.FC<{
           <div className="font-mono">
             {Math.round(size.width)} × {Math.round(size.height)}
           </div>
-          <div className="text-xs text-white/70">
+          <div className="text-xs text-text/70">
             ({deltaWidth >= 0 ? '+' : ''}
             {Math.round(deltaWidth)}, {deltaHeight >= 0 ? '+' : ''}
             {Math.round(deltaHeight)})
@@ -122,7 +122,7 @@ const SnapIndicators: React.FC<{
           {/* Common size snap indicators */}
           {indicator.type === 'common-size' && (
             <div
-              className="absolute border-2 border-green-400/60 bg-green-400/10 rounded-lg"
+              className="absolute border-2 border-success/60 bg-success/10 rounded-lg"
               style={{
                 left: position.x,
                 top: position.y,
@@ -139,7 +139,7 @@ const SnapIndicators: React.FC<{
           {/* Alignment indicators */}
           {indicator.type === 'alignment' && (
             <div
-              className="absolute bg-purple-400/60 rounded"
+              className="absolute bg-accent/60 rounded"
               style={{
                 left: indicator.position.x - 1,
                 top: indicator.position.y - 1,
@@ -147,7 +147,7 @@ const SnapIndicators: React.FC<{
                 height: indicator.size?.height || 100,
               }}
             >
-              <div className="absolute -left-8 top-0 text-xs text-purple-400 whitespace-nowrap">
+              <div className="absolute -left-8 top-0 text-xs text-accent whitespace-nowrap">
                 {indicator.label}
               </div>
             </div>
@@ -175,7 +175,7 @@ const AlignmentGuidelines: React.FC<{
                   y1={guideline.offset}
                   x2={guideline.position}
                   y2={guideline.offset + guideline.length}
-                  stroke="#3B82F6"
+                  stroke="var(--color-primary)"
                   strokeWidth="1"
                   strokeDasharray="4 4"
                   opacity="0.8"
@@ -184,7 +184,7 @@ const AlignmentGuidelines: React.FC<{
                   <text
                     x={guideline.position + 5}
                     y={guideline.offset + 15}
-                    fill="#3B82F6"
+                    fill="var(--color-primary)"
                     fontSize="12"
                     className="font-mono"
                   >
@@ -199,7 +199,7 @@ const AlignmentGuidelines: React.FC<{
                   y1={guideline.position}
                   x2={guideline.offset + guideline.length}
                   y2={guideline.position}
-                  stroke="#3B82F6"
+                  stroke="var(--color-primary)"
                   strokeWidth="1"
                   strokeDasharray="4 4"
                   opacity="0.8"
@@ -208,7 +208,7 @@ const AlignmentGuidelines: React.FC<{
                   <text
                     x={guideline.offset + 5}
                     y={guideline.position - 5}
-                    fill="#3B82F6"
+                    fill="var(--color-primary)"
                     fontSize="12"
                     className="font-mono"
                   >
@@ -234,7 +234,7 @@ const ConstraintViolationOverlay: React.FC<{
 
   return (
     <div
-      className="absolute border-2 border-red-500 bg-red-500/10 rounded-lg pointer-events-none z-40"
+      className="absolute border-2 border-error bg-error/10 rounded-lg pointer-events-none z-40"
       style={{
         left: position.x,
         top: position.y,
@@ -243,7 +243,7 @@ const ConstraintViolationOverlay: React.FC<{
       }}
     >
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="bg-red-500/90 text-white text-sm px-3 py-2 rounded-lg backdrop-blur-sm max-w-xs">
+        <div className="bg-error/90 text-surface text-sm px-3 py-2 rounded-lg backdrop-blur-sm max-w-xs">
           <div className="font-medium mb-1">⚠ Constraint Violations:</div>
           {violations.slice(0, 3).map((violation, i) => (
             <div key={i} className="text-xs">
@@ -274,10 +274,10 @@ const PreviewOutline: React.FC<{
       className={clsx(
         'absolute border-2 rounded-lg pointer-events-none z-30 transition-all duration-150',
         {
-          'border-green-400 bg-green-400/5': isValid && isExpanding,
-          'border-blue-400 bg-blue-400/5': isValid && isShrinking,
-          'border-yellow-400 bg-yellow-400/5': isValid && !isExpanding && !isShrinking,
-          'border-red-400 bg-red-400/5': !isValid,
+          'border-success bg-success/5': isValid && isExpanding,
+          'border-info bg-info/5': isValid && isShrinking,
+          'border-warning bg-warning/5': isValid && !isExpanding && !isShrinking,
+          'border-error bg-error/5': !isValid,
           'animate-pulse': !isValid,
         }
       )}
@@ -455,7 +455,7 @@ export const ResizePreview: React.FC<ResizePreviewProps> = ({
             top: position.y + previewSize.height - 40,
           }}
         >
-          <div className="bg-purple-500/90 text-white text-xs px-2 py-1 rounded backdrop-blur-sm">
+          <div className="bg-accent/90 text-surface text-xs px-2 py-1 rounded backdrop-blur-sm">
             📏 Ratio: {(previewSize.width / previewSize.height).toFixed(2)}
           </div>
         </div>
