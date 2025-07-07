@@ -30,5 +30,8 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironmentOptions: {
     customExportConditions: ['node', 'node-addons']
-  }
+  },
+  transformIgnorePatterns: [
+    'node_modules/(?!(nanoid)/)'
+  ]
 };
