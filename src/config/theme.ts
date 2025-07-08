@@ -601,7 +601,7 @@ const darkTheme: Theme = {
       200: '#99eefd',
       300: '#5ce1fc',
       400: '#22c8f3',
-      500: '#7dd3fc',  // Lighter shade for better contrast on dark background (meets 4.5:1 ratio)
+      500: '#60a5fa',  // Increased contrast for dark backgrounds (meets 4.5:1 ratio)
       600: '#38bdf8',
       700: '#0ea5e9',
       800: '#0284b6',

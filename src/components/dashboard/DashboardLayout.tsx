@@ -37,15 +37,15 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             <div className="p-3 bg-surface rounded-lg border border-neutral-700">
               <h3 className="font-medium text-primary mb-2">Quick Actions</h3>
               <div className="space-y-2">
-                <button className="w-full text-left px-3 py-2 text-sm text-neutral-300 hover:text-primary hover:bg-primary/10 rounded transition-colors">
+                <button className="w-full text-left px-3 py-2 text-sm text-neutral-300 hover:text-primary hover:bg-primary/10 rounded transition-colors" aria-label="Create new task">
                   <span className="mr-2">📝</span>
                   Create Task
                 </button>
-                <button className="w-full text-left px-3 py-2 text-sm text-neutral-300 hover:text-primary hover:bg-primary/10 rounded transition-colors">
+                <button className="w-full text-left px-3 py-2 text-sm text-neutral-300 hover:text-primary hover:bg-primary/10 rounded transition-colors" aria-label="Start new chat">
                   <span className="mr-2">💬</span>
                   New Chat
                 </button>
-                <button className="w-full text-left px-3 py-2 text-sm text-neutral-300 hover:text-primary hover:bg-primary/10 rounded transition-colors">
+                <button className="w-full text-left px-3 py-2 text-sm text-neutral-300 hover:text-primary hover:bg-primary/10 rounded transition-colors" aria-label="View reports">
                   <span className="mr-2">📊</span>
                   View Reports
                 </button>

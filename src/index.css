@@ -90,6 +90,16 @@
     outline-offset: 2px;
   }
 
+  /* Enhanced accessibility focus styles */
+  button:focus-visible,
+  [role="button"]:focus-visible,
+  [tabindex]:focus-visible,
+  [onClick]:focus-visible {
+    outline: 2px solid var(--color-primary-500) !important;
+    outline-offset: 2px !important;
+    border-radius: 2px;
+  }
+
   /* Selection */
   ::selection {
     background-color: var(--color-primary-500);

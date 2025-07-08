@@ -194,6 +194,7 @@ export default function Productivity() {
                   key={preset.label}
                   onClick={() => startSession('work', preset.work)}
                   className="px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded text-sm transition-colors"
+                  aria-label={`Start ${preset.label} session`}
                 >
                   {preset.label}
                   <div className="text-xs opacity-80">{preset.work}min</div>
@@ -205,12 +206,14 @@ export default function Productivity() {
               <button
                 onClick={isRunning ? pauseSession : resumeSession}
                 className="px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded text-sm transition-colors"
+                aria-label={isRunning ? 'Pause timer' : 'Resume timer'}
               >
                 {isRunning ? '⏸️ Pause' : '▶️ Resume'}
               </button>
               <button
                 onClick={stopSession}
                 className="px-4 py-2 bg-danger hover:bg-danger/80 text-white rounded text-sm transition-colors"
+                aria-label="Stop timer"
               >
                 🛑 Stop
               </button>
@@ -261,19 +264,19 @@ export default function Productivity() {
       <div className="p-4 border-b border-neutral-700">
         <h4 className="font-medium text-neutral-300 mb-3">Quick Tools</h4>
         <div className="grid grid-cols-2 gap-2">
-          <button className="p-2 bg-elevated hover:bg-neutral-700 rounded border border-neutral-700 text-sm transition-colors">
+          <button className="p-2 bg-elevated hover:bg-neutral-700 rounded border border-neutral-700 text-sm transition-colors" aria-label="View progress report">
             <span className="block text-lg mb-1">📊</span>
             <span>Progress Report</span>
           </button>
-          <button className="p-2 bg-elevated hover:bg-neutral-700 rounded border border-neutral-700 text-sm transition-colors">
+          <button className="p-2 bg-elevated hover:bg-neutral-700 rounded border border-neutral-700 text-sm transition-colors" aria-label="Set productivity goals">
             <span className="block text-lg mb-1">🎯</span>
             <span>Set Goals</span>
           </button>
-          <button className="p-2 bg-elevated hover:bg-neutral-700 rounded border border-neutral-700 text-sm transition-colors">
+          <button className="p-2 bg-elevated hover:bg-neutral-700 rounded border border-neutral-700 text-sm transition-colors" aria-label="Manage schedule">
             <span className="block text-lg mb-1">📅</span>
             <span>Schedule</span>
           </button>
-          <button className="p-2 bg-elevated hover:bg-neutral-700 rounded border border-neutral-700 text-sm transition-colors">
+          <button className="p-2 bg-elevated hover:bg-neutral-700 rounded border border-neutral-700 text-sm transition-colors" aria-label="Open settings">
             <span className="block text-lg mb-1">⚙️</span>
             <span>Settings</span>
           </button>

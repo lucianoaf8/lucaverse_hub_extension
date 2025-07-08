@@ -47,8 +47,9 @@ export default function ThemeDemo() {
         <div className="flex justify-center">
           <button
             onClick={() => setShowAnimations(!showAnimations)}
-            className="px-6 py-3 bg-primary/20 hover:bg-primary/30 border border-primary/40 
+            className="px-6 py-3 bg-primary/20 hover:bg-primary/30 border border-primary/40
                        rounded-lg transition-all duration-base focus:ring-2 focus:ring-primary/50"
+            aria-label={showAnimations ? 'Hide animations' : 'Show animations'}
           >
             <span className="mr-2">✨</span>
             {showAnimations ? 'Hide' : 'Show'} Animation Examples
@@ -76,7 +77,7 @@ export default function ThemeDemo() {
                         </div>
                       </div>
                       <div className="flex space-x-2">
-                        <button className={`btn btn-${variant.name.toLowerCase()}`}>
+                        <button className={`btn btn-${variant.name.toLowerCase()}`} aria-label={`${variant.name} button example`}>
                           Button
                         </button>
                         <span className={`px-2 py-1 text-xs rounded ${variant.class} bg-${variant.name.toLowerCase()}/20`}>
@@ -142,11 +143,11 @@ export default function ThemeDemo() {
                   <div className="p-4 bg-surface rounded-lg border border-neutral-700">
                     <h3 className="font-medium text-secondary mb-3">Buttons</h3>
                     <div className="flex flex-wrap gap-2">
-                      <button className="btn btn-primary">Primary</button>
-                      <button className="btn btn-secondary">Secondary</button>
-                      <button className="btn btn-success">Success</button>
-                      <button className="btn btn-warning">Warning</button>
-                      <button className="btn btn-danger">Danger</button>
+                      <button className="btn btn-primary" aria-label="Primary button example">Primary</button>
+                      <button className="btn btn-secondary" aria-label="Secondary button example">Secondary</button>
+                      <button className="btn btn-success" aria-label="Success button example">Success</button>
+                      <button className="btn btn-warning" aria-label="Warning button example">Warning</button>
+                      <button className="btn btn-danger" aria-label="Danger button example">Danger</button>
                     </div>
                   </div>
 
@@ -178,8 +179,8 @@ export default function ThemeDemo() {
                         This is a sample panel with theme-aware styling and animations.
                       </p>
                       <div className="flex gap-2">
-                        <button className="btn btn-primary">Action</button>
-                        <button className="btn btn-secondary">Cancel</button>
+                        <button className="btn btn-primary" aria-label="Action button example">Action</button>
+                        <button className="btn btn-secondary" aria-label="Cancel button example">Cancel</button>
                       </div>
                     </div>
                   </div>

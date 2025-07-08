@@ -76,9 +76,10 @@ export default function SmartHub() {
             {quickActions.map((action) => (
               <button
                 key={action.id}
-                className={`p-4 bg-elevated rounded-lg border border-neutral-700 
+                className={`p-4 bg-elevated rounded-lg border border-neutral-700
                            hover:border-${action.color}/50 hover:bg-${action.color}/10 
                            transition-all duration-base group`}
+                aria-label={`${action.label} action`}
               >
                 <div className="flex items-center space-x-3">
                   <span className="text-2xl">{action.icon}</span>
@@ -106,7 +107,7 @@ export default function SmartHub() {
                     <div className="font-medium text-neutral-300">{item.name}</div>
                     <div className="text-sm text-neutral-500 capitalize">{item.type} • {item.time}</div>
                   </div>
-                  <button className="text-neutral-400 hover:text-primary transition-colors">
+                  <button className="text-neutral-400 hover:text-primary transition-colors" aria-label={`Navigate to ${item.title}`}>
                     →
                   </button>
                 </div>

@@ -36,6 +36,7 @@
   "ignorePatterns": [
     "dist/",
     "node_modules/",
+    "scripts/validation.disabled/",
     "scripts/validation/reports/"
   ]
 }

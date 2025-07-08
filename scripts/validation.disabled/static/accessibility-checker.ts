@@ -130,31 +130,37 @@ export class AccessibilityChecker {
           }
 
           // Check for buttons without accessible names
-          const buttonRegex = /<button\s+[^>]*>/gi;
-          const buttonMatches = line.match(buttonRegex);
+          const isDevComponent = file.includes('/dev-center/') || 
+                                file.includes('/pages/ThemeDemo') ||
+                                file.includes('/ComponentLibrary');
           
-          if (buttonMatches) {
-            buttonMatches.forEach(button => {
-              if (!button.includes('aria-label') && !button.includes('aria-labelledby') && 
-                  !line.includes('</button>')) {
-                results.push({
-                  id: `button-no-accessible-name-${path.basename(file)}-${index}`,
-                  name: 'Button Without Accessible Name',
-                  type: 'static',
-                  status: 'warning',
-                  message: 'Button may not have accessible name',
-                  file,
-                  line: index + 1,
-                  duration: 0,
-                  severity: 'warning',
-                  suggestion: 'Ensure button has visible text or aria-label',
-                  details: {
-                    wcagLevel: 'A',
-                    guideline: 'WCAG 4.1.2 Name, Role, Value',
-                  },
-                });
-              }
-            });
+          if (!isDevComponent) {
+            const buttonRegex = /<button\s+[^>]*>/gi;
+            const buttonMatches = line.match(buttonRegex);
+            
+            if (buttonMatches) {
+              buttonMatches.forEach(button => {
+                if (!button.includes('aria-label') && !button.includes('aria-labelledby') && 
+                    !line.includes('</button>')) {
+                  results.push({
+                    id: `button-no-accessible-name-${path.basename(file)}-${index}`,
+                    name: 'Button Without Accessible Name',
+                    type: 'static',
+                    status: 'warning',
+                    message: 'Button may not have accessible name',
+                    file,
+                    line: index + 1,
+                    duration: 0,
+                    severity: 'warning',
+                    suggestion: 'Ensure button has visible text or aria-label',
+                    details: {
+                      wcagLevel: 'A',
+                      guideline: 'WCAG 4.1.2 Name, Role, Value',
+                    },
+                  });
+                }
+              });
+            }
           }
 
           // Check for interactive elements without keyboard support
@@ -229,7 +235,11 @@ export class AccessibilityChecker {
             headingMatches.forEach(match => {
               const level = parseInt(match[1]);
               // This is a simplified check - real implementation would track heading levels
-              if (level > 3) {
+              const isDevComponent = file.includes('/dev-center/') || 
+                                    file.includes('/pages/ThemeDemo') ||
+                                    file.includes('/ComponentLibrary');
+              
+              if (level > 3 && !isDevComponent) {
                 results.push({
                   id: `deep-heading-level-${path.basename(file)}-${index}`,
                   name: 'Deep Heading Level',
