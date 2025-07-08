@@ -4,10 +4,8 @@
  */
 
 import React, { useState } from 'react';
-import { useTranslation } from '../contexts/I18nContext';
 
-export function AnimationExamples() {
-  const { t } = useTranslation('ui');
+function AnimationExamples() {
   const [activeDemo, setActiveDemo] = useState<string | null>(null);
 
   const handleDemoClick = (demoId: string) => {
@@ -60,6 +58,13 @@ export function AnimationExamples() {
                        hover:scale-hover hover:shadow-lg active:scale-active
                        focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-background"
             onClick={() => handleDemoClick('hover')}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleDemoClick('hover');
+              }
+            }}
+            aria-label="Demonstrate hover animation effects"
           >
             <div className="text-primary mb-2">🎯</div>
             <div className="font-medium">Hover Effects</div>
@@ -72,6 +77,13 @@ export function AnimationExamples() {
                        hover:scale-hover hover:brightness-hover active:scale-active active:brightness-active
                        focus:ring-2 focus:ring-success/50 focus:ring-offset-2 focus:ring-offset-background"
             onClick={() => handleDemoClick('press')}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleDemoClick('press');
+              }
+            }}
+            aria-label="Demonstrate press animation states"
           >
             <div className="text-success mb-2">👆</div>
             <div className="font-medium">Press States</div>

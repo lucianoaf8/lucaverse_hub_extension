@@ -6,8 +6,8 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { glob } from 'glob';
-import { ValidationConfig, ValidationOptions } from '../core/config.js';
-import { ValidationResult, ValidatorModule } from '../core/runner.js';
+import { ValidationConfig, ValidationOptions } from '../core/config';
+import { ValidationResult, ValidatorModule } from '../core/runner';
 
 export interface DependencyNode {
   file: string;

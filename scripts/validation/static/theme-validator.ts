@@ -6,8 +6,8 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { glob } from 'glob';
-import { ValidationConfig, ValidationOptions } from '../core/config.js';
-import { ValidationResult, ValidatorModule } from '../core/runner.js';
+import { ValidationConfig, ValidationOptions } from '../core/config';
+import { ValidationResult, ValidatorModule } from '../core/runner';
 
 export interface ColorContrastResult {
   foreground: string;
@@ -103,29 +103,53 @@ export class ThemeValidator {
   }
 
   private parseThemeDefinition(content: string): any {
-    // Simplified theme parsing - extract color definitions
-    const colorRegex = /(\w+):\s*{\s*([\s\S]*?)\s*}/g;
     const colors: Record<string, Record<string, string>> = {};
     
-    let match;
-    while ((match = colorRegex.exec(content)) !== null) {
-      const colorName = match[1];
-      const colorBlock = match[2];
+    // Parse colors from theme definitions - handle both structured and direct color assignments
+    const colorNames = ['primary', 'secondary', 'success', 'warning', 'danger', 'neutral'];
+    
+    for (const colorName of colorNames) {
+      // Look for color definitions in the format: colorName: { shade: 'value', ... }
+      // Use a more robust approach to match balanced braces
+      const colorStartRegex = new RegExp(`${colorName}:\\s*{`, 'g');
+      let match;
       
-      // Extract individual color values
-      const valueRegex = /(\d+|DEFAULT):\s*['"]([^'"]+)['"]/g;
-      const colorValues: Record<string, string> = {};
+      // Reset regex to start from beginning for each color
+      colorStartRegex.lastIndex = 0;
       
-      let valueMatch;
-      while ((valueMatch = valueRegex.exec(colorBlock)) !== null) {
-        colorValues[valueMatch[1]] = valueMatch[2];
-      }
-      
-      if (Object.keys(colorValues).length > 0) {
-        colors[colorName] = colorValues;
+      while ((match = colorStartRegex.exec(content)) !== null) {
+        const startIndex = match.index + match[0].length;
+        let braceCount = 1;
+        let endIndex = startIndex;
+        
+        // Find the matching closing brace
+        while (endIndex < content.length && braceCount > 0) {
+          const char = content[endIndex];
+          if (char === '{') braceCount++;
+          else if (char === '}') braceCount--;
+          endIndex++;
+        }
+        
+        if (braceCount === 0) {
+          const colorContent = content.substring(startIndex, endIndex - 1);
+          const colorValues: Record<string, string> = {};
+          
+          // Extract shade values - handle both quoted and unquoted values
+          const shadePattern = /(50|100|200|300|400|500|600|700|800|900|950|DEFAULT):\s*['"]([^'"]+)['"]/g;
+          let shadeMatch;
+          
+          while ((shadeMatch = shadePattern.exec(colorContent)) !== null) {
+            colorValues[shadeMatch[1]] = shadeMatch[2];
+          }
+          
+          if (Object.keys(colorValues).length > 0) {
+            colors[colorName] = colorValues;
+            break; // Found a valid color definition, stop looking for more
+          }
+        }
       }
     }
-
+    
     return { colors };
   }
 

@@ -3,8 +3,8 @@
  * Orchestrates all validation types and manages execution flow
  */
 
-import { ValidationConfig, getConfig } from './config.js';
-import { ValidationReporter, ValidationResult } from './reporter.js';
+import { ValidationConfig, getConfig } from './config';
+import { ValidationReporter, ValidationResult } from './reporter';
 
 export interface ValidationOptions {
   mode: 'development' | 'ci' | 'production' | 'quick';
@@ -78,10 +78,14 @@ export class ValidationRunner {
   }
 
   private selectValidators(options: ValidationOptions): ValidatorModule[] {
+    console.log(`🔍 Selecting validators for scope: ${options.scope}`);
+    console.log(`📝 Available validators: ${Array.from(this.validators.keys()).join(', ')}`);
+    
     let validators = Array.from(this.validators.values());
 
     // Filter by scope
     if (options.scope === 'quick') {
+      console.log('⚡ Using quick scope - filtering to essential validators');
       // Only run fast, essential validators
       validators = validators.filter(v => 
         v.name.includes('quick') || 
@@ -89,19 +93,24 @@ export class ValidationRunner {
         v.name.includes('essential')
       );
     } else if (options.scope === 'custom') {
+      console.log('🎯 Using custom scope');
       // Filter by include/exclude patterns
       if (options.include.length > 0) {
+        console.log(`✅ Include patterns: ${options.include.join(', ')}`);
         validators = validators.filter(v =>
           options.include.some(pattern => v.name.includes(pattern))
         );
       }
       
       if (options.exclude.length > 0) {
+        console.log(`❌ Exclude patterns: ${options.exclude.join(', ')}`);
         validators = validators.filter(v =>
           !options.exclude.some(pattern => v.name.includes(pattern))
         );
       }
     }
+
+    console.log(`📊 Selected ${validators.length} validators: ${validators.map(v => v.name).join(', ')}`);
 
     // Sort by dependencies
     return this.sortValidatorsByDependencies(validators);

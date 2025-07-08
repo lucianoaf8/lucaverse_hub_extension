@@ -4,17 +4,17 @@
  */
 
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
-import { i18nConfig, detectUserLanguage, saveLanguagePreference, loadTranslations } from '../config/i18n';
+import { i18nConfig, detectUserLanguage, saveLanguagePreference, loadTranslations } from '../config/internationalization';
 
 // Translation function type
-type TranslateFunction = (key: string, params?: Record<string, any>, namespace?: string) => string;
+type TranslateFunction = (key: string, params?: Record<string, unknown>, namespace?: string) => string;
 
 // I18n context interface
 interface I18nContextValue {
   language: string;
   setLanguage: (language: string) => Promise<void>;
   t: TranslateFunction;
-  translations: Record<string, any>;
+  translations: Record<string, unknown>;
   isLoading: boolean;
   availableLanguages: string[];
 }
@@ -28,11 +28,7 @@ interface StorageAdapter {
   setItem(key: string, value: string): void;
 }
 
-// Default browser storage adapter
-const browserStorageAdapter: StorageAdapter = {
-  getItem: (key: string) => localStorage.getItem(key),
-  setItem: (key: string, value: string) => localStorage.setItem(key, value),
-};
+// Storage adapter is now imported from utils/storageAdapter
 
 // I18n provider props
 interface I18nProviderProps {
@@ -42,9 +38,9 @@ interface I18nProviderProps {
 }
 
 // Helper function to get nested translation value
-function getNestedTranslation(translations: Record<string, any>, key: string): any {
+function getNestedTranslation(translations: Record<string, unknown>, key: string): unknown {
   const keys = key.split('.');
-  let value: any = translations;
+  let value: unknown = translations;
 
   for (const k of keys) {
     if (value && typeof value === 'object' && k in value) {
@@ -58,7 +54,7 @@ function getNestedTranslation(translations: Record<string, any>, key: string): a
 }
 
 // Helper function to interpolate values in translation string
-function interpolate(text: string, params: Record<string, any>): string {
+function interpolate(text: string, params: Record<string, unknown>): string {
   let result = text;
   const { prefix, suffix } = i18nConfig.interpolation;
 
@@ -74,7 +70,6 @@ function interpolate(text: string, params: Record<string, any>): string {
 export function I18nProvider({
   children,
   defaultLanguage,
-  storageAdapter = browserStorageAdapter,
 }: I18nProviderProps) {
   // State for current language
   const [language, setLanguageState] = useState<string>(() => {
@@ -82,7 +77,7 @@ export function I18nProvider({
   });
 
   // State for translations
-  const [translations, setTranslations] = useState<Record<string, any>>({});
+  const [translations, setTranslations] = useState<Record<string, unknown>>({});
   
   // Loading state
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -93,7 +88,7 @@ export function I18nProvider({
   // Load translations for a language
   const loadLanguageTranslations = useCallback(async (lang: string) => {
     setIsLoading(true);
-    const allTranslations: Record<string, any> = {};
+    const allTranslations: Record<string, unknown> = {};
 
     try {
       // Load all namespaces
@@ -125,7 +120,7 @@ export function I18nProvider({
   }, [loadLanguageTranslations]);
 
   // Translation function
-  const t = useCallback<TranslateFunction>((key: string, params?: Record<string, any>, namespace?: string) => {
+  const t = useCallback<TranslateFunction>((key: string, params?: Record<string, unknown>, namespace?: string) => {
     const ns = namespace || i18nConfig.defaultNamespace;
     const namespaceTranslations = translations[ns] || {};
     
@@ -157,6 +152,38 @@ export function I18nProvider({
 
     return translation;
   }, [translations]);
+
+  // Initialize storage from persistent storage
+  useEffect(() => {
+    const initializeI18nStorage = async () => {
+      try {
+        const { storageUtils } = await import('../utils/storageAdapter');
+        const { LANGUAGE_STORAGE_KEY } = await import('../config/internationalization');
+        
+        // Load language from persistent storage
+        const persistentLanguage = await storageUtils.getString(LANGUAGE_STORAGE_KEY);
+        
+        // Update in-memory cache
+        const windowWithStorage = window as unknown as { __i18nStorage?: Record<string, string> };
+        if (!windowWithStorage.__i18nStorage) {
+          windowWithStorage.__i18nStorage = {};
+        }
+        
+        if (persistentLanguage) {
+          windowWithStorage.__i18nStorage[LANGUAGE_STORAGE_KEY] = persistentLanguage;
+          
+          // Update state if different from current
+          if (persistentLanguage !== language) {
+            setLanguageState(persistentLanguage);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to initialize i18n storage:', error);
+      }
+    };
+    
+    initializeI18nStorage();
+  }, [language]);
 
   // Load initial translations
   useEffect(() => {
@@ -195,7 +222,7 @@ export function useI18n() {
 export function useTranslation(namespace?: string) {
   const { t, language, isLoading } = useI18n();
   
-  const translate = useCallback((key: string, params?: Record<string, any>) => {
+  const translate = useCallback((key: string, params?: Record<string, unknown>) => {
     return t(key, params, namespace);
   }, [t, namespace]);
 
@@ -219,9 +246,9 @@ export function useLanguage() {
 
 // Hook for specific namespace translations
 export function useNamespaceTranslations(namespace: string) {
-  const { translations, language } = useI18n();
+  const { translations } = useI18n();
   
   return useMemo(() => {
     return translations[namespace] || {};
-  }, [translations, namespace, language]);
+  }, [translations, namespace]);
 }

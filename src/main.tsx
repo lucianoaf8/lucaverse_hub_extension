@@ -35,7 +35,14 @@ class ErrorBoundary extends React.Component<
             </p>
             <button
               onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-primary-500 text-neutral-50 rounded-lg hover:bg-primary-600 transition-colors"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  window.location.reload();
+                }
+              }}
+              className="px-4 py-2 bg-primary-500 text-neutral-50 rounded-lg hover:bg-primary-600 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+              aria-label="Reload the page to try again"
             >
               Reload Page
             </button>

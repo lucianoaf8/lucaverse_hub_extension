@@ -10,11 +10,15 @@ export type CSSVariableReference = `var(--${string})`;
 
 // Generate CSS variable name from object path
 function generateCSSVariableName(path: string[]): string {
-  return `--${path.join('-')}`;
+  // Convert each segment to lowercase-hyphen format
+  const segments = path.map(segment => 
+    segment.replace(/([A-Z])/g, '-$1').toLowerCase().replace(/^-/, '')
+  );
+  return `--${segments.join('-')}`;
 }
 
 // Convert a value to CSS-compatible string
-function toCSSValue(value: any): string {
+function toCSSValue(value: unknown): string {
   if (typeof value === 'string') {
     return value;
   }
@@ -23,22 +27,26 @@ function toCSSValue(value: any): string {
 
 // Recursively convert theme object to CSS variables
 function objectToCSSVariables(
-  obj: Record<string, any>,
+  obj: Record<string, unknown>,
   prefix: string[] = []
 ): Record<string, string> {
   const variables: Record<string, string> = {};
 
   Object.entries(obj).forEach(([key, value]) => {
-    const path = [...prefix, key];
+    // Convert key to CSS-friendly format (e.g., "2xl" -> "2xl", "0.5" -> "0-5")
+    let cssKey = key.replace(/\./g, '-');
+    // Special handling for DEFAULT key - should remain lowercase
+    if (cssKey === 'DEFAULT') {
+      cssKey = 'default';
+    }
+    const path = [...prefix, cssKey];
     
     if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
       // Recursively process nested objects
       Object.assign(variables, objectToCSSVariables(value, path));
     } else {
-      // Convert key to CSS-friendly format (e.g., "2xl" -> "2xl")
-      const cssKey = key.replace(/\./g, '-');
-      const cssPath = [...prefix, cssKey];
-      const variableName = generateCSSVariableName(cssPath);
+      // Generate variable name from the full path
+      const variableName = generateCSSVariableName(path);
       variables[variableName] = toCSSValue(value);
     }
   });
@@ -114,16 +122,16 @@ export const cssVars = {
 
   // Typography
   fontSize: (size: string): CSSVariableReference => {
-    return cssVar(`typography-fontSize-${size}`);
+    return cssVar(`typography-font-size-${size}`);
   },
   fontFamily: (family: string): CSSVariableReference => {
-    return cssVar(`typography-fontFamily-${family}`);
+    return cssVar(`typography-font-family-${family}`);
   },
   fontWeight: (weight: string): CSSVariableReference => {
-    return cssVar(`typography-fontWeight-${weight}`);
+    return cssVar(`typography-font-weight-${weight}`);
   },
   lineHeight: (height: string): CSSVariableReference => {
-    return cssVar(`typography-lineHeight-${height}`);
+    return cssVar(`typography-line-height-${height}`);
   },
 
   // Spacing

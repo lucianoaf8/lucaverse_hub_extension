@@ -129,10 +129,10 @@ export const defaultConfig: ValidationConfig = {
         'src/utils/**': ['*'],
       },
       fileNamingRules: {
-        components: /^[A-Z][a-zA-Z]*\.tsx?$/,
-        hooks: /^use[A-Z][a-zA-Z]*\.ts$/,
-        utils: /^[a-z][a-zA-Z]*\.ts$/,
-        types: /^[a-z][a-zA-Z]*\.ts$/,
+        components: /^[A-Z][a-zA-Z0-9]*\.tsx?$/,
+        hooks: /^use[A-Z][a-zA-Z0-9]*\.ts$/,
+        utils: /^[a-z][a-zA-Z0-9]*\.ts$/,
+        types: /^[a-z][a-zA-Z0-9]*\.ts$/,
       },
     },
     guidelines: {
@@ -157,7 +157,7 @@ export const defaultConfig: ValidationConfig = {
         min: 50,
         max: 1000,
       },
-      cssVariableNamingPattern: /^--[a-z]+(-[a-z]+)*$/,
+      cssVariableNamingPattern: /^--[a-z0-9]+(-[a-z0-9]+)*$/,
     },
     accessibility: {
       wcagLevel: 'AA',

@@ -3,8 +3,8 @@
  * Real-time monitoring and health checking for application runtime
  */
 
-import { ValidationConfig, ValidationOptions } from '../core/config.js';
-import { ValidationResult, ValidatorModule } from '../core/runner.js';
+import { ValidationConfig, ValidationOptions } from '../core/config';
+import { ValidationResult, ValidatorModule } from '../core/runner';
 
 export interface HealthMetrics {
   performance: PerformanceMetrics;

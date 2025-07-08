@@ -12,7 +12,7 @@ import './index.css';
 
 // Language Switcher Component
 function LanguageSwitcher() {
-  const { language, setLanguage, availableLanguages } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const { t } = useTranslation();
 
   return (
@@ -64,10 +64,30 @@ function Panel({ title, description, colorClass = 'text-primary' }: {
         {description}
       </p>
       <div className="flex gap-2">
-        <button className="btn btn-primary">
+        <button 
+          className="btn btn-primary"
+          onClick={() => console.log('Primary action clicked')}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              console.log('Primary action clicked');
+            }
+          }}
+          aria-label="Execute primary action"
+        >
           Primary Action
         </button>
-        <button className="btn btn-secondary">
+        <button 
+          className="btn btn-secondary"
+          onClick={() => console.log('Secondary action clicked')}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              console.log('Secondary action clicked');
+            }
+          }}
+          aria-label="Execute secondary action"
+        >
           Secondary
         </button>
       </div>
@@ -98,9 +118,16 @@ function App() {
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setShowAnimations(!showAnimations)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setShowAnimations(!showAnimations);
+                  }
+                }}
                 className="px-3 py-1 text-sm bg-primary/20 hover:bg-primary/30 
                            border border-primary/40 rounded-lg transition-all duration-base
                            focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-background"
+                aria-label={`${showAnimations ? 'Hide' : 'Show'} animation examples`}
               >
                 {showAnimations ? 'Hide' : 'Show'} Animations
               </button>
@@ -161,16 +188,16 @@ function App() {
 
         {/* Features Section */}
         <section className="bg-elevated rounded-xl p-8 mb-12">
-          <h3 className="text-2xl font-semibold mb-6 text-center text-primary">
+          <h2 className="text-2xl font-semibold mb-6 text-center text-primary">
             System Features
-          </h3>
+          </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center">
               <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <span className="text-primary text-2xl">🎨</span>
               </div>
-              <h4 className="font-semibold mb-2">Theme System</h4>
+              <h3 className="font-semibold mb-2">Theme System</h3>
               <p className="text-neutral-400 text-sm">
                 Complete design system with light/dark modes and system preference detection
               </p>
@@ -180,7 +207,7 @@ function App() {
               <div className="w-12 h-12 bg-secondary/20 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <span className="text-secondary text-2xl">🌍</span>
               </div>
-              <h4 className="font-semibold mb-2">Internationalization</h4>
+              <h3 className="font-semibold mb-2">Internationalization</h3>
               <p className="text-neutral-400 text-sm">
                 Multi-language support with dynamic translation loading and fallbacks
               </p>
@@ -190,7 +217,7 @@ function App() {
               <div className="w-12 h-12 bg-success/20 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <span className="text-success text-2xl">⚡</span>
               </div>
-              <h4 className="font-semibold mb-2">Performance</h4>
+              <h3 className="font-semibold mb-2">Performance</h3>
               <p className="text-neutral-400 text-sm">
                 Optimized CSS custom properties and efficient React contexts
               </p>

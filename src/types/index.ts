@@ -67,7 +67,7 @@ export type {
   LanguageDefinition,
   I18nError,
   I18nErrorInfo,
-} from './i18n';
+} from './internationalization';
 
 // Common utility types
 export type DeepPartial<T> = {
@@ -84,8 +84,8 @@ export type KeysOfType<T, U> = {
 
 // React utility types
 export type ReactChildren = React.ReactNode;
-export type ReactComponent<P = {}> = React.ComponentType<P>;
-export type ReactFC<P = {}> = React.FunctionComponent<P>;
+export type ReactComponent<P = Record<string, never>> = React.ComponentType<P>;
+export type ReactFC<P = Record<string, never>> = React.FunctionComponent<P>;
 
 // Event handler types
 export type ClickHandler = React.MouseEventHandler<HTMLElement>;
@@ -116,7 +116,7 @@ export type StatusVariant = 'default' | 'primary' | 'secondary' | 'success' | 'w
 export type LoadingState = 'idle' | 'loading' | 'success' | 'error';
 
 // Generic API response
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   data?: T;
   error?: string;
   message?: string;
@@ -124,7 +124,7 @@ export interface ApiResponse<T = any> {
 }
 
 // Generic list response
-export interface ListResponse<T = any> extends ApiResponse<T[]> {
+export interface ListResponse<T = unknown> extends ApiResponse<T[]> {
   total?: number;
   page?: number;
   limit?: number;

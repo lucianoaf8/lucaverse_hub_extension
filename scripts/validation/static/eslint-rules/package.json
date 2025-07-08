@@ -1,0 +1,9 @@
+{
+  "name": "eslint-plugin-platform-compliance",
+  "version": "1.0.0",
+  "description": "ESLint plugin for multi-platform compliance",
+  "main": "index.js",
+  "keywords": ["eslint", "plugin", "platform", "compliance"],
+  "author": "Lucaverse",
+  "license": "MIT"
+}

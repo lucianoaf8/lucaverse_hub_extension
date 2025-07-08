@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validation Report - 7/8/2025</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            border-bottom: 2px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .metric {
+            text-align: center;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .pass { color: #28a745; }
+        .fail { color: #dc3545; }
+        .warning { color: #ffc107; }
+        .skip { color: #6c757d; }
+        .results {
+            margin-top: 30px;
+        }
+        .result {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 4px solid;
+        }
+        .result.pass { border-color: #28a745; background: #f8fff9; }
+        .result.fail { border-color: #dc3545; background: #fff8f8; }
+        .result.warning { border-color: #ffc107; background: #fffdf5; }
+        .result.skip { border-color: #6c757d; background: #f8f9fa; }
+        .result-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .result-name {
+            font-weight: bold;
+            flex-grow: 1;
+        }
+        .result-duration {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .result-message {
+            margin-bottom: 10px;
+        }
+        .result-details {
+            font-family: monospace;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        .filter-buttons {
+            margin-bottom: 20px;
+        }
+        .filter-btn {
+            padding: 8px 16px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .filter-btn.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Validation Report</h1>
+            <p><strong>Generated:</strong> 7/8/2025, 9:42:35 AM</p>
+            <p><strong>Mode:</strong> development | <strong>Environment:</strong> development</p>
+            <p><strong>Duration:</strong> 29.09s</p>
+        </div>
+
+        <div class="summary">
+            <div class="metric">
+                <div class="metric-value">65</div>
+                <div>Total Tests</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value pass">25</div>
+                <div>Passed</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value fail">1</div>
+                <div>Failed</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value warning">37</div>
+                <div>Warnings</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value skip">2</div>
+                <div>Skipped</div>
+            </div>
+        </div>
+
+        <div class="results">
+            <h2>Test Results</h2>
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="filterResults('all')">All</button>
+                <button class="filter-btn" onclick="filterResults('fail')">Failures</button>
+                <button class="filter-btn" onclick="filterResults('warning')">Warnings</button>
+                <button class="filter-btn" onclick="filterResults('pass')">Passed</button>
+            </div>
+            
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ File Naming Violation</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">File "main.tsx" doesn't match utils naming convention</div>
+                    <div class="result-details">📁 src/main.tsx</div>
+                    <div class="result-details">💡 utils files should match: ^[a-z][a-zA-Z0-9]*\.ts$</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ File Naming Violation</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">File "App.tsx" doesn't match utils naming convention</div>
+                    <div class="result-details">📁 src/App.tsx</div>
+                    <div class="result-details">💡 utils files should match: ^[a-z][a-zA-Z0-9]*\.ts$</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ File Naming Violation</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">File "ThemeContext.tsx" doesn't match utils naming convention</div>
+                    <div class="result-details">📁 src/contexts/ThemeContext.tsx</div>
+                    <div class="result-details">💡 utils files should match: ^[a-z][a-zA-Z0-9]*\.ts$</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ File Naming Violation</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">File "I18nContext.tsx" doesn't match utils naming convention</div>
+                    <div class="result-details">📁 src/contexts/I18nContext.tsx</div>
+                    <div class="result-details">💡 utils files should match: ^[a-z][a-zA-Z0-9]*\.ts$</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Mixed Export Style</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component has both default and named exports</div>
+                    <div class="result-details">📁 src/components/ThemeSwitcher.tsx</div>
+                    <div class="result-details">💡 Prefer default export only for React components</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Mixed Export Style</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component has both default and named exports</div>
+                    <div class="result-details">📁 src/components/AnimationExamples.tsx</div>
+                    <div class="result-details">💡 Prefer default export only for React components</div>
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Dependency Metrics Summary</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Architecture metrics: 13 files, avg 0.0 deps/file</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Color Contrast</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Good contrast ratio 15.43:1 for Primary text on dark background</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Color Contrast</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Good contrast ratio 15.43:1 for Primary text on light background</div>
+                    
+                    
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Poor Color Contrast</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Poor contrast ratio 3.08:1 for Primary color on dark background</div>
+                    
+                    <div class="result-details">💡 Increase contrast ratio to at least 4.5:1 for WCAG AA compliance</div>
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Color Contrast</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Good contrast ratio 5.01:1 for Primary color on light background</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Color Contrast</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Good contrast ratio 5.01:1 for Light text on primary background</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Color Contrast</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Good contrast ratio 5.79:1 for Dark text on success background</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Color Contrast</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Good contrast ratio 4.63:1 for Light text on danger background</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Theme Variant: light</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Theme variant "light" is available</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Theme Variant: dark</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Theme variant "dark" is available</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src/components/ThemeSwitcher.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src/components/AnimationExamples.tsx</div>
+                    
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Button Without Accessible Name</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Button may not have accessible name</div>
+                    <div class="result-details">📁 src/App.tsx:233</div>
+                    <div class="result-details">💡 Ensure button has visible text or aria-label</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Button Without Accessible Name</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Button may not have accessible name</div>
+                    <div class="result-details">📁 src/App.tsx:236</div>
+                    <div class="result-details">💡 Ensure button has visible text or aria-label</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Missing Keyboard Handler</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Interactive element with onClick missing keyboard handler</div>
+                    <div class="result-details">📁 src/main.tsx:37</div>
+                    <div class="result-details">💡 Add onKeyDown handler for Enter and Space keys</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Missing Keyboard Handler</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Interactive element with onClick missing keyboard handler</div>
+                    <div class="result-details">📁 src/App.tsx:69</div>
+                    <div class="result-details">💡 Add onKeyDown handler for Enter and Space keys</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Missing Keyboard Handler</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Interactive element with onClick missing keyboard handler</div>
+                    <div class="result-details">📁 src/App.tsx:82</div>
+                    <div class="result-details">💡 Add onKeyDown handler for Enter and Space keys</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Missing Keyboard Handler</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Interactive element with onClick missing keyboard handler</div>
+                    <div class="result-details">📁 src/App.tsx:120</div>
+                    <div class="result-details">💡 Add onKeyDown handler for Enter and Space keys</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Missing Keyboard Handler</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Interactive element with onClick missing keyboard handler</div>
+                    <div class="result-details">📁 src/components/AnimationExamples.tsx:60</div>
+                    <div class="result-details">💡 Add onKeyDown handler for Enter and Space keys</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Missing Keyboard Handler</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Interactive element with onClick missing keyboard handler</div>
+                    <div class="result-details">📁 src/components/AnimationExamples.tsx:79</div>
+                    <div class="result-details">💡 Add onKeyDown handler for Enter and Space keys</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Error Without ARIA</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Error state should use ARIA attributes</div>
+                    <div class="result-details">📁 src/main.tsx:10</div>
+                    <div class="result-details">💡 Add aria-invalid and aria-describedby for error states</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Error Without ARIA</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Error state should use ARIA attributes</div>
+                    <div class="result-details">📁 src/main.tsx:17</div>
+                    <div class="result-details">💡 Add aria-invalid and aria-describedby for error states</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Error Without ARIA</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Error state should use ARIA attributes</div>
+                    <div class="result-details">📁 src/main.tsx:18</div>
+                    <div class="result-details">💡 Add aria-invalid and aria-describedby for error states</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Error Without ARIA</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Error state should use ARIA attributes</div>
+                    <div class="result-details">📁 src/main.tsx:21</div>
+                    <div class="result-details">💡 Add aria-invalid and aria-describedby for error states</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Error Without ARIA</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Error state should use ARIA attributes</div>
+                    <div class="result-details">📁 src/main.tsx:22</div>
+                    <div class="result-details">💡 Add aria-invalid and aria-describedby for error states</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Error Without ARIA</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Error state should use ARIA attributes</div>
+                    <div class="result-details">📁 src/main.tsx:34</div>
+                    <div class="result-details">💡 Add aria-invalid and aria-describedby for error states</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Error Without ARIA</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Error state should use ARIA attributes</div>
+                    <div class="result-details">📁 src/App.tsx:258</div>
+                    <div class="result-details">💡 Add aria-invalid and aria-describedby for error states</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Error Without ARIA</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Error state should use ARIA attributes</div>
+                    <div class="result-details">📁 src/contexts/ThemeContext.tsx:38</div>
+                    <div class="result-details">💡 Add aria-invalid and aria-describedby for error states</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Error Without ARIA</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Error state should use ARIA attributes</div>
+                    <div class="result-details">📁 src/contexts/ThemeContext.tsx:39</div>
+                    <div class="result-details">💡 Add aria-invalid and aria-describedby for error states</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Error Without ARIA</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Error state should use ARIA attributes</div>
+                    <div class="result-details">📁 src/contexts/ThemeContext.tsx:150</div>
+                    <div class="result-details">💡 Add aria-invalid and aria-describedby for error states</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Error Without ARIA</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Error state should use ARIA attributes</div>
+                    <div class="result-details">📁 src/contexts/ThemeContext.tsx:151</div>
+                    <div class="result-details">💡 Add aria-invalid and aria-describedby for error states</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Error Without ARIA</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Error state should use ARIA attributes</div>
+                    <div class="result-details">📁 src/contexts/I18nContext.tsx:103</div>
+                    <div class="result-details">💡 Add aria-invalid and aria-describedby for error states</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Error Without ARIA</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Error state should use ARIA attributes</div>
+                    <div class="result-details">📁 src/contexts/I18nContext.tsx:104</div>
+                    <div class="result-details">💡 Add aria-invalid and aria-describedby for error states</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Error Without ARIA</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Error state should use ARIA attributes</div>
+                    <div class="result-details">📁 src/contexts/I18nContext.tsx:180</div>
+                    <div class="result-details">💡 Add aria-invalid and aria-describedby for error states</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Error Without ARIA</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Error state should use ARIA attributes</div>
+                    <div class="result-details">📁 src/contexts/I18nContext.tsx:181</div>
+                    <div class="result-details">💡 Add aria-invalid and aria-describedby for error states</div>
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Node.js Version OK</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Node.js version v22.16.0 is supported</div>
+                    
+                    
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ High Memory Usage</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Memory usage 102.08MB exceeds threshold 50.00MB</div>
+                    
+                    <div class="result-details">💡 Monitor for memory leaks</div>
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Feature: theme-switching</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Feature "theme-switching" is enabled and working</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Feature: i18n-support</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Feature "i18n-support" is enabled and working</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Feature: animations</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Feature "animations" is enabled and working</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Feature: performance-monitoring</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Feature "performance-monitoring" is enabled and working</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Feature Health Summary</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">4/4 features healthy (100.0%)</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Render Performance OK</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Average render time 8.5ms is within target</div>
+                    
+                    
+                </div>
+            
+                <div class="result skip" data-status="skip">
+                    <div class="result-header">
+                        <div class="result-name">⏭️ Performance Metrics - Node Environment</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Performance metrics collection skipped in Node.js environment</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Largest Contentful Paint (LCP)</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">LCP: 0ms - good</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ First Contentful Paint (FCP)</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">FCP: 0ms - good</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Time to First Byte (TTFB)</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">TTFB: 0ms - good</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Cumulative Layout Shift (CLS)</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">CLS: 0ms - good</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ First Input Delay (FID)</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">FID: 0ms - good</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Web Vitals Score</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Web Vitals Score: 100% (5/5 metrics good)</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Bundle Size OK</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Bundle size 850.00KB is within limit</div>
+                    
+                    
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Duplicate Modules Detected</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Found 2 duplicate modules: lodash, moment</div>
+                    
+                    <div class="result-details">💡 Configure webpack to deduplicate modules or use different versions</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Large Dependency</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Dependency "@emotion/styled" is 85.00KB</div>
+                    
+                    <div class="result-details">💡 Consider alternatives or dynamic imports for large dependencies</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Large Dependency</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Dependency "react-dom" is 120.00KB</div>
+                    
+                    <div class="result-details">💡 Consider alternatives or dynamic imports for large dependencies</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ High Rerender Count</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component "ThemeSwitcher" rerendered 8 times</div>
+                    
+                    <div class="result-details">💡 Check for unnecessary state updates or prop changes</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Rendering Performance Score</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Rendering health: 75% (3/4 components optimal)</div>
+                    
+                    
+                </div>
+            
+                <div class="result skip" data-status="skip">
+                    <div class="result-header">
+                        <div class="result-name">⏭️ Network Analysis Skipped</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Network analysis not available in this environment</div>
+                    
+                    
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Performance Recommendation</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Optimize component rendering</div>
+                    
+                    <div class="result-details">💡 Use React.memo, useMemo, and useCallback to prevent unnecessary rerenders</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Performance Recommendation</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Improve caching strategy</div>
+                    
+                    <div class="result-details">💡 Set proper cache headers and use service workers for better caching</div>
+                </div>
+            
+        </div>
+    </div>
+
+    <script>
+        function filterResults(status) {
+            const results = document.querySelectorAll('.result');
+            const buttons = document.querySelectorAll('.filter-btn');
+            
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            results.forEach(result => {
+                if (status === 'all' || result.dataset.status === status) {
+                    result.style.display = 'block';
+                } else {
+                    result.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

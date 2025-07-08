@@ -6,17 +6,39 @@
 import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
 import { Theme, ThemeVariant, themeVariants, defaultTheme } from '../config/theme';
 import { applyTheme } from '../utils/cssVariables';
+import { storageUtils } from '../utils/storageAdapter';
 
-// Storage adapter interface for multi-platform support
+// Storage adapter interface for multi-platform support (deprecated)
 interface StorageAdapter {
   getItem(key: string): string | null;
   setItem(key: string, value: string): void;
 }
 
-// Default browser storage adapter
+// Default browser storage adapter (now uses platform-compatible storage)
 const browserStorageAdapter: StorageAdapter = {
-  getItem: (key: string) => localStorage.getItem(key),
-  setItem: (key: string, value: string) => localStorage.setItem(key, value),
+  getItem: (key: string) => {
+    // This is a temporary synchronous wrapper for backward compatibility
+    // TODO: Refactor to use async storage throughout the context
+    try {
+      return key === 'theme' || key === 'useSystemTheme' ? 
+        (window as unknown as { __themeStorage?: Record<string, string> }).__themeStorage?.[key] || null : null;
+    } catch {
+      return null;
+    }
+  },
+  setItem: (key: string, value: string) => {
+    // Store in memory cache for synchronous access
+    const windowWithStorage = window as unknown as { __themeStorage?: Record<string, string> };
+    if (!windowWithStorage.__themeStorage) {
+      windowWithStorage.__themeStorage = {};
+    }
+    windowWithStorage.__themeStorage[key] = value;
+    
+    // Also store in persistent storage asynchronously
+    storageUtils.setString(key, value).catch(error => {
+      console.error('Failed to save theme to storage:', error);
+    });
+  },
 };
 
 // Theme context interface
@@ -96,6 +118,42 @@ export function ThemeProvider({
 
   // Get current theme configuration
   const themeConfig = useMemo(() => themeVariants[theme], [theme]);
+
+  // Initialize storage from persistent storage
+  useEffect(() => {
+    const initializeStorage = async () => {
+      try {
+        // Load theme from persistent storage
+        const persistentTheme = await storageUtils.getString(storageKey);
+        const persistentSystemTheme = await storageUtils.getString(SYSTEM_THEME_KEY);
+        
+        // Update in-memory cache
+        const windowWithStorage = window as unknown as { __themeStorage?: Record<string, string> };
+        if (!windowWithStorage.__themeStorage) {
+          windowWithStorage.__themeStorage = {};
+        }
+        
+        if (persistentTheme) {
+          windowWithStorage.__themeStorage[storageKey] = persistentTheme;
+        }
+        if (persistentSystemTheme) {
+          windowWithStorage.__themeStorage[SYSTEM_THEME_KEY] = persistentSystemTheme;
+        }
+        
+        // Update state if needed
+        if (persistentTheme && persistentTheme !== theme) {
+          setThemeState(persistentTheme as ThemeVariant);
+        }
+        if (persistentSystemTheme) {
+          setIsSystemTheme(persistentSystemTheme === 'true');
+        }
+      } catch (error) {
+        console.error('Failed to initialize theme storage:', error);
+      }
+    };
+    
+    initializeStorage();
+  }, [storageKey, theme]);
 
   // Apply theme changes
   useEffect(() => {
