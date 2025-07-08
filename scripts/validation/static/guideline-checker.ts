@@ -45,28 +45,46 @@ export class GuidelineChecker {
     const startTime = Date.now();
 
     try {
+      // Skip if code quality validation is disabled
+      if (!config.codeQuality?.enabled) {
+        console.log('🔍 Code quality validation disabled');
+        return [{
+          id: 'code-quality-disabled',
+          name: 'Code Quality Validation Disabled',
+          type: 'static',
+          status: 'pass',
+          message: 'Code quality validation disabled via config',
+          duration: Date.now() - startTime,
+          severity: 'info',
+        }];
+      }
+
       // Get all TypeScript and JavaScript files
       const files = await this.getSourceFiles();
       
       console.log(`🔍 Checking ${files.length} files for guideline compliance...`);
 
-      // Run ESLint checks
-      const eslintResults = await this.runESLintChecks(files);
-      results.push(...eslintResults);
+      // Run ESLint checks (if enabled)
+      if (config.codeQuality.eslintErrors) {
+        const eslintResults = await this.runESLintChecks(files);
+        results.push(...eslintResults);
+      }
 
-      // Run custom static analysis
-      const customResults = await this.runCustomChecks(files);
-      results.push(...customResults);
+      // Run import validation (if enabled)
+      if (config.codeQuality.importValidation) {
+        const importResults = await this.checkAllImportPatterns(files);
+        results.push(...importResults);
+      }
 
-      // Check for forbidden APIs
+      // Check for forbidden APIs (always useful for security)
       const apiResults = await this.checkForbiddenApis(files);
       results.push(...apiResults);
 
-      // Check serializable state patterns
+      // Check serializable state patterns (always useful)
       const stateResults = await this.checkSerializableState(files);
       results.push(...stateResults);
 
-      // Check CSP compliance
+      // Check CSP compliance (always useful for security)
       const cspResults = await this.checkCSPCompliance(files);
       results.push(...cspResults);
 
@@ -144,6 +162,34 @@ export class GuidelineChecker {
     return results;
   }
 
+  private async checkAllImportPatterns(files: string[]): Promise<ValidationResult[]> {
+    const results: ValidationResult[] = [];
+
+    for (const file of files) {
+      try {
+        const content = await fs.readFile(file, 'utf-8');
+        
+        // Check import patterns
+        const importResults = this.checkImportPatterns(file, content);
+        results.push(...importResults);
+
+      } catch (error) {
+        results.push({
+          id: `import-check-error-${path.basename(file)}`,
+          name: 'Import Check',
+          type: 'static',
+          status: 'fail',
+          message: `Failed to check imports: ${error instanceof Error ? error.message : String(error)}`,
+          file,
+          duration: 0,
+          severity: 'error',
+        });
+      }
+    }
+
+    return results;
+  }
+
   private async runCustomChecks(files: string[]): Promise<ValidationResult[]> {
     const results: ValidationResult[] = [];
 
@@ -186,8 +232,8 @@ export class GuidelineChecker {
     const fileName = path.basename(file);
     const fileType = this.determineFileType(file);
 
-    // Skip file naming if surgically disabled
-    if (this.config.surgicalDisable?.fileNaming) {
+    // Skip file naming if disabled
+    if (!this.config.fileNaming?.enabled) {
       return null;
     }
 

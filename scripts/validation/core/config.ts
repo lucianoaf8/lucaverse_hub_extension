@@ -10,15 +10,81 @@ export interface ValidationConfig {
   visual: VisualValidationConfig;
   reporting: ReportingConfig;
   
-  // SURGICAL CONTROL FLAGS - Disable problematic validations
-  surgicalDisable: {
-    fileNaming: boolean;           // Disable file naming validation entirely
-    ariaWarnings: boolean;         // Disable excessive ARIA warnings
-    deepHeadings: boolean;         // Disable deep heading warnings
-    keyboardHandlers: boolean;     // Disable keyboard handler requirements
-    focusStyles: boolean;          // Disable focus style requirements
-    architectureRules: boolean;    // Disable architecture validation
-    mixedExports: boolean;         // Disable mixed export warnings
+  // GRANULAR VALIDATION CONTROL - Enable valuable categories, disable problematic ones
+  performance: {
+    enabled: boolean;
+    bundleSize: boolean;
+    memoryUsage: boolean;
+    renderMetrics: boolean;
+    componentRerenders: boolean;
+    webVitals: boolean;
+  };
+  
+  features: {
+    enabled: boolean;
+    themeSwitch: boolean;
+    i18nSupport: boolean;
+    animations: boolean;
+    performanceMonitoring: boolean;
+  };
+  
+  codeQuality: {
+    enabled: boolean;
+    eslintErrors: boolean;
+    typescriptErrors: boolean;
+    importValidation: boolean;
+    unusedVariables: boolean;
+    syntaxErrors: boolean;
+  };
+  
+  architecture: {
+    enabled: boolean;
+    dependencyCycles: boolean;      // Keep disabled - mixed export warnings
+    componentCoupling: boolean;
+    fileStructure: boolean;         // Keep disabled - file naming issues
+    importPatterns: boolean;
+  };
+  
+  accessibility: {
+    enabled: boolean;
+    rules: {
+      'missing-alt-text': boolean;
+      'missing-form-labels': boolean;
+      'color-contrast': boolean;
+      'heading-structure': boolean;
+      'link-purposes': boolean;
+      'aria-error-states': boolean;  // Keep disabled - console.log false positives
+      'keyboard-handlers': boolean;  // Keep disabled - too many false positives
+      'focus-styles': boolean;       // Keep disabled - better handled globally
+      'deep-heading': boolean;       // Keep disabled - too strict for dev components
+    };
+  };
+  
+  theme: {
+    enabled: boolean;
+    colorContrast: boolean;
+    variantValidation: boolean;
+    themeIntegration: boolean;
+  };
+  
+  bundle: {
+    enabled: boolean;
+    duplicateModules: boolean;
+    largeDependencies: boolean;
+    treeshaking: boolean;
+  };
+  
+  fileNaming: {
+    enabled: boolean;  // Keep disabled - was flagging valid React patterns
+  };
+  
+  components: {
+    enabled: boolean;
+    rules: {
+      'multiple-components': boolean;    // This was actually useful
+      'default-exports': boolean;       // Keep disabled - mixed exports warning
+      'component-naming': boolean;      // Keep disabled - was problematic
+    };
   };
 }
 
@@ -120,15 +186,81 @@ export interface ValidationMode {
 
 // Default configuration
 export const defaultConfig: ValidationConfig = {
-  // SURGICAL DISABLE FLAGS - Turn off problematic validations
-  surgicalDisable: {
-    fileNaming: true,           // DISABLE file naming - too many false positives
-    ariaWarnings: true,         // DISABLE excessive ARIA warnings
-    deepHeadings: true,         // DISABLE deep heading warnings in dev components
-    keyboardHandlers: true,     // DISABLE keyboard handler requirements (handle globally)
-    focusStyles: true,          // DISABLE focus style requirements (handle globally via CSS)
-    architectureRules: true,    // DISABLE architecture validation temporarily
-    mixedExports: true,         // DISABLE mixed export warnings
+  // GRANULAR VALIDATION CONTROL - Enable valuable categories, disable problematic ones
+  performance: {
+    enabled: true,
+    bundleSize: true,
+    memoryUsage: true,
+    renderMetrics: true,
+    componentRerenders: true,
+    webVitals: true
+  },
+  
+  features: {
+    enabled: true,
+    themeSwitch: true,
+    i18nSupport: true,
+    animations: true,
+    performanceMonitoring: true
+  },
+  
+  codeQuality: {
+    enabled: true,
+    eslintErrors: true,
+    typescriptErrors: true,
+    importValidation: true,
+    unusedVariables: true,
+    syntaxErrors: true
+  },
+  
+  architecture: {
+    enabled: true,
+    dependencyCycles: false,      // Keep disabled - mixed export warnings
+    componentCoupling: true,
+    fileStructure: false,         // Keep disabled - file naming issues
+    importPatterns: true
+  },
+  
+  accessibility: {
+    enabled: true,
+    rules: {
+      'missing-alt-text': true,
+      'missing-form-labels': true,
+      'color-contrast': true,
+      'heading-structure': true,
+      'link-purposes': true,
+      'aria-error-states': false,     // Keep disabled - console.log false positives
+      'keyboard-handlers': false,     // Keep disabled - too many false positives
+      'focus-styles': false,          // Keep disabled - better handled globally
+      'deep-heading': false           // Keep disabled - too strict for dev components
+    }
+  },
+  
+  theme: {
+    enabled: true,
+    colorContrast: true,
+    variantValidation: true,
+    themeIntegration: true
+  },
+  
+  bundle: {
+    enabled: true,
+    duplicateModules: true,
+    largeDependencies: true,
+    treeshaking: true
+  },
+  
+  fileNaming: {
+    enabled: false  // Keep disabled - was flagging valid React patterns
+  },
+  
+  components: {
+    enabled: true,
+    rules: {
+      'multiple-components': true,    // This was actually useful
+      'default-exports': false,       // Keep disabled - mixed exports warning
+      'component-naming': false       // Keep disabled - was problematic
+    }
   },
   
   static: {
@@ -325,7 +457,23 @@ export function getConfig(mode: keyof ValidationMode = 'development'): Validatio
 
 function mergeConfig(base: ValidationConfig, overrides: Partial<ValidationConfig>): ValidationConfig {
   return {
-    surgicalDisable: { ...base.surgicalDisable, ...overrides.surgicalDisable },
+    performance: { ...base.performance, ...overrides.performance },
+    features: { ...base.features, ...overrides.features },
+    codeQuality: { ...base.codeQuality, ...overrides.codeQuality },
+    architecture: { ...base.architecture, ...overrides.architecture },
+    accessibility: { 
+      ...base.accessibility, 
+      ...overrides.accessibility,
+      rules: { ...base.accessibility?.rules, ...overrides.accessibility?.rules }
+    },
+    theme: { ...base.theme, ...overrides.theme },
+    bundle: { ...base.bundle, ...overrides.bundle },
+    fileNaming: { ...base.fileNaming, ...overrides.fileNaming },
+    components: { 
+      ...base.components, 
+      ...overrides.components,
+      rules: { ...base.components?.rules, ...overrides.components?.rules }
+    },
     static: { ...base.static, ...overrides.static },
     runtime: { ...base.runtime, ...overrides.runtime },
     integration: { ...base.integration, ...overrides.integration },

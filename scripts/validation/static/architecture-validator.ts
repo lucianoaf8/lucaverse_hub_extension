@@ -47,15 +47,15 @@ export class ArchitectureValidator {
     try {
       console.log('🏗️ Validating architecture compliance...');
 
-      // Skip architecture validation if surgically disabled
-      if (config.surgicalDisable?.architectureRules) {
-        console.log('⚠️ Architecture validation surgically disabled');
+      // Skip architecture validation if disabled
+      if (!config.architecture?.enabled) {
+        console.log('⚠️ Architecture validation disabled');
         return [{
           id: 'architecture-disabled',
           name: 'Architecture Validation Disabled',
           type: 'static',
           status: 'pass',
-          message: 'Architecture validation temporarily disabled via surgical config',
+          message: 'Architecture validation disabled via config',
           duration: Date.now() - startTime,
           severity: 'info',
         }];
@@ -64,33 +64,31 @@ export class ArchitectureValidator {
       // Build dependency graph
       await this.buildDependencyGraph();
 
-      // Validate import structure
-      const importResults = await this.validateImportStructure();
-      results.push(...importResults);
+      // Validate import patterns (if enabled)
+      if (config.architecture.importPatterns) {
+        const importResults = await this.validateImportStructure();
+        results.push(...importResults);
+      }
 
-      // Validate file naming conventions (skip if disabled)
-      if (!config.surgicalDisable?.fileNaming) {
+      // Validate file structure (if enabled - kept disabled by default)
+      if (config.architecture.fileStructure) {
         const namingResults = await this.validateFileNaming();
         results.push(...namingResults);
       }
 
-      // Validate export patterns (skip mixed exports if disabled)
-      const exportResults = await this.validateExportPatterns(config);
-      results.push(...exportResults);
+      // Detect circular dependencies (if enabled - kept disabled by default)
+      if (config.architecture.dependencyCycles) {
+        const circularResults = await this.detectCircularDependencies();
+        results.push(...circularResults);
+      }
 
-      // Detect circular dependencies
-      const circularResults = await this.detectCircularDependencies();
-      results.push(...circularResults);
+      // Component coupling analysis (if enabled)
+      if (config.architecture.componentCoupling) {
+        const componentResults = await this.validateComponentStructure();
+        results.push(...componentResults);
+      }
 
-      // Validate component structure
-      const componentResults = await this.validateComponentStructure();
-      results.push(...componentResults);
-
-      // Validate directory structure
-      const directoryResults = await this.validateDirectoryStructure();
-      results.push(...directoryResults);
-
-      // Generate dependency metrics
+      // Generate dependency metrics (always useful)
       const metricsResults = await this.generateDependencyMetrics();
       results.push(...metricsResults);
 

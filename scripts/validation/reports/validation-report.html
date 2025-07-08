@@ -106,18 +106,18 @@
     <div class="container">
         <div class="header">
             <h1>🔍 Validation Report</h1>
-            <p><strong>Generated:</strong> 7/8/2025, 12:32:21 PM</p>
+            <p><strong>Generated:</strong> 7/8/2025, 12:44:50 PM</p>
             <p><strong>Mode:</strong> development | <strong>Environment:</strong> development</p>
-            <p><strong>Duration:</strong> 31.57s</p>
+            <p><strong>Duration:</strong> 31.98s</p>
         </div>
 
         <div class="summary">
             <div class="metric">
-                <div class="metric-value">30</div>
+                <div class="metric-value">57</div>
                 <div>Total Tests</div>
             </div>
             <div class="metric">
-                <div class="metric-value pass">23</div>
+                <div class="metric-value pass">37</div>
                 <div>Passed</div>
             </div>
             <div class="metric">
@@ -125,11 +125,11 @@
                 <div>Failed</div>
             </div>
             <div class="metric">
-                <div class="metric-value warning">6</div>
+                <div class="metric-value warning">17</div>
                 <div>Warnings</div>
             </div>
             <div class="metric">
-                <div class="metric-value skip">0</div>
+                <div class="metric-value skip">2</div>
                 <div>Skipped</div>
             </div>
         </div>
@@ -144,12 +144,42 @@
             </div>
             
             
-                <div class="result pass" data-status="pass">
+                <div class="result warning" data-status="warning">
                     <div class="result-header">
-                        <div class="result-name">✅ Architecture Validation Disabled</div>
+                        <div class="result-name">⚠️ Multiple Components in File</div>
                         <div class="result-duration">0ms</div>
                     </div>
-                    <div class="result-message">Architecture validation temporarily disabled via surgical config</div>
+                    <div class="result-message">File contains 2 components</div>
+                    <div class="result-details">📁 src/components/dev-center/ThemePlayground.tsx</div>
+                    <div class="result-details">💡 Split into separate files or create index file</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Multiple Components in File</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">File contains 4 components</div>
+                    <div class="result-details">📁 src/components/dashboard/Productivity.tsx</div>
+                    <div class="result-details">💡 Split into separate files or create index file</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Multiple Components in File</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">File contains 3 components</div>
+                    <div class="result-details">📁 src/components/dashboard/AIChat.tsx</div>
+                    <div class="result-details">💡 Split into separate files or create index file</div>
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Dependency Metrics Summary</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Architecture metrics: 37 files, avg 0.0 deps/file</div>
                     
                     
                 </div>
@@ -270,46 +300,6 @@
                         <div class="result-duration">0ms</div>
                     </div>
                     <div class="result-message">Component uses theme-aware styling</div>
-                    <div class="result-details">📁 src/components/dev-center/ValidationRunner.tsx</div>
-                    
-                </div>
-            
-                <div class="result pass" data-status="pass">
-                    <div class="result-header">
-                        <div class="result-name">✅ Good Theme Integration</div>
-                        <div class="result-duration">0ms</div>
-                    </div>
-                    <div class="result-message">Component uses theme-aware styling</div>
-                    <div class="result-details">📁 src/components/dev-center/ThemePlayground.tsx</div>
-                    
-                </div>
-            
-                <div class="result pass" data-status="pass">
-                    <div class="result-header">
-                        <div class="result-name">✅ Good Theme Integration</div>
-                        <div class="result-duration">0ms</div>
-                    </div>
-                    <div class="result-message">Component uses theme-aware styling</div>
-                    <div class="result-details">📁 src/components/dev-center/DevNavigation.tsx</div>
-                    
-                </div>
-            
-                <div class="result pass" data-status="pass">
-                    <div class="result-header">
-                        <div class="result-name">✅ Good Theme Integration</div>
-                        <div class="result-duration">0ms</div>
-                    </div>
-                    <div class="result-message">Component uses theme-aware styling</div>
-                    <div class="result-details">📁 src/components/dev-center/ComponentLibrary.tsx</div>
-                    
-                </div>
-            
-                <div class="result pass" data-status="pass">
-                    <div class="result-header">
-                        <div class="result-name">✅ Good Theme Integration</div>
-                        <div class="result-duration">0ms</div>
-                    </div>
-                    <div class="result-message">Component uses theme-aware styling</div>
                     <div class="result-details">📁 src/components/dashboard/TaskManager.tsx</div>
                     
                 </div>
@@ -384,6 +374,46 @@
                     
                 </div>
             
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src/components/dev-center/ValidationRunner.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src/components/dev-center/ThemePlayground.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src/components/dev-center/DevNavigation.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src/components/dev-center/ComponentLibrary.tsx</div>
+                    
+                </div>
+            
                 <div class="result warning" data-status="warning">
                     <div class="result-header">
                         <div class="result-name">⚠️ Error Without ARIA</div>
@@ -442,6 +472,246 @@
                     <div class="result-message">Error state should use ARIA attributes</div>
                     <div class="result-details">📁 src/components/dev-center/ValidationRunner.tsx:316</div>
                     <div class="result-details">💡 Add aria-invalid and aria-describedby for error states</div>
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Node.js Version OK</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Node.js version v22.16.0 is supported</div>
+                    
+                    
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ High Memory Usage</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Memory usage 124.16MB exceeds threshold 50.00MB</div>
+                    
+                    <div class="result-details">💡 Monitor for memory leaks</div>
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Feature: theme-switching</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Feature "theme-switching" is enabled and working</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Feature: i18n-support</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Feature "i18n-support" is enabled and working</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Feature: animations</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Feature "animations" is enabled and working</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Feature: performance-monitoring</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Feature "performance-monitoring" is enabled and working</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Feature Health Summary</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">4/4 features healthy (100.0%)</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Render Performance OK</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Average render time 8.5ms is within target</div>
+                    
+                    
+                </div>
+            
+                <div class="result skip" data-status="skip">
+                    <div class="result-header">
+                        <div class="result-name">⏭️ Performance Metrics - Node Environment</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Performance metrics collection skipped in Node.js environment</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Largest Contentful Paint (LCP)</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">LCP: 0ms - good</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ First Contentful Paint (FCP)</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">FCP: 0ms - good</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Time to First Byte (TTFB)</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">TTFB: 0ms - good</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Cumulative Layout Shift (CLS)</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">CLS: 0ms - good</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ First Input Delay (FID)</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">FID: 0ms - good</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Web Vitals Score</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Web Vitals Score: 100% (5/5 metrics good)</div>
+                    
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Bundle Size OK</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Bundle size 850.00KB is within limit</div>
+                    
+                    
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Duplicate Modules Detected</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Found 2 duplicate modules: lodash, moment</div>
+                    
+                    <div class="result-details">💡 Configure webpack to deduplicate modules or use different versions</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Large Dependency</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Dependency "@emotion/styled" is 85.00KB</div>
+                    
+                    <div class="result-details">💡 Consider alternatives or dynamic imports for large dependencies</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Large Dependency</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Dependency "react-dom" is 120.00KB</div>
+                    
+                    <div class="result-details">💡 Consider alternatives or dynamic imports for large dependencies</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ High Rerender Count</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component "ThemeSwitcher" rerendered 8 times</div>
+                    
+                    <div class="result-details">💡 Check for unnecessary state updates or prop changes</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Rendering Performance Score</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Rendering health: 75% (3/4 components optimal)</div>
+                    
+                    
+                </div>
+            
+                <div class="result skip" data-status="skip">
+                    <div class="result-header">
+                        <div class="result-name">⏭️ Network Analysis Skipped</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Network analysis not available in this environment</div>
+                    
+                    
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Performance Recommendation</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Optimize component rendering</div>
+                    
+                    <div class="result-details">💡 Use React.memo, useMemo, and useCallback to prevent unnecessary rerenders</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Performance Recommendation</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Improve caching strategy</div>
+                    
+                    <div class="result-details">💡 Set proper cache headers and use service workers for better caching</div>
                 </div>
             
         </div>
