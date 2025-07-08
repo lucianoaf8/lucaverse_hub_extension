@@ -109,7 +109,6 @@ public/*.d.ts
 *.sketch
 *.pdf
 *.xcf
-*.png
 *.jpg
 *.jpeg
 *.webp

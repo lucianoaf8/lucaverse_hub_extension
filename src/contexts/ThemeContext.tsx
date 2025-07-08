@@ -1,237 +1,200 @@
 /**
- * Theme Context Provider
- * Manages global theme state and provides theme switching functionality
+ * Enhanced Theme Context
+ * Manages theme state, persistence, and system preference detection
  */
 
-import React, { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react';
-import {
-  Theme,
-  ThemeVariant,
-  getTheme,
-  getSystemThemePreference,
-  subscribeToSystemThemeChanges,
-  applyThemeToDocument,
-} from '@/config/theme';
+import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
+import { Theme, ThemeVariant, themeVariants, defaultTheme } from '../config/theme';
+import { applyTheme } from '../utils/cssVariables';
 
+// Storage adapter interface for multi-platform support
+interface StorageAdapter {
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+}
+
+// Default browser storage adapter
+const browserStorageAdapter: StorageAdapter = {
+  getItem: (key: string) => localStorage.getItem(key),
+  setItem: (key: string, value: string) => localStorage.setItem(key, value),
+};
+
+// Theme context interface
 interface ThemeContextValue {
-  currentTheme: ThemeVariant;
-  setTheme: (theme: ThemeVariant) => void;
+  theme: ThemeVariant;
   themeConfig: Theme;
-  isDarkMode: boolean;
-  isLightMode: boolean;
-  isAutoMode: boolean;
+  setTheme: (theme: ThemeVariant) => void;
   toggleTheme: () => void;
-  cycleTheme: () => void;
-  resetToSystemTheme: () => void;
-  isSystemDark: boolean;
+  systemPreference: ThemeVariant | null;
+  isSystemTheme: boolean;
+  setSystemTheme: (useSystem: boolean) => void;
 }
 
+// Create context
+const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
+
+// Theme provider props
 interface ThemeProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
+  storageAdapter?: StorageAdapter;
+  storageKey?: string;
   defaultTheme?: ThemeVariant;
+  detectSystemPreference?: boolean;
 }
 
-const ThemeContext = createContext<ThemeContextValue | null>(null);
+// Storage keys
+const THEME_STORAGE_KEY = 'lucaverse-theme';
+const SYSTEM_THEME_KEY = 'lucaverse-use-system-theme';
 
-// Storage utilities
-const STORAGE_KEY = 'lucaverse-theme-preference';
-
-const loadThemeFromStorage = (defaultTheme: ThemeVariant): ThemeVariant => {
-  if (typeof window === 'undefined') return defaultTheme;
-  
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored && Object.values(ThemeVariant).includes(stored as ThemeVariant)) {
-      return stored as ThemeVariant;
-    }
-  } catch (error) {
-    console.warn('Failed to load theme from localStorage:', error);
+// Detect system color scheme preference
+function getSystemThemePreference(): ThemeVariant | null {
+  if (typeof window === 'undefined' || !window.matchMedia) {
+    return null;
   }
-  
-  return defaultTheme;
-};
 
-const saveThemeToStorage = (theme: ThemeVariant): void => {
-  if (typeof window === 'undefined') return;
-  
-  try {
-    localStorage.setItem(STORAGE_KEY, theme);
-  } catch (error) {
-    console.warn('Failed to save theme to localStorage:', error);
-  }
-};
+  const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  return isDarkMode ? 'dark' : 'light';
+}
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({
+// Theme Provider Component
+export function ThemeProvider({
   children,
-  defaultTheme = ThemeVariant.Dark,
-}) => {
-  // Initialize theme from storage or default
-  const [currentTheme, setCurrentThemeState] = useState<ThemeVariant>(() =>
-    loadThemeFromStorage(defaultTheme)
-  );
-  
-  // Track system theme preference
-  const [systemTheme, setSystemTheme] = useState<ThemeVariant>(() =>
-    typeof window !== 'undefined' ? getSystemThemePreference() : ThemeVariant.Dark
-  );
-
-  // Get resolved theme configuration
-  const themeConfig = getTheme(currentTheme === ThemeVariant.Auto ? systemTheme : currentTheme);
-
-  // Computed theme states
-  const isDarkMode = currentTheme === ThemeVariant.Dark || 
-    (currentTheme === ThemeVariant.Auto && systemTheme === ThemeVariant.Dark);
-  const isLightMode = currentTheme === ThemeVariant.Light || 
-    (currentTheme === ThemeVariant.Auto && systemTheme === ThemeVariant.Light);
-  const isAutoMode = currentTheme === ThemeVariant.Auto;
-  const isSystemDark = systemTheme === ThemeVariant.Dark;
-
-  // Theme setter with validation and persistence
-  const setTheme = useCallback((theme: ThemeVariant) => {
-    if (!Object.values(ThemeVariant).includes(theme)) {
-      console.warn('Invalid theme variant:', theme);
-      return;
-    }
-
-    setCurrentThemeState(theme);
-    saveThemeToStorage(theme);
+  storageAdapter = browserStorageAdapter,
+  storageKey = THEME_STORAGE_KEY,
+  defaultTheme: defaultThemeProp = defaultTheme,
+  detectSystemPreference = true,
+}: ThemeProviderProps) {
+  // State for current theme
+  const [theme, setThemeState] = useState<ThemeVariant>(() => {
+    // Check if we should use system theme
+    const useSystemTheme = storageAdapter.getItem(SYSTEM_THEME_KEY) === 'true';
     
-    console.log(`🎨 Theme changed to: ${theme}`);
-  }, []);
+    if (useSystemTheme && detectSystemPreference) {
+      const systemTheme = getSystemThemePreference();
+      if (systemTheme) return systemTheme;
+    }
 
-  // Toggle between dark and light (preserving auto if active)
+    // Check stored theme
+    const storedTheme = storageAdapter.getItem(storageKey);
+    if (storedTheme && (storedTheme === 'light' || storedTheme === 'dark')) {
+      return storedTheme as ThemeVariant;
+    }
+
+    // Use default
+    return defaultThemeProp;
+  });
+
+  // State for system preference
+  const [systemPreference, setSystemPreference] = useState<ThemeVariant | null>(
+    detectSystemPreference ? getSystemThemePreference() : null
+  );
+
+  // State for using system theme
+  const [isSystemTheme, setIsSystemTheme] = useState<boolean>(() => {
+    return storageAdapter.getItem(SYSTEM_THEME_KEY) === 'true';
+  });
+
+  // Get current theme configuration
+  const themeConfig = useMemo(() => themeVariants[theme], [theme]);
+
+  // Apply theme changes
+  useEffect(() => {
+    applyTheme(theme);
+  }, [theme]);
+
+  // Set theme with persistence
+  const setTheme = useCallback((newTheme: ThemeVariant) => {
+    setThemeState(newTheme);
+    storageAdapter.setItem(storageKey, newTheme);
+    setIsSystemTheme(false);
+    storageAdapter.setItem(SYSTEM_THEME_KEY, 'false');
+  }, [storageAdapter, storageKey]);
+
+  // Toggle between themes
   const toggleTheme = useCallback(() => {
-    if (currentTheme === ThemeVariant.Auto) {
-      // When in auto mode, toggle based on current system preference
-      setTheme(systemTheme === ThemeVariant.Dark ? ThemeVariant.Light : ThemeVariant.Dark);
-    } else if (currentTheme === ThemeVariant.Dark) {
-      setTheme(ThemeVariant.Light);
-    } else {
-      setTheme(ThemeVariant.Dark);
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+  }, [theme, setTheme]);
+
+  // Set system theme preference
+  const setSystemTheme = useCallback((useSystem: boolean) => {
+    setIsSystemTheme(useSystem);
+    storageAdapter.setItem(SYSTEM_THEME_KEY, String(useSystem));
+
+    if (useSystem && systemPreference) {
+      setThemeState(systemPreference);
+      // Don't save theme to storage when using system preference
     }
-  }, [currentTheme, systemTheme, setTheme]);
+  }, [systemPreference, storageAdapter]);
 
-  // Cycle through all themes: Dark -> Light -> Auto -> Dark
-  const cycleTheme = useCallback(() => {
-    const themeOrder = [ThemeVariant.Dark, ThemeVariant.Light, ThemeVariant.Auto];
-    const currentIndex = themeOrder.indexOf(currentTheme);
-    const nextIndex = (currentIndex + 1) % themeOrder.length;
-    const nextTheme = themeOrder[nextIndex];
-    if (nextTheme) {
-      setTheme(nextTheme);
-    }
-  }, [currentTheme, setTheme]);
-
-  // Reset to system theme
-  const resetToSystemTheme = useCallback(() => {
-    setTheme(ThemeVariant.Auto);
-  }, [setTheme]);
-
-  // Apply theme to document when theme changes
+  // Listen for system theme changes
   useEffect(() => {
-    try {
-      applyThemeToDocument(themeConfig);
+    if (!detectSystemPreference || typeof window === 'undefined') return;
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    const handleChange = (e: MediaQueryListEvent) => {
+      const newSystemTheme = e.matches ? 'dark' : 'light';
+      setSystemPreference(newSystemTheme);
       
-      // Add data attribute to document for CSS targeting
-      if (typeof document !== 'undefined') {
-        document.documentElement.setAttribute('data-theme', currentTheme);
-        document.documentElement.setAttribute('data-theme-resolved', 
-          currentTheme === ThemeVariant.Auto ? systemTheme : currentTheme
-        );
+      // Update theme if using system preference
+      if (isSystemTheme) {
+        setThemeState(newSystemTheme);
       }
-      
-      console.log(`🎨 Applied theme: ${themeConfig.name} (${currentTheme})`);
-    } catch (error) {
-      console.error('Failed to apply theme to document:', error);
+    };
+
+    // Modern browsers
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
     }
-  }, [themeConfig, currentTheme, systemTheme]);
+    
+    // Legacy browsers
+    mediaQuery.addListener(handleChange);
+    return () => mediaQuery.removeListener(handleChange);
+  }, [isSystemTheme, detectSystemPreference]);
 
-  // Subscribe to system theme changes
-  useEffect(() => {
-    const unsubscribe = subscribeToSystemThemeChanges((newSystemTheme) => {
-      setSystemTheme(newSystemTheme);
-      console.log(`🖥️ System theme changed to: ${newSystemTheme}`);
-    });
-
-    return unsubscribe;
-  }, []);
-
-  // Debug logging in development
-  useEffect(() => {
-    if (import.meta.env.DEV) {
-      console.log('🎨 Theme Debug Info:', {
-        currentTheme,
-        systemTheme,
-        resolvedTheme: themeConfig.name,
-        isDarkMode,
-        isLightMode,
-        isAutoMode,
-      });
-    }
-  }, [currentTheme, systemTheme, themeConfig.name, isDarkMode, isLightMode, isAutoMode]);
-
-  const contextValue: ThemeContextValue = {
-    currentTheme,
-    setTheme,
+  // Context value
+  const value = useMemo<ThemeContextValue>(() => ({
+    theme,
     themeConfig,
-    isDarkMode,
-    isLightMode,
-    isAutoMode,
+    setTheme,
     toggleTheme,
-    cycleTheme,
-    resetToSystemTheme,
-    isSystemDark,
-  };
+    systemPreference,
+    isSystemTheme,
+    setSystemTheme,
+  }), [theme, themeConfig, setTheme, toggleTheme, systemPreference, isSystemTheme, setSystemTheme]);
 
   return (
-    <ThemeContext.Provider value={contextValue}>
+    <ThemeContext.Provider value={value}>
       {children}
     </ThemeContext.Provider>
   );
-};
+}
 
-// Custom hook to use theme context
-export const useTheme = (): ThemeContextValue => {
+// Hook to use theme context
+export function useTheme() {
   const context = useContext(ThemeContext);
   
   if (!context) {
-    throw new Error(
-      'useTheme must be used within a ThemeProvider. ' +
-      'Make sure to wrap your component tree with <ThemeProvider>.'
-    );
+    throw new Error('useTheme must be used within a ThemeProvider');
   }
   
   return context;
-};
+}
 
-// Hook for accessing theme colors directly
-export const useThemeColors = () => {
+// Additional hooks for specific use cases
+export function useThemeConfig() {
   const { themeConfig } = useTheme();
-  return themeConfig.colors;
-};
+  return themeConfig;
+}
 
-// Hook for accessing theme utilities
-export const useThemeUtils = () => {
-  const { themeConfig } = useTheme();
-  return {
-    colors: themeConfig.colors,
-    glass: themeConfig.glass,
-    shadows: themeConfig.shadows,
-    animations: themeConfig.animations,
-  };
-};
+export function useThemeVariant() {
+  const { theme } = useTheme();
+  return theme;
+}
 
-// HOC for components that need theme context
-export const withTheme = <P extends object>(
-  Component: React.ComponentType<P & { theme: ThemeContextValue }>
-) => {
-  const ThemedComponent = (props: P) => {
-    const theme = useTheme();
-    return <Component {...props} theme={theme} />;
-  };
-  
-  ThemedComponent.displayName = `withTheme(${Component.displayName || Component.name})`;
-  return ThemedComponent;
-};
-
-export default ThemeContext;
+export function useThemeToggle() {
+  const { toggleTheme } = useTheme();
+  return toggleTheme;
+}

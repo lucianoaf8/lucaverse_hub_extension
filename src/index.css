@@ -1,100 +1,322 @@
-/* Lucaverse Hub - Base Styles */
-/* Vite defaults removed and replaced with theme-aware styles */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+/**
+ * Global Styles with Theme Integration
+ * All styles use CSS custom properties from the theme system
+ */
 
-  /* Use CSS custom properties set by theme system */
-  color: var(--color-text, #f4f4f5);
-  background-color: var(--color-background, #0a0f1a);
-  
-  /* Color scheme auto-detection */
-  color-scheme: light dark;
+/* Base styles applying theme variables */
+@layer base {
+  /* Root element */
+  :root {
+    /* Default theme will be applied by ThemeContext */
+    color-scheme: light dark;
+  }
 
-  /* Font rendering optimizations */
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* HTML and body setup */
+  html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply m-0 p-0;
+    font-family: var(--typography-fontFamily-sans);
+    font-size: var(--typography-fontSize-base);
+    font-weight: var(--typography-fontWeight-normal);
+    line-height: var(--typography-lineHeight-normal);
+    color: var(--color-neutral-50);
+    background-color: var(--color-neutral-950);
+    min-height: 100vh;
+    transition: background-color var(--animation-duration-base) var(--animation-easing-inOut),
+                color var(--animation-duration-base) var(--animation-easing-inOut);
+  }
+
+  /* Typography base styles */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: var(--typography-fontWeight-semibold);
+    line-height: var(--typography-lineHeight-tight);
+    color: var(--color-neutral-50);
+  }
+
+  h1 { font-size: var(--typography-fontSize-4xl); }
+  h2 { font-size: var(--typography-fontSize-3xl); }
+  h3 { font-size: var(--typography-fontSize-2xl); }
+  h4 { font-size: var(--typography-fontSize-xl); }
+  h5 { font-size: var(--typography-fontSize-lg); }
+  h6 { font-size: var(--typography-fontSize-base); }
+
+  p {
+    margin-bottom: var(--spacing-4);
+    line-height: var(--typography-lineHeight-relaxed);
+  }
+
+  /* Links */
+  a {
+    color: var(--color-primary-500);
+    text-decoration: none;
+    transition: color var(--animation-duration-fast) var(--animation-easing-out);
+  }
+
+  a:hover {
+    color: var(--color-primary-400);
+    text-decoration: underline;
+  }
+
+  /* Form elements */
+  input, textarea, select {
+    font-family: var(--typography-fontFamily-sans);
+    font-size: var(--typography-fontSize-base);
+    line-height: var(--typography-lineHeight-normal);
+  }
+
+  /* Code and pre */
+  code, kbd, samp, pre {
+    font-family: var(--typography-fontFamily-mono);
+    font-size: var(--typography-fontSize-sm);
+  }
+
+  /* Focus styles */
+  :focus {
+    outline: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+  }
+
+  /* Selection */
+  ::selection {
+    background-color: var(--color-primary-500);
+    color: var(--color-neutral-50);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-neutral-800);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-neutral-600);
+    border-radius: var(--radius-md);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-neutral-500);
+  }
 }
 
-/* Link styles using theme colors */
-a {
-  font-weight: 500;
-  color: var(--color-primary, #00bcd4);
-  text-decoration: inherit;
-  transition: color 0.2s ease;
+/* Component styles */
+@layer components {
+  /* Panel component */
+  .panel {
+    background-color: var(--color-neutral-900);
+    border: 1px solid var(--color-neutral-700);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-6);
+    box-shadow: var(--shadow-md);
+    transition: all var(--animation-duration-base) var(--animation-easing-out);
+  }
+
+  .panel:hover {
+    border-color: var(--color-primary-500);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Button base */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-2) var(--spacing-4);
+    font-size: var(--typography-fontSize-base);
+    font-weight: var(--typography-fontWeight-medium);
+    line-height: var(--typography-lineHeight-normal);
+    border-radius: var(--radius-md);
+    transition: all var(--animation-duration-fast) var(--animation-easing-out);
+    cursor: pointer;
+    border: 1px solid transparent;
+  }
+
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Button variants */
+  .btn-primary {
+    background-color: var(--color-primary-500);
+    color: var(--color-neutral-50);
+    border-color: var(--color-primary-500);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background-color: var(--color-primary-600);
+    border-color: var(--color-primary-600);
+  }
+
+  .btn-secondary {
+    background-color: var(--color-neutral-800);
+    color: var(--color-neutral-50);
+    border-color: var(--color-neutral-700);
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    background-color: var(--color-neutral-700);
+    border-color: var(--color-neutral-600);
+  }
+
+  /* Input component */
+  .input {
+    width: 100%;
+    padding: var(--spacing-2) var(--spacing-3);
+    background-color: var(--color-neutral-900);
+    border: 1px solid var(--color-neutral-700);
+    border-radius: var(--radius-md);
+    color: var(--color-neutral-50);
+    transition: all var(--animation-duration-fast) var(--animation-easing-out);
+  }
+
+  .input:focus {
+    border-color: var(--color-primary-500);
+    box-shadow: 0 0 0 3px var(--color-primary-500);
+    box-shadow: 0 0 0 3px rgba(var(--color-primary-500), 0.1);
+  }
+
+  .input::placeholder {
+    color: var(--color-neutral-500);
+  }
+
+  /* Card component */
+  .card {
+    background-color: var(--color-neutral-900);
+    border: 1px solid var(--color-neutral-800);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-8);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Container */
+  .container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-6);
+  }
 }
 
-a:hover {
-  color: var(--color-accent, #00e5ff);
+/* Utility classes */
+@layer utilities {
+  /* Text utilities */
+  .text-primary { color: var(--color-primary-500); }
+  .text-secondary { color: var(--color-secondary-500); }
+  .text-success { color: var(--color-success-500); }
+  .text-warning { color: var(--color-warning-500); }
+  .text-danger { color: var(--color-danger-500); }
+  .text-muted { color: var(--color-neutral-400); }
+
+  /* Background utilities */
+  .bg-surface { background-color: var(--color-neutral-900); }
+  .bg-elevated { background-color: var(--color-neutral-800); }
+
+  /* Animation utilities */
+  .animate-fade-in {
+    animation: fadeIn var(--animation-duration-base) var(--animation-easing-out);
+  }
+
+  .animate-slide-up {
+    animation: slideUp var(--animation-duration-base) var(--animation-easing-out);
+  }
+
+  /* Transition utilities */
+  .transition-fast {
+    transition-duration: var(--animation-duration-fast);
+  }
+
+  .transition-base {
+    transition-duration: var(--animation-duration-base);
+  }
+
+  .transition-slow {
+    transition-duration: var(--animation-duration-slow);
+  }
 }
 
-/* Body layout */
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  background-color: var(--color-background, #0a0f1a);
-  overflow-x: hidden;
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-/* Root element - full height */
-#root {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+@keyframes slideUp {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
-/* Typography */
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-  color: var(--color-text, #f4f4f5);
+@keyframes slideIn {
+  from {
+    transform: translateX(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
-h2, h3, h4, h5, h6 {
-  color: var(--color-text, #f4f4f5);
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
-/* Button base styles using theme */
-button {
-  border-radius: 8px;
-  border: 1px solid var(--color-border, rgba(0, 255, 255, 0.1));
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: var(--color-surface, #0f1419);
-  color: var(--color-text, #f4f4f5);
-  cursor: pointer;
-  transition: all var(--animation-fast, 150ms) ease;
+/* Theme-specific styles */
+[data-theme="light"] {
+  color-scheme: light;
 }
 
-button:hover {
-  border-color: var(--color-primary, #00bcd4);
-  background-color: var(--color-primary, #00bcd4);
-  color: var(--color-background, #0a0f1a);
+[data-theme="dark"] {
+  color-scheme: dark;
 }
 
-button:focus,
-button:focus-visible {
-  outline: 2px solid var(--color-accent, #00e5ff);
-  outline-offset: 2px;
+/* Print styles */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
 }
 
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
-
-button:disabled:hover {
-  border-color: var(--color-border, rgba(0, 255, 255, 0.1));
-  background-color: var(--color-surface, #0f1419);
-  color: var(--color-text, #f4f4f5);
-}
-
-/* Remove media query that conflicts with theme system */
-/* Theme system now handles light/dark mode dynamically */

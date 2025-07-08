@@ -1,0 +1,45 @@
+{
+  "panels": {
+    "smartHub": {
+      "title": "Centro Inteligente",
+      "description": "Acciones rápidas y accesos directos"
+    },
+    "aiChat": {
+      "title": "Chat IA",
+      "description": "Asistente con inteligencia artificial"
+    },
+    "taskManager": {
+      "title": "Gestor de Tareas",
+      "description": "Administra tus tareas"
+    },
+    "productivity": {
+      "title": "Productividad",
+      "description": "Rastrea tu productividad"
+    }
+  },
+  "buttons": {
+    "primary": "Acción Principal",
+    "secondary": "Acción Secundaria",
+    "danger": "Acción Peligrosa"
+  },
+  "forms": {
+    "required": "Requerido",
+    "optional": "Opcional",
+    "placeholder": {
+      "email": "Ingresa tu correo electrónico",
+      "password": "Ingresa tu contraseña",
+      "search": "Buscar..."
+    },
+    "validation": {
+      "required": "Este campo es requerido",
+      "email": "Por favor ingresa un correo válido",
+      "minLength": "Debe tener al menos {{min}} caracteres",
+      "maxLength": "No debe tener más de {{max}} caracteres"
+    }
+  },
+  "tooltips": {
+    "help": "Clic para ayuda",
+    "info": "Más información",
+    "settings": "Abrir configuración"
+  }
+}

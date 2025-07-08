@@ -1,0 +1,45 @@
+{
+  "panels": {
+    "smartHub": {
+      "title": "Smart Hub",
+      "description": "Quick actions and shortcuts"
+    },
+    "aiChat": {
+      "title": "AI Chat",
+      "description": "AI-powered assistant"
+    },
+    "taskManager": {
+      "title": "Task Manager",
+      "description": "Manage your tasks"
+    },
+    "productivity": {
+      "title": "Productivity",
+      "description": "Track your productivity"
+    }
+  },
+  "buttons": {
+    "primary": "Primary Action",
+    "secondary": "Secondary Action",
+    "danger": "Danger Action"
+  },
+  "forms": {
+    "required": "Required",
+    "optional": "Optional",
+    "placeholder": {
+      "email": "Enter your email",
+      "password": "Enter your password",
+      "search": "Search..."
+    },
+    "validation": {
+      "required": "This field is required",
+      "email": "Please enter a valid email",
+      "minLength": "Must be at least {{min}} characters",
+      "maxLength": "Must be no more than {{max}} characters"
+    }
+  },
+  "tooltips": {
+    "help": "Click for help",
+    "info": "More information",
+    "settings": "Open settings"
+  }
+}
