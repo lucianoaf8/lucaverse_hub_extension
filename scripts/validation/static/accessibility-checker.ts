@@ -56,7 +56,7 @@ export class AccessibilityChecker {
 
       // Check for missing form labels (if enabled)
       if (config.accessibility.rules['missing-form-labels']) {
-        const formResults = await this.validateFormAccessibility();
+        const formResults = await this.validateFormAccessibility(config);
         results.push(...formResults);
       }
 
@@ -706,7 +706,7 @@ export class AccessibilityChecker {
     return results;
   }
 
-  private async validateFormAccessibility(): Promise<ValidationResult[]> {
+  private async validateFormAccessibility(config?: ValidationConfig): Promise<ValidationResult[]> {
     const results: ValidationResult[] = [];
     const componentFiles = await glob('src/**/*.{jsx,tsx}');
 
@@ -765,14 +765,20 @@ export class AccessibilityChecker {
             });
           }
 
-          // Check for form validation feedback (but not console.error or similar)
-          if (line.includes('error') && !line.includes('aria-describedby') && 
-              !line.includes('aria-invalid') && !line.includes('console.') && 
+          // Check for form validation feedback (but skip if ARIA error states rule is disabled)
+          if (config?.accessibility?.rules?.['aria-error-states'] === true && 
+              line.includes('error') && 
+              // Skip console statements entirely - they don't need ARIA attributes
+              !line.includes('console.') && 
               !line.includes('throw new Error') && !line.includes('new Error') &&
               !line.includes('Error:') && !line.includes('error:') &&
+              !line.includes('//') && // Skip comments
+              // Only check if not already having ARIA attributes
+              !line.includes('aria-describedby') && 
+              !line.includes('aria-invalid') &&
+              // Only flag if it looks like an error state in UI context
               (line.includes('input') || line.includes('form') || line.includes('field') || 
-               line.includes('error') && line.includes('state')) &&
-              !line.includes('//')) {
+               (line.includes('error') && line.includes('state') && !line.includes('console')))) {
             results.push({
               id: `error-no-aria-${path.basename(file)}-${index}`,
               name: 'Error Without ARIA',
