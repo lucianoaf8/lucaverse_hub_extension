@@ -6,7 +6,7 @@
   "type": "module",
   "main": "dist/electron/main.js",
   "scripts": {
-    "dev": "npx kill-port 5666 --silent && vite || vite",
+    "dev": "npx kill-port 5666 --silent && vite --open || vite --open",
     "dev:dashboard": "vite --open /dashboard",
     "dev:theme": "vite --open /theme-demo",
     "dev:animations": "vite --open /animation-demo",
