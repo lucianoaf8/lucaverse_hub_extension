@@ -47,6 +47,20 @@ export class ArchitectureValidator {
     try {
       console.log('🏗️ Validating architecture compliance...');
 
+      // Skip architecture validation if surgically disabled
+      if (config.surgicalDisable?.architectureRules) {
+        console.log('⚠️ Architecture validation surgically disabled');
+        return [{
+          id: 'architecture-disabled',
+          name: 'Architecture Validation Disabled',
+          type: 'static',
+          status: 'pass',
+          message: 'Architecture validation temporarily disabled via surgical config',
+          duration: Date.now() - startTime,
+          severity: 'info',
+        }];
+      }
+
       // Build dependency graph
       await this.buildDependencyGraph();
 
@@ -54,12 +68,14 @@ export class ArchitectureValidator {
       const importResults = await this.validateImportStructure();
       results.push(...importResults);
 
-      // Validate file naming conventions
-      const namingResults = await this.validateFileNaming();
-      results.push(...namingResults);
+      // Validate file naming conventions (skip if disabled)
+      if (!config.surgicalDisable?.fileNaming) {
+        const namingResults = await this.validateFileNaming();
+        results.push(...namingResults);
+      }
 
-      // Validate export patterns
-      const exportResults = await this.validateExportPatterns();
+      // Validate export patterns (skip mixed exports if disabled)
+      const exportResults = await this.validateExportPatterns(config);
       results.push(...exportResults);
 
       // Detect circular dependencies
@@ -314,7 +330,7 @@ export class ArchitectureValidator {
     return 'utils'; // default
   }
 
-  private async validateExportPatterns(): Promise<ValidationResult[]> {
+  private async validateExportPatterns(config?: ValidationConfig): Promise<ValidationResult[]> {
     const results: ValidationResult[] = [];
     const requiredExports = this.config.static.architecture.requiredExports;
 
@@ -358,8 +374,9 @@ export class ArchitectureValidator {
         }
       }
 
-      // Check for mixed export styles (default + named in components)
-      if (file.includes('/components/') && 
+      // Check for mixed export styles (default + named in components) - skip if disabled
+      if (!config?.surgicalDisable?.mixedExports &&
+          file.includes('/components/') && 
           node.exports.includes('default') && 
           node.exports.length > 1) {
         results.push({

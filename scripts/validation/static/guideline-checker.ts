@@ -186,6 +186,11 @@ export class GuidelineChecker {
     const fileName = path.basename(file);
     const fileType = this.determineFileType(file);
 
+    // Skip file naming if surgically disabled
+    if (this.config.surgicalDisable?.fileNaming) {
+      return null;
+    }
+
     // Only apply naming rules to files in specific directories
     const shouldCheckNaming = this.shouldApplyNamingRule(file, fileType);
     

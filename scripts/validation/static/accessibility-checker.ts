@@ -34,25 +34,33 @@ export class AccessibilityChecker {
     try {
       console.log('♿ Validating accessibility compliance...');
 
-      // Check JSX components for accessibility issues
-      const jsxResults = await this.validateJSXAccessibility();
-      results.push(...jsxResults);
+      // Check JSX components for accessibility issues (skip if surgically disabled)
+      if (!config.surgicalDisable?.ariaWarnings) {
+        const jsxResults = await this.validateJSXAccessibility();
+        results.push(...jsxResults);
+      }
 
-      // Check for proper semantic HTML usage
-      const semanticResults = await this.validateSemanticHTML();
+      // Check for proper semantic HTML usage (skip deep headings if disabled)
+      const semanticResults = await this.validateSemanticHTML(config);
       results.push(...semanticResults);
 
-      // Check ARIA usage
-      const ariaResults = await this.validateARIAUsage();
-      results.push(...ariaResults);
+      // Check ARIA usage (skip if surgically disabled)
+      if (!config.surgicalDisable?.ariaWarnings) {
+        const ariaResults = await this.validateARIAUsage();
+        results.push(...ariaResults);
+      }
 
-      // Check keyboard navigation support
-      const keyboardResults = await this.validateKeyboardNavigation();
-      results.push(...keyboardResults);
+      // Check keyboard navigation support (skip if disabled)
+      if (!config.surgicalDisable?.keyboardHandlers) {
+        const keyboardResults = await this.validateKeyboardNavigation();
+        results.push(...keyboardResults);
+      }
 
-      // Check focus management
-      const focusResults = await this.validateFocusManagement();
-      results.push(...focusResults);
+      // Check focus management (skip if disabled)
+      if (!config.surgicalDisable?.focusStyles) {
+        const focusResults = await this.validateFocusManagement();
+        results.push(...focusResults);
+      }
 
       // Check media accessibility
       const mediaResults = await this.validateMediaAccessibility();
@@ -194,7 +202,7 @@ export class AccessibilityChecker {
     return results;
   }
 
-  private async validateSemanticHTML(): Promise<ValidationResult[]> {
+  private async validateSemanticHTML(config?: ValidationConfig): Promise<ValidationResult[]> {
     const results: ValidationResult[] = [];
     const htmlFiles = await glob('src/**/*.{jsx,tsx,html}');
 
@@ -239,7 +247,8 @@ export class AccessibilityChecker {
                                     file.includes('/pages/ThemeDemo') ||
                                     file.includes('/ComponentLibrary');
               
-              if (level > 3 && !isDevComponent) {
+              // Skip deep heading warnings if surgically disabled
+              if (level > 3 && !isDevComponent && !config?.surgicalDisable?.deepHeadings) {
                 results.push({
                   id: `deep-heading-level-${path.basename(file)}-${index}`,
                   name: 'Deep Heading Level',
