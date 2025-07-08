@@ -22,7 +22,7 @@ export interface I18nConfig {
 export const i18nConfig: I18nConfig = {
   defaultLanguage: 'en',
   fallbackLanguage: 'en',
-  supportedLanguages: ['en', 'es'],
+  supportedLanguages: ['en', 'pt'],
   languageDetection: {
     order: ['localStorage', 'navigator', 'htmlTag'],
     caches: ['localStorage'],
@@ -38,7 +38,7 @@ export const i18nConfig: I18nConfig = {
 // Language names for display
 export const languageNames: Record<string, string> = {
   en: 'English',
-  es: 'Español',
+  pt: 'Português',
 };
 
 // Storage key for language preference

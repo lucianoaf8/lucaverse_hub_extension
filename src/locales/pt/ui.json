@@ -1,0 +1,45 @@
+{
+  "panels": {
+    "smartHub": {
+      "title": "Hub Inteligente",
+      "description": "Ações rápidas e atalhos"
+    },
+    "aiChat": {
+      "title": "Chat IA",
+      "description": "Assistente com inteligência artificial"
+    },
+    "taskManager": {
+      "title": "Gerenciador de Tarefas",
+      "description": "Gerencie suas tarefas"
+    },
+    "productivity": {
+      "title": "Produtividade",
+      "description": "Acompanhe sua produtividade"
+    }
+  },
+  "buttons": {
+    "primary": "Ação Principal",
+    "secondary": "Ação Secundária",
+    "danger": "Ação Perigosa"
+  },
+  "forms": {
+    "required": "Obrigatório",
+    "optional": "Opcional",
+    "placeholder": {
+      "email": "Digite seu e-mail",
+      "password": "Digite sua senha",
+      "search": "Pesquisar..."
+    },
+    "validation": {
+      "required": "Este campo é obrigatório",
+      "email": "Por favor digite um e-mail válido",
+      "minLength": "Deve ter pelo menos {{min}} caracteres",
+      "maxLength": "Não deve ter mais de {{max}} caracteres"
+    }
+  },
+  "tooltips": {
+    "help": "Clique para ajuda",
+    "info": "Mais informações",
+    "settings": "Abrir configurações"
+  }
+}

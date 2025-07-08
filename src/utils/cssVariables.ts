@@ -65,8 +65,14 @@ export function generateCSSVariables(theme: Theme): Record<string, string> {
   // Shadows
   Object.assign(variables, objectToCSSVariables(theme.shadows, ['shadow']));
 
+  // Backgrounds
+  Object.assign(variables, objectToCSSVariables(theme.backgrounds, ['background']));
+
   // Animations
   Object.assign(variables, objectToCSSVariables(theme.animations, ['animation']));
+
+  // Interactions
+  Object.assign(variables, objectToCSSVariables(theme.interactions, ['interaction']));
 
   // Breakpoints
   Object.assign(variables, objectToCSSVariables(theme.breakpoints, ['breakpoint']));
@@ -136,12 +142,28 @@ export const cssVars = {
     return cssVar(`shadow-${size}`);
   },
 
+  // Backgrounds
+  gradient: (type: string): CSSVariableReference => {
+    return cssVar(`background-gradients-${type}`);
+  },
+  pattern: (type: string): CSSVariableReference => {
+    return cssVar(`background-patterns-${type}`);
+  },
+  backdrop: (property: string, size?: string): CSSVariableReference => {
+    return size ? cssVar(`background-backdrop-${property}-${size}`) : cssVar(`background-backdrop-${property}`);
+  },
+
   // Animations
   duration: (speed: string): CSSVariableReference => {
     return cssVar(`animation-duration-${speed}`);
   },
   easing: (type: string): CSSVariableReference => {
     return cssVar(`animation-easing-${type}`);
+  },
+
+  // Interactions
+  interaction: (state: string, property: string): CSSVariableReference => {
+    return cssVar(`interaction-${state}-${property}`);
   },
 
   // Breakpoints

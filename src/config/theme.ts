@@ -177,7 +177,53 @@ export interface ThemeShadows {
   none: string;
 }
 
+// Background system interface
+export interface ThemeBackgrounds {
+  gradients: {
+    primary: string;
+    secondary: string;
+    success: string;
+    warning: string;
+    danger: string;
+    hero: string;
+    subtle: string;
+  };
+  patterns: {
+    dots: string;
+    grid: string;
+    noise: string;
+    diagonal: string;
+  };
+  backdrop: {
+    blur: {
+      sm: string;
+      md: string;
+      lg: string;
+      xl: string;
+    };
+    opacity: {
+      light: string;
+      medium: string;
+      heavy: string;
+    };
+  };
+}
+
 export interface ThemeAnimations {
+  keyframes: {
+    fadeIn: Record<string, Record<string, string>>;
+    fadeOut: Record<string, Record<string, string>>;
+    slideUp: Record<string, Record<string, string>>;
+    slideDown: Record<string, Record<string, string>>;
+    slideLeft: Record<string, Record<string, string>>;
+    slideRight: Record<string, Record<string, string>>;
+    scaleIn: Record<string, Record<string, string>>;
+    scaleOut: Record<string, Record<string, string>>;
+    pulse: Record<string, Record<string, string>>;
+    bounce: Record<string, Record<string, string>>;
+    spin: Record<string, Record<string, string>>;
+    ping: Record<string, Record<string, string>>;
+  };
   duration: {
     fast: string;
     base: string;
@@ -186,9 +232,37 @@ export interface ThemeAnimations {
   };
   easing: {
     linear: string;
-    in: string;
-    out: string;
-    inOut: string;
+    ease: string;
+    easeIn: string;
+    easeOut: string;
+    easeInOut: string;
+    bouncy: string;
+    elastic: string;
+  };
+}
+
+// Interactive states interface
+export interface ThemeInteractions {
+  hover: {
+    scale: string;
+    brightness: string;
+    shadow: string;
+    transition: string;
+  };
+  focus: {
+    ringWidth: string;
+    ringColor: string;
+    ringOpacity: string;
+    ringOffset: string;
+  };
+  active: {
+    scale: string;
+    brightness: string;
+  };
+  disabled: {
+    opacity: string;
+    cursor: string;
+    grayscale: string;
   };
 }
 
@@ -206,7 +280,9 @@ export interface Theme {
   spacing: ThemeSpacing;
   borderRadius: ThemeBorderRadius;
   shadows: ThemeShadows;
+  backgrounds: ThemeBackgrounds;
   animations: ThemeAnimations;
+  interactions: ThemeInteractions;
   breakpoints: ThemeBreakpoints;
 }
 
@@ -386,7 +462,87 @@ const lightTheme: Theme = {
     inner: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
     none: 'none',
   },
+  backgrounds: {
+    gradients: {
+      primary: 'linear-gradient(135deg, #00bcd4 0%, #00acc1 100%)',
+      secondary: 'linear-gradient(135deg, #00ffff 0%, #00e6e6 100%)',
+      success: 'linear-gradient(90deg, #10b981 0%, #059669 100%)',
+      warning: 'linear-gradient(90deg, #f59e0b 0%, #d97706 100%)',
+      danger: 'linear-gradient(90deg, #ef4444 0%, #dc2626 100%)',
+      hero: 'radial-gradient(circle at top right, #00bcd4, #006064)',
+      subtle: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+    },
+    patterns: {
+      dots: 'radial-gradient(circle, #94a3b8 1px, transparent 1px)',
+      grid: 'linear-gradient(#e2e8f0 1px, transparent 1px), linear-gradient(90deg, #e2e8f0 1px, transparent 1px)',
+      noise: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\' opacity=\'0.4\'/%3E%3C/svg%3E")',
+      diagonal: 'repeating-linear-gradient(45deg, transparent, transparent 2px, #e2e8f0 2px, #e2e8f0 4px)',
+    },
+    backdrop: {
+      blur: {
+        sm: '4px',
+        md: '8px',
+        lg: '16px',
+        xl: '24px',
+      },
+      opacity: {
+        light: '0.8',
+        medium: '0.6',
+        heavy: '0.4',
+      },
+    },
+  },
   animations: {
+    keyframes: {
+      fadeIn: {
+        '0%': { opacity: '0' },
+        '100%': { opacity: '1' },
+      },
+      fadeOut: {
+        '0%': { opacity: '1' },
+        '100%': { opacity: '0' },
+      },
+      slideUp: {
+        '0%': { transform: 'translateY(10px)', opacity: '0' },
+        '100%': { transform: 'translateY(0)', opacity: '1' },
+      },
+      slideDown: {
+        '0%': { transform: 'translateY(-10px)', opacity: '0' },
+        '100%': { transform: 'translateY(0)', opacity: '1' },
+      },
+      slideLeft: {
+        '0%': { transform: 'translateX(10px)', opacity: '0' },
+        '100%': { transform: 'translateX(0)', opacity: '1' },
+      },
+      slideRight: {
+        '0%': { transform: 'translateX(-10px)', opacity: '0' },
+        '100%': { transform: 'translateX(0)', opacity: '1' },
+      },
+      scaleIn: {
+        '0%': { transform: 'scale(0.95)', opacity: '0' },
+        '100%': { transform: 'scale(1)', opacity: '1' },
+      },
+      scaleOut: {
+        '0%': { transform: 'scale(1)', opacity: '1' },
+        '100%': { transform: 'scale(0.95)', opacity: '0' },
+      },
+      pulse: {
+        '0%, 100%': { opacity: '1' },
+        '50%': { opacity: '0.5' },
+      },
+      bounce: {
+        '0%, 20%, 53%, 80%, 100%': { transform: 'translate3d(0,0,0)' },
+        '40%, 43%': { transform: 'translate3d(0, -30px, 0)' },
+        '70%': { transform: 'translate3d(0, -15px, 0)' },
+      },
+      spin: {
+        '0%': { transform: 'rotate(0deg)' },
+        '100%': { transform: 'rotate(360deg)' },
+      },
+      ping: {
+        '75%, 100%': { transform: 'scale(2)', opacity: '0' },
+      },
+    },
     duration: {
       fast: '150ms',
       base: '300ms',
@@ -395,9 +551,35 @@ const lightTheme: Theme = {
     },
     easing: {
       linear: 'linear',
-      in: 'cubic-bezier(0.4, 0, 1, 1)',
-      out: 'cubic-bezier(0, 0, 0.2, 1)',
-      inOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
+      ease: 'ease',
+      easeIn: 'cubic-bezier(0.4, 0, 1, 1)',
+      easeOut: 'cubic-bezier(0, 0, 0.2, 1)',
+      easeInOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
+      bouncy: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+      elastic: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+    },
+  },
+  interactions: {
+    hover: {
+      scale: '1.05',
+      brightness: '1.1',
+      shadow: 'var(--shadow-lg)',
+      transition: 'var(--animation-duration-base)',
+    },
+    focus: {
+      ringWidth: '2px',
+      ringColor: 'var(--color-primary-500)',
+      ringOpacity: '0.5',
+      ringOffset: '2px',
+    },
+    active: {
+      scale: '0.98',
+      brightness: '0.95',
+    },
+    disabled: {
+      opacity: '0.5',
+      cursor: 'not-allowed',
+      grayscale: '100%',
     },
   },
   breakpoints: {
@@ -496,6 +678,59 @@ const darkTheme: Theme = {
     '2xl': '0 25px 50px -12px rgba(0, 255, 255, 0.25)',
     inner: 'inset 0 2px 4px 0 rgba(0, 255, 255, 0.06)',
     none: 'none',
+  },
+  backgrounds: {
+    gradients: {
+      primary: 'linear-gradient(135deg, #00bcd4 0%, #006064 100%)',
+      secondary: 'linear-gradient(135deg, #00ffff 0%, #008080 100%)',
+      success: 'linear-gradient(90deg, #00ffff 0%, #00cccc 100%)',
+      warning: 'linear-gradient(90deg, #ffeb3b 0%, #f9a825 100%)',
+      danger: 'linear-gradient(90deg, #e91e63 0%, #ad1457 100%)',
+      hero: 'radial-gradient(circle at center, #00bcd4, #003d40)',
+      subtle: 'linear-gradient(135deg, #0a0e17 0%, #0d111b 100%)',
+    },
+    patterns: {
+      dots: 'radial-gradient(circle, #00bcd4 1px, transparent 1px)',
+      grid: 'linear-gradient(#0d111b 1px, transparent 1px), linear-gradient(90deg, #0d111b 1px, transparent 1px)',
+      noise: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\' opacity=\'0.2\'/%3E%3C/svg%3E")',
+      diagonal: 'repeating-linear-gradient(45deg, transparent, transparent 2px, #0d111b 2px, #0d111b 4px)',
+    },
+    backdrop: {
+      blur: {
+        sm: '4px',
+        md: '8px',
+        lg: '16px',
+        xl: '24px',
+      },
+      opacity: {
+        light: '0.9',
+        medium: '0.7',
+        heavy: '0.5',
+      },
+    },
+  },
+  interactions: {
+    hover: {
+      scale: '1.05',
+      brightness: '1.2',
+      shadow: 'var(--shadow-lg)',
+      transition: 'var(--animation-duration-base)',
+    },
+    focus: {
+      ringWidth: '2px',
+      ringColor: 'var(--color-primary-500)',
+      ringOpacity: '0.6',
+      ringOffset: '2px',
+    },
+    active: {
+      scale: '0.98',
+      brightness: '0.9',
+    },
+    disabled: {
+      opacity: '0.4',
+      cursor: 'not-allowed',
+      grayscale: '100%',
+    },
   },
 };
 

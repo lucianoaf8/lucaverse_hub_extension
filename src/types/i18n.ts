@@ -170,7 +170,7 @@ export type TranslationKeyPath =
   | 'time.years_ago';
 
 // Supported languages type
-export type SupportedLanguage = 'en' | 'es';
+export type SupportedLanguage = 'en' | 'pt';
 
 // Language code validation
 export type LanguageCode = string;

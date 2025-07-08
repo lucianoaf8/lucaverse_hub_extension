@@ -1,0 +1,43 @@
+{
+  "app": {
+    "name": "Lucaverse Hub",
+    "description": "Seu painel de produtividade pessoal"
+  },
+  "theme": {
+    "light": "Claro",
+    "dark": "Escuro",
+    "system": "Sistema",
+    "toggle": "Alternar tema"
+  },
+  "language": {
+    "select": "Selecionar idioma",
+    "current": "Idioma atual"
+  },
+  "navigation": {
+    "home": "Início",
+    "dashboard": "Painel",
+    "settings": "Configurações",
+    "help": "Ajuda",
+    "about": "Sobre"
+  },
+  "actions": {
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "add": "Adicionar",
+    "close": "Fechar",
+    "confirm": "Confirmar",
+    "back": "Voltar",
+    "next": "Próximo",
+    "finish": "Finalizar"
+  },
+  "status": {
+    "loading": "Carregando...",
+    "saving": "Salvando...",
+    "success": "Sucesso",
+    "error": "Erro",
+    "warning": "Aviso",
+    "info": "Informação"
+  }
+}

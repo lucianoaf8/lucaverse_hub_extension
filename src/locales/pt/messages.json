@@ -1,0 +1,44 @@
+{
+  "welcome": {
+    "title": "Bem-vindo ao {{appName}}",
+    "subtitle": "Vamos começar sua jornada de produtividade",
+    "greeting": {
+      "morning": "Bom dia",
+      "afternoon": "Boa tarde",
+      "evening": "Boa tarde",
+      "night": "Boa noite"
+    }
+  },
+  "notifications": {
+    "success": {
+      "saved": "Alterações salvas com sucesso",
+      "deleted": "Item excluído com sucesso",
+      "updated": "Atualizado com sucesso",
+      "created": "Criado com sucesso"
+    },
+    "error": {
+      "general": "Algo deu errado. Por favor tente novamente.",
+      "network": "Erro de rede. Por favor verifique sua conexão.",
+      "notFound": "O item solicitado não foi encontrado.",
+      "unauthorized": "Você não tem autorização para realizar esta ação.",
+      "validation": "Por favor verifique suas informações e tente novamente."
+    },
+    "warning": {
+      "unsavedChanges": "Você tem alterações não salvas. Tem certeza que deseja sair?",
+      "deleteConfirm": "Tem certeza que deseja excluir este item? Esta ação não pode ser desfeita."
+    },
+    "info": {
+      "newVersion": "Uma nova versão está disponível. Por favor atualize a página.",
+      "maintenance": "Manutenção do sistema agendada para {{time}}"
+    }
+  },
+  "time": {
+    "just_now": "Agora mesmo",
+    "minutes_ago": "{{count}} minutos atrás",
+    "hours_ago": "{{count}} horas atrás",
+    "days_ago": "{{count}} dias atrás",
+    "weeks_ago": "{{count}} semanas atrás",
+    "months_ago": "{{count}} meses atrás",
+    "years_ago": "{{count}} anos atrás"
+  }
+}

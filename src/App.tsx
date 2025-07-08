@@ -3,10 +3,11 @@
  * Integrates theme and i18n systems with sample content
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { ThemeSwitcher, ThemeToggleButton } from './components/ThemeSwitcher';
 import { useTranslation } from './contexts/I18nContext';
 import { useLanguage } from './contexts/I18nContext';
+import AnimationExamples from './components/AnimationExamples';
 import './index.css';
 
 // Language Switcher Component
@@ -32,7 +33,7 @@ function LanguageSwitcher() {
         aria-label={t('language.select')}
       >
         <option value="en">English</option>
-        <option value="es">Español</option>
+        <option value="pt">Português</option>
       </select>
       
       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-neutral-400">
@@ -77,6 +78,7 @@ function Panel({ title, description, colorClass = 'text-primary' }: {
 function App() {
   const { t } = useTranslation('ui');
   const { t: tCommon } = useTranslation('common');
+  const [showAnimations, setShowAnimations] = useState(false);
   
   return (
     <div className="min-h-screen bg-background transition-colors duration-base">
@@ -94,6 +96,14 @@ function App() {
             </div>
             
             <div className="flex items-center space-x-4">
+              <button
+                onClick={() => setShowAnimations(!showAnimations)}
+                className="px-3 py-1 text-sm bg-primary/20 hover:bg-primary/30 
+                           border border-primary/40 rounded-lg transition-all duration-base
+                           focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-background"
+              >
+                {showAnimations ? 'Hide' : 'Show'} Animations
+              </button>
               <LanguageSwitcher />
               <div className="hidden sm:block">
                 <ThemeSwitcher />
@@ -108,15 +118,19 @@ function App() {
 
       {/* Main Content */}
       <main className="container mx-auto px-6 py-8">
-        {/* Welcome Section */}
-        <section className="mb-12 text-center">
-          <h2 className="text-4xl font-bold mb-4 text-primary animate-fade-in">
-            Welcome to Lucaverse Hub
-          </h2>
-          <p className="text-xl text-neutral-300 max-w-2xl mx-auto animate-slide-up">
-            Your centralized productivity dashboard with a beautiful theme system and multilingual support.
-          </p>
-        </section>
+        {showAnimations ? (
+          <AnimationExamples />
+        ) : (
+          <>
+            {/* Welcome Section */}
+            <section className="mb-12 text-center">
+              <h2 className="text-4xl font-bold mb-4 text-primary animate-fade-in">
+                Welcome to Lucaverse Hub
+              </h2>
+              <p className="text-xl text-neutral-300 max-w-2xl mx-auto animate-slide-up">
+                Your centralized productivity dashboard with a beautiful theme system and multilingual support.
+              </p>
+            </section>
 
         {/* Dashboard Grid */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
@@ -231,6 +245,8 @@ function App() {
             />
           </div>
         </section>
+        </>
+        )}
       </main>
 
       {/* Footer */}

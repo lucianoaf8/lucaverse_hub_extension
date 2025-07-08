@@ -193,14 +193,97 @@ export default {
         inner: 'var(--shadow-inner)',
         none: 'var(--shadow-none)',
       },
+      // Background Gradients
+      backgroundImage: {
+        'gradient-primary': 'var(--background-gradients-primary)',
+        'gradient-secondary': 'var(--background-gradients-secondary)',
+        'gradient-success': 'var(--background-gradients-success)',
+        'gradient-warning': 'var(--background-gradients-warning)',
+        'gradient-danger': 'var(--background-gradients-danger)',
+        'gradient-hero': 'var(--background-gradients-hero)',
+        'gradient-subtle': 'var(--background-gradients-subtle)',
+        'pattern-dots': 'var(--background-patterns-dots)',
+        'pattern-grid': 'var(--background-patterns-grid)',
+        'pattern-noise': 'var(--background-patterns-noise)',
+        'pattern-diagonal': 'var(--background-patterns-diagonal)',
+      },
+      // Backdrop Filters
+      backdropBlur: {
+        sm: 'var(--background-backdrop-blur-sm)',
+        md: 'var(--background-backdrop-blur-md)',
+        lg: 'var(--background-backdrop-blur-lg)',
+        xl: 'var(--background-backdrop-blur-xl)',
+      },
+      backdropOpacity: {
+        light: 'var(--background-backdrop-opacity-light)',
+        medium: 'var(--background-backdrop-opacity-medium)',
+        heavy: 'var(--background-backdrop-opacity-heavy)',
+      },
       // Animation
       animation: {
-        'fade-in': 'fadeIn var(--animation-duration-base) var(--animation-easing-out)',
-        'fade-out': 'fadeOut var(--animation-duration-base) var(--animation-easing-in)',
-        'slide-in': 'slideIn var(--animation-duration-base) var(--animation-easing-out)',
-        'slide-out': 'slideOut var(--animation-duration-base) var(--animation-easing-in)',
-        'scale-in': 'scaleIn var(--animation-duration-fast) var(--animation-easing-out)',
-        'scale-out': 'scaleOut var(--animation-duration-fast) var(--animation-easing-in)',
+        'fade-in': 'fadeIn var(--animation-duration-base) var(--animation-easing-easeOut)',
+        'fade-out': 'fadeOut var(--animation-duration-base) var(--animation-easing-easeIn)',
+        'slide-up': 'slideUp var(--animation-duration-base) var(--animation-easing-easeOut)',
+        'slide-down': 'slideDown var(--animation-duration-base) var(--animation-easing-easeOut)',
+        'slide-left': 'slideLeft var(--animation-duration-base) var(--animation-easing-easeOut)',
+        'slide-right': 'slideRight var(--animation-duration-base) var(--animation-easing-easeOut)',
+        'scale-in': 'scaleIn var(--animation-duration-fast) var(--animation-easing-easeOut)',
+        'scale-out': 'scaleOut var(--animation-duration-fast) var(--animation-easing-easeIn)',
+        'pulse': 'pulse var(--animation-duration-slow) var(--animation-easing-ease) infinite',
+        'bounce': 'bounce var(--animation-duration-slower) var(--animation-easing-bouncy) infinite',
+        'spin': 'spin var(--animation-duration-slower) var(--animation-easing-linear) infinite',
+        'ping': 'ping var(--animation-duration-slower) var(--animation-easing-ease) infinite',
+      },
+      // Keyframes
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        fadeOut: {
+          '0%': { opacity: '1' },
+          '100%': { opacity: '0' },
+        },
+        slideUp: {
+          '0%': { transform: 'translateY(10px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        slideDown: {
+          '0%': { transform: 'translateY(-10px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        slideLeft: {
+          '0%': { transform: 'translateX(10px)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
+        slideRight: {
+          '0%': { transform: 'translateX(-10px)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
+        scaleIn: {
+          '0%': { transform: 'scale(0.95)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+        scaleOut: {
+          '0%': { transform: 'scale(1)', opacity: '1' },
+          '100%': { transform: 'scale(0.95)', opacity: '0' },
+        },
+        pulse: {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.5' },
+        },
+        bounce: {
+          '0%, 20%, 53%, 80%, 100%': { transform: 'translate3d(0,0,0)' },
+          '40%, 43%': { transform: 'translate3d(0, -30px, 0)' },
+          '70%': { transform: 'translate3d(0, -15px, 0)' },
+        },
+        spin: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
+        ping: {
+          '75%, 100%': { transform: 'scale(2)', opacity: '0' },
+        },
       },
       transitionDuration: {
         fast: 'var(--animation-duration-fast)',
@@ -210,9 +293,21 @@ export default {
       },
       transitionTimingFunction: {
         linear: 'var(--animation-easing-linear)',
-        in: 'var(--animation-easing-in)',
-        out: 'var(--animation-easing-out)',
-        'in-out': 'var(--animation-easing-inOut)',
+        ease: 'var(--animation-easing-ease)',
+        in: 'var(--animation-easing-easeIn)',
+        out: 'var(--animation-easing-easeOut)',
+        'in-out': 'var(--animation-easing-easeInOut)',
+        bouncy: 'var(--animation-easing-bouncy)',
+        elastic: 'var(--animation-easing-elastic)',
+      },
+      // Interactive state utilities
+      scale: {
+        'hover': 'var(--interaction-hover-scale)',
+        'active': 'var(--interaction-active-scale)',
+      },
+      brightness: {
+        'hover': 'var(--interaction-hover-brightness)',
+        'active': 'var(--interaction-active-brightness)',
       },
       // Screens (breakpoints)
       screens: {
