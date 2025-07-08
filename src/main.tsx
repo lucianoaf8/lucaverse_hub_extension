@@ -3,6 +3,31 @@ import ReactDOM from 'react-dom/client'
 import App from './App'
 import { ThemeProvider } from './contexts/ThemeContext'
 import { I18nProvider } from './contexts/I18nContext'
+import { storageAdapter } from './utils/storageAdapter'
+
+// Initialize navigation state
+async function initializeNavigationState() {
+  // Ensure navigation state is properly initialized
+  const currentPath = window.location.pathname;
+  
+  // If we're on the dashboard and don't have navigation state, this might be a direct access
+  if (currentPath === '/dashboard') {
+    const hasDevCenterFlag = await storageAdapter.getItem('lucaverse-from-dev-center');
+    if (!hasDevCenterFlag) {
+      console.log('Dashboard accessed directly - navigation state initialized');
+    }
+  }
+  
+  // Clear any invalid navigation state
+  try {
+    const navigationState = await storageAdapter.getItem('lucaverse-from-dev-center');
+    if (navigationState && navigationState !== 'true') {
+      await storageAdapter.removeItem('lucaverse-from-dev-center');
+    }
+  } catch (error) {
+    console.error('Failed to validate navigation state:', error);
+  }
+}
 
 // Error boundary component
 class ErrorBoundary extends React.Component<
@@ -54,6 +79,9 @@ class ErrorBoundary extends React.Component<
     return this.props.children;
   }
 }
+
+// Initialize navigation state before rendering
+initializeNavigationState().catch(console.error);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

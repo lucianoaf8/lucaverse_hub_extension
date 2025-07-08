@@ -22,19 +22,12 @@ interface I18nContextValue {
 // Create context
 const I18nContext = createContext<I18nContextValue | undefined>(undefined);
 
-// Storage adapter interface for multi-platform support
-interface StorageAdapter {
-  getItem(key: string): string | null;
-  setItem(key: string, value: string): void;
-}
-
 // Storage adapter is now imported from utils/storageAdapter
 
 // I18n provider props
 interface I18nProviderProps {
   children: React.ReactNode;
   defaultLanguage?: string;
-  storageAdapter?: StorageAdapter;
 }
 
 // Helper function to get nested translation value

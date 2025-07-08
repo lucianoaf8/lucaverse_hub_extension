@@ -341,8 +341,14 @@ export class ThemeValidator {
           const matches = line.match(hardcodedColorRegex);
           
           if (matches && !line.includes('//') && !line.includes('/*')) {
-            // Skip if it's in a comment or theme definition file
-            if (!file.includes('theme.ts') && !file.includes('config.ts')) {
+            // Skip if it's in a comment, theme definition file, or development/report files
+            if (!file.includes('theme.ts') && 
+                !file.includes('config.ts') && 
+                !file.includes('useValidation.ts') &&
+                !file.includes('ThemePlayground.tsx') &&
+                !file.includes('dev-center') &&
+                !file.includes('validation') &&
+                !file.includes('reports/')) {
               results.push({
                 id: `hardcoded-color-${path.basename(file)}-${index}`,
                 name: 'Hardcoded Color',

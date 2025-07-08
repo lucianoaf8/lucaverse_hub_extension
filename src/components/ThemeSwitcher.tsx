@@ -84,4 +84,32 @@ function ThemeSwitcher() {
 }
 
 
+function ThemeToggleButton() {
+  const { theme, setTheme, isSystemTheme, setSystemTheme } = useTheme();
+  const { t } = useTranslation();
+
+  const handleToggle = () => {
+    if (isSystemTheme) {
+      setSystemTheme(false);
+      setTheme('light');
+    } else {
+      setTheme(theme === 'light' ? 'dark' : 'light');
+    }
+  };
+
+  return (
+    <button
+      onClick={handleToggle}
+      className="p-2 rounded-lg border border-neutral-700 bg-neutral-800 hover:bg-neutral-700 
+                 text-neutral-300 hover:text-primary transition-all duration-base
+                 focus:outline-none focus:ring-2 focus:ring-primary/50"
+      aria-label={t('theme.toggle')}
+      title={t('theme.toggle')}
+    >
+      {theme === 'dark' ? '🌙' : '☀️'}
+    </button>
+  );
+}
+
 export default ThemeSwitcher;
+export { ThemeSwitcher, ThemeToggleButton };

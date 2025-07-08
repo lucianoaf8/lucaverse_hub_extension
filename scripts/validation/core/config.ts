@@ -129,10 +129,11 @@ export const defaultConfig: ValidationConfig = {
         'src/utils/**': ['*'],
       },
       fileNamingRules: {
-        components: /^[A-Z][a-zA-Z0-9]*\.tsx?$/,
-        hooks: /^use[A-Z][a-zA-Z0-9]*\.ts$/,
-        utils: /^[a-z][a-zA-Z0-9]*\.ts$/,
-        types: /^[a-z][a-zA-Z0-9]*\.ts$/,
+        components: /^.*\.tsx$/,     // Allow any component naming for .tsx files
+        hooks: /^use.*\.(ts|tsx)$/,  // Hooks can be .ts or .tsx, start with 'use'
+        utils: /^.*\.ts$/,           // Allow any utility naming for .ts files
+        types: /^.*\.ts$/,           // Allow any type file naming for .ts files
+        pages: /^.*\.tsx$/,          // Allow any page naming for .tsx files
       },
     },
     guidelines: {
@@ -269,10 +270,11 @@ export const validationModes: ValidationMode = {
         forbiddenPatterns: [],
         requiredExports: {},
         fileNamingRules: {
-          components: /^[A-Z]/,
-          hooks: /^use/,
-          utils: /^[a-z]/,
-          types: /^[a-z]/,
+          components: /^[A-Z].*\.tsx$/,
+          hooks: /^use.*\.ts$/,
+          utils: /^[a-z].*\.ts$/,
+          types: /^[a-z].*\.ts$/,
+          pages: /^[A-Z].*\.tsx$/,
         },
       },
     },

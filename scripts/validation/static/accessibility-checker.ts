@@ -628,9 +628,14 @@ export class AccessibilityChecker {
             });
           }
 
-          // Check for form validation feedback
+          // Check for form validation feedback (but not console.error or similar)
           if (line.includes('error') && !line.includes('aria-describedby') && 
-              !line.includes('aria-invalid')) {
+              !line.includes('aria-invalid') && !line.includes('console.') && 
+              !line.includes('throw new Error') && !line.includes('new Error') &&
+              !line.includes('Error:') && !line.includes('error:') &&
+              (line.includes('input') || line.includes('form') || line.includes('field') || 
+               line.includes('error') && line.includes('state')) &&
+              !line.includes('//')) {
             results.push({
               id: `error-no-aria-${path.basename(file)}-${index}`,
               name: 'Error Without ARIA',

@@ -1,293 +1,90 @@
-/**
- * Main App Component
- * Integrates theme and i18n systems with sample content
- */
-
-import React, { useState } from 'react';
-import { ThemeSwitcher, ThemeToggleButton } from './components/ThemeSwitcher';
-import { useTranslation } from './contexts/I18nContext';
-import { useLanguage } from './contexts/I18nContext';
-import AnimationExamples from './components/AnimationExamples';
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from './contexts/ThemeContext';
+import { I18nProvider } from './contexts/I18nContext';
+import { DevCenter, Dashboard, ThemeDemo, AnimationDemo } from './pages';
 import './index.css';
 
-// Language Switcher Component
-function LanguageSwitcher() {
-  const { language, setLanguage } = useLanguage();
-  const { t } = useTranslation();
+class ErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean; error: Error | null }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
 
-  return (
-    <div className="relative">
-      <label htmlFor="language-selector" className="sr-only">
-        {t('language.select')}
-      </label>
-      
-      <select
-        id="language-selector"
-        value={language}
-        onChange={(e) => setLanguage(e.target.value)}
-        className="appearance-none bg-neutral-800 border border-neutral-700 text-neutral-50 
-                   rounded-lg px-4 py-2 pr-8 leading-tight 
-                   focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20
-                   transition-all duration-fast cursor-pointer
-                   hover:bg-neutral-700 hover:border-neutral-600"
-        aria-label={t('language.select')}
-      >
-        <option value="en">English</option>
-        <option value="pt">Português</option>
-      </select>
-      
-      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-neutral-400">
-        <svg
-          className="fill-current h-4 w-4"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-        >
-          <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-        </svg>
-      </div>
-    </div>
-  );
-}
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
 
-// Sample Panel Component
-function Panel({ title, description, colorClass = 'text-primary' }: { 
-  title: string; 
-  description: string; 
-  colorClass?: string; 
-}) {
-  return (
-    <div className="panel animate-fade-in">
-      <h3 className={`text-xl font-semibold mb-3 ${colorClass}`}>
-        {title}
-      </h3>
-      <p className="text-neutral-300 mb-4">
-        {description}
-      </p>
-      <div className="flex gap-2">
-        <button 
-          className="btn btn-primary"
-          onClick={() => console.log('Primary action clicked')}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              console.log('Primary action clicked');
-            }
-          }}
-          aria-label="Execute primary action"
-        >
-          Primary Action
-        </button>
-        <button 
-          className="btn btn-secondary"
-          onClick={() => console.log('Secondary action clicked')}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              console.log('Secondary action clicked');
-            }
-          }}
-          aria-label="Execute secondary action"
-        >
-          Secondary
-        </button>
-      </div>
-    </div>
-  );
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('Route Error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <div className="max-w-md p-6 bg-surface border border-danger-500 rounded-lg">
+            <h1 className="text-xl font-bold text-danger-500 mb-4">Application Error</h1>
+            <div className="bg-danger-50 border border-danger-200 rounded p-4 mb-4">
+              <h2 className="font-semibold text-danger-800">Error Details:</h2>
+              <p className="text-danger-700 mt-2">{this.state.error?.message}</p>
+              <details className="mt-4">
+                <summary className="cursor-pointer text-danger-600 hover:text-danger-800">
+                  Full Stack Trace
+                </summary>
+                <pre className="mt-2 text-xs text-danger-600 overflow-auto">
+                  {this.state.error?.stack}
+                </pre>
+              </details>
+            </div>
+            <button
+              onClick={() => this.setState({ hasError: false, error: null })}
+              className="w-full px-4 py-2 bg-primary-500 text-white rounded hover:bg-primary-600 transition-colors"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
 }
 
 function App() {
-  const { t } = useTranslation('ui');
-  const { t: tCommon } = useTranslation('common');
-  const [showAnimations, setShowAnimations] = useState(false);
-  
   return (
-    <div className="min-h-screen bg-background transition-colors duration-base">
-      {/* Header */}
-      <header className="border-b border-neutral-700 bg-surface">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <h1 className="text-2xl font-bold text-primary">
-                {tCommon('app.name')}
-              </h1>
-              <p className="text-neutral-400 hidden md:block">
-                {tCommon('app.description')}
-              </p>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => setShowAnimations(!showAnimations)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    setShowAnimations(!showAnimations);
-                  }
-                }}
-                className="px-3 py-1 text-sm bg-primary/20 hover:bg-primary/30 
-                           border border-primary/40 rounded-lg transition-all duration-base
-                           focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-background"
-                aria-label={`${showAnimations ? 'Hide' : 'Show'} animation examples`}
-              >
-                {showAnimations ? 'Hide' : 'Show'} Animations
-              </button>
-              <LanguageSwitcher />
-              <div className="hidden sm:block">
-                <ThemeSwitcher />
-              </div>
-              <div className="sm:hidden">
-                <ThemeToggleButton />
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="container mx-auto px-6 py-8">
-        {showAnimations ? (
-          <AnimationExamples />
-        ) : (
-          <>
-            {/* Welcome Section */}
-            <section className="mb-12 text-center">
-              <h2 className="text-4xl font-bold mb-4 text-primary animate-fade-in">
-                Welcome to Lucaverse Hub
-              </h2>
-              <p className="text-xl text-neutral-300 max-w-2xl mx-auto animate-slide-up">
-                Your centralized productivity dashboard with a beautiful theme system and multilingual support.
-              </p>
-            </section>
-
-        {/* Dashboard Grid */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-          <Panel
-            title={t('panels.smartHub.title')}
-            description={t('panels.smartHub.description')}
-            colorClass="text-primary"
-          />
-          
-          <Panel
-            title={t('panels.aiChat.title')}
-            description={t('panels.aiChat.description')}
-            colorClass="text-secondary"
-          />
-          
-          <Panel
-            title={t('panels.taskManager.title')}
-            description={t('panels.taskManager.description')}
-            colorClass="text-warning"
-          />
-          
-          <Panel
-            title={t('panels.productivity.title')}
-            description={t('panels.productivity.description')}
-            colorClass="text-success"
-          />
-        </section>
-
-        {/* Features Section */}
-        <section className="bg-elevated rounded-xl p-8 mb-12">
-          <h2 className="text-2xl font-semibold mb-6 text-center text-primary">
-            System Features
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="text-center">
-              <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <span className="text-primary text-2xl">🎨</span>
-              </div>
-              <h3 className="font-semibold mb-2">Theme System</h3>
-              <p className="text-neutral-400 text-sm">
-                Complete design system with light/dark modes and system preference detection
-              </p>
-            </div>
-            
-            <div className="text-center">
-              <div className="w-12 h-12 bg-secondary/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <span className="text-secondary text-2xl">🌍</span>
-              </div>
-              <h3 className="font-semibold mb-2">Internationalization</h3>
-              <p className="text-neutral-400 text-sm">
-                Multi-language support with dynamic translation loading and fallbacks
-              </p>
-            </div>
-            
-            <div className="text-center">
-              <div className="w-12 h-12 bg-success/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <span className="text-success text-2xl">⚡</span>
-              </div>
-              <h3 className="font-semibold mb-2">Performance</h3>
-              <p className="text-neutral-400 text-sm">
-                Optimized CSS custom properties and efficient React contexts
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Action Buttons Demo */}
-        <section className="text-center">
-          <h3 className="text-xl font-semibold mb-6">Component Demo</h3>
-          
-          <div className="flex flex-wrap gap-4 justify-center mb-6">
-            <button className="btn btn-primary">
-              {tCommon('actions.save')}
-            </button>
-            <button className="btn btn-secondary">
-              {tCommon('actions.cancel')}
-            </button>
-            <button className="btn" style={{ 
-              backgroundColor: 'var(--color-success-500)', 
-              color: 'var(--color-neutral-50)',
-              borderColor: 'var(--color-success-500)'
-            }}>
-              {tCommon('status.success')}
-            </button>
-            <button className="btn" style={{ 
-              backgroundColor: 'var(--color-warning-500)', 
-              color: 'var(--color-neutral-900)',
-              borderColor: 'var(--color-warning-500)'
-            }}>
-              {tCommon('status.warning')}
-            </button>
-            <button className="btn" style={{ 
-              backgroundColor: 'var(--color-danger-500)', 
-              color: 'var(--color-neutral-50)',
-              borderColor: 'var(--color-danger-500)'
-            }}>
-              {tCommon('status.error')}
-            </button>
-          </div>
-          
-          <div className="space-y-4 max-w-md mx-auto">
-            <input 
-              type="text" 
-              placeholder={t('forms.placeholder.search')}
-              className="input"
-            />
-            <input 
-              type="email" 
-              placeholder={t('forms.placeholder.email')}
-              className="input"
-            />
-          </div>
-        </section>
-        </>
-        )}
-      </main>
-
-      {/* Footer */}
-      <footer className="border-t border-neutral-700 bg-surface mt-16">
-        <div className="container mx-auto px-6 py-8">
-          <div className="text-center text-neutral-400">
-            <p>&copy; 2024 Lucaverse Hub. Built with React, TypeScript, and Tailwind CSS.</p>
-            <p className="text-sm mt-2">
-              Theme System • Internationalization • Modern Design
-            </p>
-          </div>
-        </div>
-      </footer>
-    </div>
+    <ThemeProvider>
+      <I18nProvider>
+        <BrowserRouter>
+          <ErrorBoundary>
+            <Routes>
+              <Route path="/" element={<DevCenter />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/theme-demo" element={<ThemeDemo />} />
+              <Route path="/animation-demo" element={<AnimationDemo />} />
+              <Route path="*" element={
+                <div className="min-h-screen bg-background flex items-center justify-center">
+                  <div className="text-center">
+                    <h1 className="text-4xl font-bold text-primary mb-4">404 - Page Not Found</h1>
+                    <p className="text-neutral-300 mb-6">The requested route does not exist.</p>
+                    <a 
+                      href="/" 
+                      className="px-6 py-3 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+                    >
+                      Go to Dev Center
+                    </a>
+                  </div>
+                </div>
+              } />
+            </Routes>
+          </ErrorBoundary>
+        </BrowserRouter>
+      </I18nProvider>
+    </ThemeProvider>
   );
 }
 

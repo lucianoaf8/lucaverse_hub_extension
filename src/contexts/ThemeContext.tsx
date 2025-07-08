@@ -8,14 +8,8 @@ import { Theme, ThemeVariant, themeVariants, defaultTheme } from '../config/them
 import { applyTheme } from '../utils/cssVariables';
 import { storageUtils } from '../utils/storageAdapter';
 
-// Storage adapter interface for multi-platform support (deprecated)
-interface StorageAdapter {
-  getItem(key: string): string | null;
-  setItem(key: string, value: string): void;
-}
-
 // Default browser storage adapter (now uses platform-compatible storage)
-const browserStorageAdapter: StorageAdapter = {
+const browserStorageAdapter = {
   getItem: (key: string) => {
     // This is a temporary synchronous wrapper for backward compatibility
     // TODO: Refactor to use async storage throughout the context
@@ -58,7 +52,6 @@ const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 // Theme provider props
 interface ThemeProviderProps {
   children: React.ReactNode;
-  storageAdapter?: StorageAdapter;
   storageKey?: string;
   defaultTheme?: ThemeVariant;
   detectSystemPreference?: boolean;
@@ -81,11 +74,11 @@ function getSystemThemePreference(): ThemeVariant | null {
 // Theme Provider Component
 export function ThemeProvider({
   children,
-  storageAdapter = browserStorageAdapter,
   storageKey = THEME_STORAGE_KEY,
   defaultTheme: defaultThemeProp = defaultTheme,
   detectSystemPreference = true,
 }: ThemeProviderProps) {
+  const storageAdapter = browserStorageAdapter;
   // State for current theme
   const [theme, setThemeState] = useState<ThemeVariant>(() => {
     // Check if we should use system theme
