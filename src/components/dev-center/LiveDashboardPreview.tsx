@@ -20,7 +20,7 @@ interface PreviewControls {
 }
 
 export default function LiveDashboardPreview() {
-  const { themeConfig, updateTheme } = useTheme();
+  const { themeConfig } = useTheme();
   const [previewControls, setPreviewControls] = useState<PreviewControls>({
     theme: themeConfig,
     layout: 'grid-2x2',
@@ -110,6 +110,7 @@ export default function LiveDashboardPreview() {
               layout: e.target.value as any 
             }))}
             className="w-full p-2 bg-neutral-800 border border-neutral-700 rounded"
+            style={{ color: themeConfig.colors.neutral[100] }}
           >
             <option value="grid-2x2">2x2 Grid</option>
             <option value="grid-1x4">1x4 Vertical</option>

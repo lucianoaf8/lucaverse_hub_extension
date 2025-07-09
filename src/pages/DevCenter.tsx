@@ -5,6 +5,9 @@ import DevNavigation from '../components/dev-center/DevNavigation';
 import ComponentLibrary from '../components/dev-center/ComponentLibrary';
 import ValidationRunner from '../components/dev-center/ValidationRunner';
 import ThemePlayground from '../components/dev-center/ThemePlayground';
+import AdvancedThemeHub from '../components/dev-center/AdvancedThemeHub';
+import ComponentTestingLab from '../components/dev-center/ComponentTestingLab';
+import LiveDashboardPreview from '../components/dev-center/LiveDashboardPreview';
 import useNavigation from '../hooks/useNavigation';
 
 export default function DevCenter() {
@@ -50,6 +53,30 @@ export default function DevCenter() {
       icon: '🎛️',
       link: '#theme-playground',
       color: 'info'
+    },
+    {
+      id: 'advanced-theme-hub',
+      title: 'Advanced Theme Hub',
+      description: 'Real-time CSS custom property manipulation with granular control over all visual aspects',
+      icon: '🎨',
+      link: '#advanced-theme-hub',
+      color: 'primary'
+    },
+    {
+      id: 'component-testing-lab',
+      title: 'Component Testing Lab',
+      description: 'Isolated component testing with state matrix testing and automated screenshot capture',
+      icon: '🧪',
+      link: '#component-testing-lab',
+      color: 'secondary'
+    },
+    {
+      id: 'live-dashboard-preview',
+      title: 'Live Dashboard Preview',
+      description: 'Real-time dashboard visualization with dev controls and layout manipulation',
+      icon: '📺',
+      link: '#live-dashboard-preview',
+      color: 'warning'
     }
   ];
 
@@ -147,6 +174,45 @@ export default function DevCenter() {
 
         <section id="theme-playground" className="scroll-mt-20">
           <ThemePlayground />
+        </section>
+
+        <section id="advanced-theme-hub" className="scroll-mt-20">
+          <div className="mb-6">
+            <h2 className="text-3xl font-bold text-primary mb-4">🎨 Advanced Theme Hub</h2>
+            <p className="text-neutral-400 text-lg">
+              Real-time CSS custom property manipulation with granular control over all visual aspects.
+              Experiment with colors, typography, spacing, animations, and effects with live preview.
+            </p>
+          </div>
+          <div className="bg-elevated rounded-xl border border-neutral-700 overflow-hidden" style={{ height: '600px' }}>
+            <AdvancedThemeHub />
+          </div>
+        </section>
+
+        <section id="component-testing-lab" className="scroll-mt-20">
+          <div className="mb-6">
+            <h2 className="text-3xl font-bold text-secondary mb-4">🧪 Component Testing Lab</h2>
+            <p className="text-neutral-400 text-lg">
+              Isolated component testing with state matrix testing, props manipulation, and automated screenshot capture.
+              Test components in all states and variants with recording capabilities.
+            </p>
+          </div>
+          <div className="bg-elevated rounded-xl border border-neutral-700 overflow-hidden" style={{ height: '700px' }}>
+            <ComponentTestingLab />
+          </div>
+        </section>
+
+        <section id="live-dashboard-preview" className="scroll-mt-20">
+          <div className="mb-6">
+            <h2 className="text-3xl font-bold text-warning mb-4">📺 Live Dashboard Preview</h2>
+            <p className="text-neutral-400 text-lg">
+              Real-time dashboard visualization with dev controls and layout manipulation.
+              Test different layouts, panel visibility, and animations with instant preview.
+            </p>
+          </div>
+          <div className="bg-elevated rounded-xl border border-neutral-700 overflow-hidden" style={{ height: '600px' }}>
+            <LiveDashboardPreview />
+          </div>
         </section>
 
         <section className="bg-elevated rounded-xl p-8">

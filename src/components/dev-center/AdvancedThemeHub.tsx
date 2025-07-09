@@ -18,7 +18,7 @@ interface ThemeProperty {
 }
 
 export default function AdvancedThemeHub() {
-  const { themeConfig, updateTheme } = useTheme();
+  const { themeConfig } = useTheme();
   const [activeCategory, setActiveCategory] = useState<string>('colors');
   const [searchTerm, setSearchTerm] = useState('');
   const [customProperties, setCustomProperties] = useState<ThemeProperty[]>([]);
@@ -45,14 +45,14 @@ export default function AdvancedThemeHub() {
       }
     });
 
-    // Typography properties
-    Object.entries(themeConfig.typography?.fontSizes || {}).forEach(([size, value]) => {
+    // Typography properties  
+    Object.entries(themeConfig.typography?.fontSize || {}).forEach(([size, value]) => {
       properties.push({
         id: `font-size-${size}`,
         category: 'typography',
         name: `Font Size ${size}`,
         type: 'slider',
-        value: parseFloat(value.replace('rem', '')),
+        value: parseFloat(String(value).replace('rem', '')),
         min: 0.5,
         max: 4,
         step: 0.1,
@@ -68,7 +68,7 @@ export default function AdvancedThemeHub() {
         category: 'spacing',
         name: `Spacing ${key}`,
         type: 'slider',
-        value: parseFloat(value.replace('rem', '')),
+        value: parseFloat(String(value).replace('rem', '')),
         min: 0,
         max: 8,
         step: 0.25,
@@ -183,6 +183,7 @@ export default function AdvancedThemeHub() {
               value={property.value}
               onChange={(e) => updateProperty(property.id, e.target.value)}
               className="flex-1 px-3 py-2 bg-neutral-800 border border-neutral-700 rounded text-sm font-mono"
+              style={{ color: themeConfig.colors.neutral[100] }}
             />
             <button
               onClick={() => navigator.clipboard.writeText(property.value)}
@@ -216,6 +217,7 @@ export default function AdvancedThemeHub() {
                   value={property.value}
                   onChange={(e) => updateProperty(property.id, parseFloat(e.target.value))}
                   className="w-20 px-2 py-1 bg-neutral-800 border border-neutral-700 rounded text-sm text-center"
+                  style={{ color: themeConfig.colors.neutral[100] }}
                 />
                 {property.unit && (
                   <span className="text-xs text-neutral-400 flex-shrink-0">{property.unit}</span>
@@ -231,6 +233,7 @@ export default function AdvancedThemeHub() {
             value={property.value}
             onChange={(e) => updateProperty(property.id, e.target.value)}
             className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded text-sm"
+            style={{ color: themeConfig.colors.neutral[100] }}
           >
             {property.options?.map(option => (
               <option key={option} value={option}>{option}</option>
@@ -258,6 +261,7 @@ export default function AdvancedThemeHub() {
             value={property.value}
             onChange={(e) => updateProperty(property.id, e.target.value)}
             className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded text-sm"
+            style={{ color: themeConfig.colors.neutral[100] }}
           />
         );
     }
@@ -306,6 +310,7 @@ export default function AdvancedThemeHub() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded text-sm"
+            style={{ color: themeConfig.colors.neutral[100] }}
           />
         </div>
 

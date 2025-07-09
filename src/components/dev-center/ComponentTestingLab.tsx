@@ -1,6 +1,7 @@
 // src/components/dev-center/ComponentTestingLab.tsx
 import React, { useState, useEffect } from 'react';
 import { SmartHub, AIChat, TaskManager, Productivity } from '../dashboard';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface ComponentConfig {
   id: string;
@@ -25,6 +26,7 @@ interface TestScenario {
 }
 
 export default function ComponentTestingLab() {
+  const { themeConfig } = useTheme();
   const [selectedComponent, setSelectedComponent] = useState<string>('smart-hub');
   const [activeState, setActiveState] = useState<string>('default');
   const [customProps, setCustomProps] = useState<Record<string, any>>({});
@@ -199,7 +201,7 @@ export default function ComponentTestingLab() {
         <div className="border border-neutral-700 rounded-lg overflow-hidden">
           <div className="bg-neutral-800 px-4 py-2 border-b border-neutral-700 flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium">{selectedConfig.name}</span>
+              <span className="text-sm font-medium" style={{ color: themeConfig.colors.neutral[100] }}>{selectedConfig.name}</span>
               <span className="text-xs text-neutral-400">State: {activeState}</span>
             </div>
             <div className="flex items-center space-x-2">
@@ -247,6 +249,7 @@ export default function ComponentTestingLab() {
                 }
               }}
               className="w-full h-32 px-3 py-2 bg-neutral-800 border border-neutral-700 rounded text-sm font-mono"
+              style={{ color: themeConfig.colors.neutral[100] }}
               placeholder='{"key": "value"}'
             />
           </div>
@@ -284,6 +287,7 @@ export default function ComponentTestingLab() {
               value={selectedComponent}
               onChange={(e) => setSelectedComponent(e.target.value)}
               className="w-full p-2 bg-neutral-800 border border-neutral-700 rounded"
+              style={{ color: themeConfig.colors.neutral[100] }}
             >
               {componentConfigs.map(config => (
                 <option key={config.id} value={config.id}>
@@ -322,6 +326,7 @@ export default function ComponentTestingLab() {
               <h4 className="font-medium text-secondary mb-2">Variant</h4>
               <select
                 className="w-full p-2 bg-neutral-800 border border-neutral-700 rounded"
+                style={{ color: themeConfig.colors.neutral[100] }}
               >
                 {selectedConfig.variants.map(variant => (
                   <option key={variant} value={variant}>
@@ -368,7 +373,7 @@ export default function ComponentTestingLab() {
                   className="p-3 bg-neutral-800 border border-neutral-700 rounded"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">{scenario.name}</span>
+                    <span className="text-sm font-medium" style={{ color: themeConfig.colors.neutral[100] }}>{scenario.name}</span>
                     <button
                       onClick={() => setTestScenarios(prev => prev.filter(s => s.id !== scenario.id))}
                       className="text-xs text-neutral-400 hover:text-red-400"
