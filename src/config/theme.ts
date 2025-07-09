@@ -266,6 +266,24 @@ export interface ThemeInteractions {
   };
 }
 
+export interface ThemeOpacity {
+  glass: {
+    high: string;
+    medium: string;
+    low: string;
+  };
+  glow: {
+    subtle: string;
+    medium: string;
+    bright: string;
+  };
+  border: {
+    light: string;
+    medium: string;
+    strong: string;
+  };
+}
+
 export interface ThemeBreakpoints {
   sm: string;
   md: string;
@@ -283,6 +301,7 @@ export interface Theme {
   backgrounds: ThemeBackgrounds;
   animations: ThemeAnimations;
   interactions: ThemeInteractions;
+  opacity: ThemeOpacity;
   breakpoints: ThemeBreakpoints;
 }
 
@@ -580,6 +599,23 @@ const lightTheme: Theme = {
       opacity: '0.5',
       cursor: 'not-allowed',
       grayscale: '100%',
+    },
+  },
+  opacity: {
+    glass: {
+      high: 'E6', // 90% opacity for high transparency
+      medium: 'B3', // 70% opacity for medium transparency
+      low: '80', // 50% opacity for low transparency
+    },
+    glow: {
+      subtle: '20', // 12.5% opacity for subtle glows
+      medium: '40', // 25% opacity for medium glows
+      bright: '60', // 37.5% opacity for bright glows
+    },
+    border: {
+      light: '20', // 12.5% opacity for light borders
+      medium: '40', // 25% opacity for medium borders
+      strong: '60', // 37.5% opacity for strong borders
     },
   },
   breakpoints: {

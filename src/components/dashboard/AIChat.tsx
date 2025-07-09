@@ -44,8 +44,11 @@ export default function AIChat() {
         {/* Left sidebar */}
         <div className="w-32 flex flex-col space-y-2 flex-shrink-0 overflow-hidden">
           {/* New Chat button */}
-          <button className="flex items-center justify-center space-x-1 px-2 py-2 text-white rounded text-xs transition-all"
-                  style={{ backgroundColor: themeConfig.colors.primary[700] }}>
+          <button className="flex items-center justify-center space-x-1 px-2 py-2 rounded text-xs transition-all"
+                  style={{ 
+                    backgroundColor: themeConfig.colors.primary[700],
+                    color: themeConfig.colors.neutral[100]
+                  }}>
             <span className="text-sm">🌟</span>
             <span className="font-medium">New Chat</span>
           </button>
@@ -80,8 +83,12 @@ export default function AIChat() {
             <select
               value={selectedModel}
               onChange={(e) => setSelectedModel(e.target.value)}
-              className="px-2 py-1 rounded text-white text-xs focus:outline-none"
-              style={{ backgroundColor: themeConfig.colors.neutral[800], borderColor: themeConfig.colors.neutral[700] }}
+              className="px-2 py-1 rounded text-xs focus:outline-none"
+              style={{ 
+                backgroundColor: themeConfig.colors.neutral[800], 
+                borderColor: themeConfig.colors.neutral[700],
+                color: themeConfig.colors.neutral[100]
+              }}
             >
               {models.map((model) => (
                 <option key={model} value={model}>{model}</option>
@@ -90,8 +97,12 @@ export default function AIChat() {
             <select
               value={selectedVersion}
               onChange={(e) => setSelectedVersion(e.target.value)}
-              className="px-2 py-1 rounded text-white text-xs focus:outline-none"
-              style={{ backgroundColor: themeConfig.colors.neutral[800], borderColor: themeConfig.colors.neutral[700] }}
+              className="px-2 py-1 rounded text-xs focus:outline-none"
+              style={{ 
+                backgroundColor: themeConfig.colors.neutral[800], 
+                borderColor: themeConfig.colors.neutral[700],
+                color: themeConfig.colors.neutral[100]
+              }}
             >
               {versions.map((version) => (
                 <option key={version} value={version}>{version}</option>
@@ -121,8 +132,12 @@ export default function AIChat() {
           <div className="flex-1 overflow-hidden">
             <textarea
               placeholder="Please explain this concept in simple terms:"
-              className="w-full h-full px-3 py-2 text-white placeholder-gray-400 focus:outline-none resize-none text-xs"
-              style={{ backgroundColor: themeConfig.colors.neutral[800], borderColor: themeConfig.colors.neutral[700] }}
+              className="w-full h-full px-3 py-2 focus:outline-none resize-none text-xs"
+              style={{ 
+                backgroundColor: themeConfig.colors.neutral[800], 
+                borderColor: themeConfig.colors.neutral[700],
+                color: themeConfig.colors.neutral[100]
+              }}
             />
           </div>
         </div>

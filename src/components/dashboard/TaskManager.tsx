@@ -65,8 +65,11 @@ export default function TaskManager() {
                 <span className="mr-1">📋</span>
                 Main Tasks
               </h3>
-              <button className="px-2 py-1 text-white rounded text-xs transition-all"
-                      style={{ backgroundColor: themeConfig.colors.primary[700] }}>
+              <button className="px-2 py-1 rounded text-xs transition-all"
+                      style={{ 
+                        backgroundColor: themeConfig.colors.primary[700],
+                        color: themeConfig.colors.neutral[100]
+                      }}>
                 + Add
               </button>
             </div>
@@ -138,8 +141,11 @@ export default function TaskManager() {
                 <span className="mr-1">➤</span>
                 Subtasks
               </h3>
-              <button className="px-2 py-1 text-white rounded text-xs transition-all"
-                      style={{ backgroundColor: themeConfig.colors.primary[700] }}>
+              <button className="px-2 py-1 rounded text-xs transition-all"
+                      style={{ 
+                        backgroundColor: themeConfig.colors.primary[700],
+                        color: themeConfig.colors.neutral[100]
+                      }}>
                 + Add
               </button>
             </div>

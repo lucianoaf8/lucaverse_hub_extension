@@ -53,15 +53,20 @@ export default function Dashboard() {
               <input
                 type="text"
                 placeholder="Search everything…"
-                className="w-full px-4 py-2 rounded-xl text-white placeholder-gray-400 
-                           focus:outline-none focus:ring-2 transition-all backdrop-blur-sm"
+                className="w-full px-4 py-2 rounded-xl focus:outline-none focus:ring-2 transition-all backdrop-blur-sm"
                 style={{ 
-                  backgroundColor: `${themeConfig.colors.neutral[800]}B3`,
-                  borderColor: `${themeConfig.colors.primary[500]}60`,
+                  backgroundColor: `${themeConfig.colors.neutral[800]}${themeConfig.opacity.glass.medium}`,
+                  borderColor: `${themeConfig.colors.primary[500]}${themeConfig.opacity.border.strong}`,
                   borderWidth: '1px',
-                  boxShadow: `inset 0 2px 4px 0 ${themeConfig.colors.neutral[950]}40, 0 0 10px ${themeConfig.colors.primary[500]}20`
+                  boxShadow: `inset 0 2px 4px 0 ${themeConfig.colors.neutral[950]}${themeConfig.opacity.border.medium}, 0 0 10px ${themeConfig.colors.primary[500]}${themeConfig.opacity.glow.subtle}`,
+                  color: themeConfig.colors.neutral[100]
                 }}
               />
+              <style jsx>{`
+                input::placeholder {
+                  color: ${themeConfig.colors.neutral[400]};
+                }
+              `}</style>
               <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                      style={{ color: themeConfig.colors.primary[400] }}>
@@ -87,9 +92,9 @@ export default function Dashboard() {
         {/* Top-left: Smart Access Hub */}
         <div className="overflow-hidden backdrop-blur-sm" 
              style={{ 
-               backgroundColor: `${themeConfig.colors.neutral[900]}E6`,
-               border: `1px solid ${themeConfig.colors.primary[500]}40`,
-               boxShadow: `inset 0 1px 0 ${themeConfig.colors.primary[500]}20, 0 0 20px ${themeConfig.colors.primary[500]}10`
+               backgroundColor: `${themeConfig.colors.neutral[900]}${themeConfig.opacity.glass.high}`,
+               border: `1px solid ${themeConfig.colors.primary[500]}${themeConfig.opacity.border.medium}`,
+               boxShadow: `inset 0 1px 0 ${themeConfig.colors.primary[500]}${themeConfig.opacity.glow.subtle}, 0 0 20px ${themeConfig.colors.primary[500]}10`
              }}>
           <div className="h-full p-6 overflow-hidden">
             <SmartHub />
@@ -99,9 +104,9 @@ export default function Dashboard() {
         {/* Top-right: AI Command Center */}
         <div className="overflow-hidden backdrop-blur-sm" 
              style={{ 
-               backgroundColor: `${themeConfig.colors.neutral[900]}E6`,
-               border: `1px solid ${themeConfig.colors.primary[500]}40`,
-               boxShadow: `inset 0 1px 0 ${themeConfig.colors.primary[500]}20, 0 0 20px ${themeConfig.colors.primary[500]}10`
+               backgroundColor: `${themeConfig.colors.neutral[900]}${themeConfig.opacity.glass.high}`,
+               border: `1px solid ${themeConfig.colors.primary[500]}${themeConfig.opacity.border.medium}`,
+               boxShadow: `inset 0 1px 0 ${themeConfig.colors.primary[500]}${themeConfig.opacity.glow.subtle}, 0 0 20px ${themeConfig.colors.primary[500]}10`
              }}>
           <div className="h-full p-6 overflow-hidden">
             <AIChat />
@@ -111,9 +116,9 @@ export default function Dashboard() {
         {/* Bottom-left: Mission Control */}
         <div className="overflow-hidden backdrop-blur-sm" 
              style={{ 
-               backgroundColor: `${themeConfig.colors.neutral[900]}E6`,
-               border: `1px solid ${themeConfig.colors.primary[500]}40`,
-               boxShadow: `inset 0 1px 0 ${themeConfig.colors.primary[500]}20, 0 0 20px ${themeConfig.colors.primary[500]}10`
+               backgroundColor: `${themeConfig.colors.neutral[900]}${themeConfig.opacity.glass.high}`,
+               border: `1px solid ${themeConfig.colors.primary[500]}${themeConfig.opacity.border.medium}`,
+               boxShadow: `inset 0 1px 0 ${themeConfig.colors.primary[500]}${themeConfig.opacity.glow.subtle}, 0 0 20px ${themeConfig.colors.primary[500]}10`
              }}>
           <div className="h-full p-6 overflow-hidden">
             <TaskManager />
@@ -123,9 +128,9 @@ export default function Dashboard() {
         {/* Bottom-right: Productivity Nexus */}
         <div className="overflow-hidden backdrop-blur-sm" 
              style={{ 
-               backgroundColor: `${themeConfig.colors.neutral[900]}E6`,
-               border: `1px solid ${themeConfig.colors.primary[500]}40`,
-               boxShadow: `inset 0 1px 0 ${themeConfig.colors.primary[500]}20, 0 0 20px ${themeConfig.colors.primary[500]}10`
+               backgroundColor: `${themeConfig.colors.neutral[900]}${themeConfig.opacity.glass.high}`,
+               border: `1px solid ${themeConfig.colors.primary[500]}${themeConfig.opacity.border.medium}`,
+               boxShadow: `inset 0 1px 0 ${themeConfig.colors.primary[500]}${themeConfig.opacity.glow.subtle}, 0 0 20px ${themeConfig.colors.primary[500]}10`
              }}>
           <div className="h-full p-6 overflow-hidden">
             <Productivity />

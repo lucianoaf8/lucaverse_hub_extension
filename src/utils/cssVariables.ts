@@ -82,6 +82,9 @@ export function generateCSSVariables(theme: Theme): Record<string, string> {
   // Interactions
   Object.assign(variables, objectToCSSVariables(theme.interactions, ['interaction']));
 
+  // Opacity
+  Object.assign(variables, objectToCSSVariables(theme.opacity, ['opacity']));
+
   // Breakpoints
   Object.assign(variables, objectToCSSVariables(theme.breakpoints, ['breakpoint']));
 
@@ -172,6 +175,11 @@ export const cssVars = {
   // Interactions
   interaction: (state: string, property: string): CSSVariableReference => {
     return cssVar(`interaction-${state}-${property}`);
+  },
+
+  // Opacity
+  opacity: (type: string, level: string): CSSVariableReference => {
+    return cssVar(`opacity-${type}-${level}`);
   },
 
   // Breakpoints

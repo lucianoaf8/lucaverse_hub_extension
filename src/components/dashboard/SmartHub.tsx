@@ -48,12 +48,13 @@ export default function SmartHub() {
         <input
           type="text"
           placeholder="Search bookmarks & history…"
-          className="w-full px-4 py-2 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 transition-all backdrop-blur-sm"
+          className="w-full px-4 py-2 rounded-lg focus:outline-none focus:ring-2 transition-all backdrop-blur-sm"
           style={{ 
             backgroundColor: `${themeConfig.colors.neutral[800]}B3`,
             borderColor: `${themeConfig.colors.primary[500]}60`,
             borderWidth: '1px',
-            boxShadow: `inset 0 2px 4px 0 ${themeConfig.colors.neutral[950]}40, 0 0 8px ${themeConfig.colors.primary[500]}20`
+            boxShadow: `inset 0 2px 4px 0 ${themeConfig.colors.neutral[950]}40, 0 0 8px ${themeConfig.colors.primary[500]}20`,
+            color: themeConfig.colors.neutral[100]
           }}
         />
         <div className="absolute inset-y-0 right-0 flex items-center pr-3">
@@ -79,11 +80,13 @@ export default function SmartHub() {
               {quickTags.map((tag) => (
                 <button
                   key={tag.name}
-                  className="h-[32px] px-2 py-1 rounded-full text-xs text-white hover:opacity-75 transition-all flex items-center justify-center"
+                  className="h-[32px] px-2 py-1 rounded-full text-xs hover:opacity-75 transition-all flex items-center justify-center backdrop-blur-sm"
                   style={{ 
-                    backgroundColor: tag.color,
-                    borderColor: themeConfig.colors.neutral[700],
-                    borderWidth: '1px'
+                    backgroundColor: `${tag.color}CC`,
+                    borderColor: `${themeConfig.colors.primary[500]}40`,
+                    borderWidth: '1px',
+                    boxShadow: `0 0 8px ${tag.color}40`,
+                    color: themeConfig.colors.neutral[100]
                   }}
                 >
                   {tag.name}

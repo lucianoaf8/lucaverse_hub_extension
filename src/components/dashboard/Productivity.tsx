@@ -91,8 +91,11 @@ export default function Productivity() {
             {controls.map((control) => (
               <button
                 key={control}
-                className="px-3 py-1 text-white rounded text-xs transition-all"
-                style={{ backgroundColor: themeConfig.colors.neutral[800] }}
+                className="px-3 py-1 rounded text-xs transition-all"
+                style={{ 
+                  backgroundColor: themeConfig.colors.neutral[800],
+                  color: themeConfig.colors.neutral[100]
+                }}
               >
                 {control}
               </button>
@@ -145,8 +148,12 @@ export default function Productivity() {
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Capture thoughts, insights, and breakthroughs…"
-            className="flex-1 w-full px-3 py-2 rounded text-white placeholder-gray-400 focus:outline-none resize-none text-xs"
-            style={{ backgroundColor: themeConfig.colors.neutral[800], borderColor: themeConfig.colors.neutral[700] }}
+            className="flex-1 w-full px-3 py-2 rounded focus:outline-none resize-none text-xs"
+            style={{ 
+              backgroundColor: themeConfig.colors.neutral[800], 
+              borderColor: themeConfig.colors.neutral[700],
+              color: themeConfig.colors.neutral[100]
+            }}
           />
         </div>
       </div>
