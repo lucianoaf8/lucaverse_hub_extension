@@ -1,7 +1,11 @@
+// Update the index file to export all new components
+export { default as DevCenterGrid } from './DevCenterGrid';
+export { default as DevCenterHeader } from './DevCenterHeader';
+export { default as WorkflowCards } from './WorkflowCards';
+export { default as QuickActionsBar } from './QuickActionsBar';
+export { default as StatusPanels } from './StatusPanels';
 export { default as DevNavigation } from './DevNavigation';
-export { default as ValidationRunner } from './ValidationRunner';
-export { default as ComponentLibrary } from './ComponentLibrary';
-export { default as ThemePlayground } from './ThemePlayground';
-export { default as AdvancedThemeHub } from './AdvancedThemeHub';
-export { default as ComponentTestingLab } from './ComponentTestingLab';
-export { default as LiveDashboardPreview } from './LiveDashboardPreview';
+export { default as LayoutTest } from './LayoutTest';
+
+// Remove any exports for the old components that are being replaced
+// Remove: LiveDashboardPreview, ComponentTestingLab, AdvancedThemeHub

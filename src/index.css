@@ -330,3 +330,33 @@
     transition-duration: 50ms !important;
   }
 }
+
+/* Add these styles to prevent any scrolling in dev center */
+.dev-center-container,
+.dev-center-container * {
+  box-sizing: border-box;
+}
+
+.dev-center-container {
+  overflow: hidden !important;
+}
+
+.dev-center-main {
+  overflow: hidden !important;
+}
+
+/* Ensure all dev center children respect height constraints */
+.dev-center-container .status-panel,
+.dev-center-container .workflow-card,
+.dev-center-container .quick-actions-bar {
+  overflow: hidden;
+}
+
+/* Remove any default margins that could cause layout issues */
+.dev-center-container h1,
+.dev-center-container h2,
+.dev-center-container h3,
+.dev-center-container p {
+  margin: 0;
+  padding: 0;
+}

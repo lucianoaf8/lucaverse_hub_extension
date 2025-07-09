@@ -64,7 +64,7 @@ function App() {
             <Routes>
               <Route path="/" element={<DevCenter />} />
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/dev-center" element={<DevCenter />} />
+              <Route path="/dev-center/*" element={<DevCenter />} />
               <Route path="/theme-demo" element={<ThemeDemo />} />
               <Route path="/animation-demo" element={<AnimationDemo />} />
               <Route path="*" element={

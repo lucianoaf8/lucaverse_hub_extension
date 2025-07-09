@@ -54,86 +54,32 @@ export default function DevNavigation() {
   };
 
   return (
-    <nav className="bg-elevated border-b border-neutral-700">
-      <div className="container mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-6">
-            <Link to="/dev-center" className="text-xl font-bold text-primary hover:text-primary/80 transition-colors">
-              {t('app.name')} Dev
-            </Link>
-            
-            <div className="hidden md:flex items-center space-x-1">
-              {navItems.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-base ${
-                    isActivePath(item.path)
-                      ? 'bg-primary/20 text-primary border border-primary/30'
-                      : 'text-neutral-300 hover:text-primary hover:bg-primary/10'
-                  }`}
-                >
-                  <span className="mr-2">{item.icon}</span>
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={() => goToDashboard().catch(console.error)}
-              className="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg 
-                         font-medium transition-all duration-base
-                         focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-background
-                         shadow-lg hover:shadow-xl"
-              aria-label="Launch Production Dashboard"
-            >
-              <span className="mr-2">🚀</span>
-              Launch Dashboard
-            </button>
-            
-            <LanguageSwitcher />
-            
-            <div className="hidden sm:block">
-              <ThemeSwitcher />
-            </div>
-            <div className="sm:hidden">
-              <ThemeToggleButton />
-            </div>
-          </div>
-        </div>
-
-        <div className="md:hidden mt-4 flex flex-wrap gap-2">
-          {navItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-base ${
-                isActivePath(item.path)
-                  ? 'bg-primary/20 text-primary border border-primary/30'
-                  : 'text-neutral-300 hover:text-primary hover:bg-primary/10'
-              }`}
-            >
-              <span className="mr-2">{item.icon}</span>
-              {item.label}
-            </Link>
-          ))}
-        </div>
-
-        {location.pathname !== '/dev-center' && (
-          <div className="mt-4 text-sm text-neutral-400">
-            <span className="mr-2">📍</span>
-            <Link to="/dev-center" className="hover:text-primary transition-colors">
-              Dev Center
-            </Link>
-            <span className="mx-2">→</span>
-            <span className="text-primary">
-              {navItems.find(item => item.path === location.pathname)?.label || 'Current Section'}
-            </span>
-          </div>
-        )}
-      </div>
+    <nav className="dev-navigation">
+      <style jsx>{`
+        .dev-navigation {
+          display: flex;
+          gap: 16px;
+          align-items: center;
+        }
+        .nav-link {
+          padding: 6px 12px;
+          color: var(--color-neutral-400);
+          text-decoration: none;
+          border-radius: 4px;
+          font-size: 14px;
+          transition: all 0.2s;
+        }
+        .nav-link:hover,
+        .nav-link.active {
+          background: var(--color-neutral-800);
+          color: var(--color-neutral-200);
+        }
+      `}</style>
+      <Link to="/dev-center" className="nav-link">Overview</Link>
+      <Link to="/dev-center/theme" className="nav-link">Theme</Link>
+      <Link to="/dev-center/components" className="nav-link">Components</Link>
+      <Link to="/dev-center/layout" className="nav-link">Layout</Link>
+      <Link to="/dev-center/validation" className="nav-link">Validation</Link>
     </nav>
   );
 }

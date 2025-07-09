@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Validation Report - 7/8/2025</title>
+    <title>Validation Report - 7/9/2025</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -106,26 +106,26 @@
     <div class="container">
         <div class="header">
             <h1>🔍 Validation Report</h1>
-            <p><strong>Generated:</strong> 7/8/2025, 7:06:00 PM</p>
+            <p><strong>Generated:</strong> 7/9/2025, 4:18:45 AM</p>
             <p><strong>Mode:</strong> development | <strong>Environment:</strong> development</p>
-            <p><strong>Duration:</strong> 2.91s</p>
+            <p><strong>Duration:</strong> 4.37s</p>
         </div>
 
         <div class="summary">
             <div class="metric">
-                <div class="metric-value">76</div>
+                <div class="metric-value">289</div>
                 <div>Total Tests</div>
             </div>
             <div class="metric">
-                <div class="metric-value pass">36</div>
+                <div class="metric-value pass">62</div>
                 <div>Passed</div>
             </div>
             <div class="metric">
-                <div class="metric-value fail">10</div>
+                <div class="metric-value fail">60</div>
                 <div>Failed</div>
             </div>
             <div class="metric">
-                <div class="metric-value warning">28</div>
+                <div class="metric-value warning">165</div>
                 <div>Warnings</div>
             </div>
             <div class="metric">
@@ -143,6 +143,46 @@
                 <button class="filter-btn" onclick="filterResults('pass')">Passed</button>
             </div>
             
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Deep Relative Import</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Import path goes up 3 levels: ../../../contexts/ThemeContext</div>
+                    <div class="result-details">📁 src\components\dev-center\navigation\QuickActions.tsx</div>
+                    <div class="result-details">💡 Consider using absolute imports or restructuring directories</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Deep Relative Import</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Import path goes up 4 levels: ../../../../contexts/ThemeContext</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\ThemeStudio\Typography.tsx</div>
+                    <div class="result-details">💡 Consider using absolute imports or restructuring directories</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Deep Relative Import</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Import path goes up 4 levels: ../../../../contexts/ThemeContext</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\ThemeStudio\SpacingLayout.tsx</div>
+                    <div class="result-details">💡 Consider using absolute imports or restructuring directories</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Deep Relative Import</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Import path goes up 4 levels: ../../../../contexts/ThemeContext</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\ThemeStudio\ColorHarmony.tsx</div>
+                    <div class="result-details">💡 Consider using absolute imports or restructuring directories</div>
+                </div>
             
                 <div class="result warning" data-status="warning">
                     <div class="result-header">
@@ -174,12 +214,102 @@
                     <div class="result-details">💡 Split into separate files or create index file</div>
                 </div>
             
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Multiple Components in File</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">File contains 5 components</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\StateDemo.tsx</div>
+                    <div class="result-details">💡 Split into separate files or create index file</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Multiple Components in File</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">File contains 7 components</div>
+                    <div class="result-details">📁 src\components\dev-center\state\selectors.ts</div>
+                    <div class="result-details">💡 Split into separate files or create index file</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Multiple Components in File</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">File contains 7 components</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\MigrationManager.tsx</div>
+                    <div class="result-details">💡 Split into separate files or create index file</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Multiple Components in File</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">File contains 3 components</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\MigrationDashboard.tsx</div>
+                    <div class="result-details">💡 Split into separate files or create index file</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Multiple Components in File</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">File contains 2 components</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\FeatureFlags.ts</div>
+                    <div class="result-details">💡 Split into separate files or create index file</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Component No Default Export</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">React component file should have default export</div>
+                    <div class="result-details">📁 src\components\dev-center\contexts\DevWorkflowContext.tsx</div>
+                    <div class="result-details">💡 Export component as default</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Multiple Components in File</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">File contains 4 components</div>
+                    <div class="result-details">📁 src\components\dev-center\contexts\DevWorkflowContext.tsx</div>
+                    <div class="result-details">💡 Split into separate files or create index file</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Multiple Components in File</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">File contains 2 components</div>
+                    <div class="result-details">📁 src\components\dev-center\components\WorkflowToolPage.tsx</div>
+                    <div class="result-details">💡 Split into separate files or create index file</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Multiple Components in File</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">File contains 2 components</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\ComponentWorkshop\TestStates.tsx</div>
+                    <div class="result-details">💡 Split into separate files or create index file</div>
+                </div>
+            
                 <div class="result pass" data-status="pass">
                     <div class="result-header">
                         <div class="result-name">✅ Dependency Metrics Summary</div>
                         <div class="result-duration">0ms</div>
                     </div>
-                    <div class="result-message">Architecture metrics: 40 files, avg 0.0 deps/file</div>
+                    <div class="result-message">Architecture metrics: 95 files, avg 0.0 deps/file</div>
                     
                     
                 </div>
@@ -340,6 +470,16 @@
                         <div class="result-duration">0ms</div>
                     </div>
                     <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\DevLanding.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
                     <div class="result-details">📁 src\components\dev-center\ComponentTestingLab.tsx</div>
                     
                 </div>
@@ -444,6 +584,306 @@
                     <div class="result-details">💡 Use theme colors and CSS variables for consistent styling</div>
                 </div>
             
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\StateDemo.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\navigation\QuickActions.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\navigation\DevToolbar.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\MigrationManager.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\MigrationDashboard.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\integrations\ToolIntegrations.ts</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\components\WorkflowToolPage.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\components\SkeletonLoader.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\ThemeStudio\Typography.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\ThemeStudio\SpacingLayout.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\ThemeStudio\EffectsAnimation.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\ThemeStudio\ColorHarmony.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\QualityGate\VerifyResults.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\QualityGate\MeasureBaseline.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\QualityGate\FixOptimize.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\QualityGate\AnalyzeIssues.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\LayoutDesigner\StructureDesign.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\LayoutDesigner\ResponsiveDesign.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\LayoutDesigner\OptimizeLayout.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\LayoutDesigner\InteractiveFeatures.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\ComponentWorkshop\ValidateComponent.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\ComponentWorkshop\TestStates.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\ComponentWorkshop\DeployComponent.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\ComponentWorkshop\BuildComponent.tsx</div>
+                    
+                </div>
+            
+                <div class="result pass" data-status="pass">
+                    <div class="result-header">
+                        <div class="result-name">✅ Good Theme Integration</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Component uses theme-aware styling</div>
+                    <div class="result-details">📁 src\components\dev-center\integrations\managers\ToolIntegrations.ts</div>
+                    
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Input Without Label</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Input element missing accessible label</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\ComponentWorkshop\DeployComponent.tsx:287</div>
+                    <div class="result-details">💡 Add <label>, aria-label, or aria-labelledby</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Input Without Label</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Input element missing accessible label</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\ComponentWorkshop\DeployComponent.tsx:292</div>
+                    <div class="result-details">💡 Add <label>, aria-label, or aria-labelledby</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Input Without Label</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Input element missing accessible label</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\ComponentWorkshop\DeployComponent.tsx:297</div>
+                    <div class="result-details">💡 Add <label>, aria-label, or aria-labelledby</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Input Without Label</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Input element missing accessible label</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\ComponentWorkshop\DeployComponent.tsx:302</div>
+                    <div class="result-details">💡 Add <label>, aria-label, or aria-labelledby</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: @typescript-eslint/no-unused-vars</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">'analysis' is assigned a value but never used.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\pages\DevCenter.tsx:38</div>
+                    
+                </div>
+            
                 <div class="result fail" data-status="fail">
                     <div class="result-header">
                         <div class="result-name">❌ ESLint: react/no-unknown-property</div>
@@ -502,6 +942,56 @@
                     <div class="result-message">Unexpected any. Specify a different type.</div>
                     <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\LiveDashboardPreview.tsx:110</div>
                     <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\DevLanding.tsx:22</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: @typescript-eslint/no-unused-vars</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">'theme' is assigned a value but never used.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\DevLanding.tsx:26</div>
+                    
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: @typescript-eslint/no-unused-vars</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">'component' is assigned a value but never used.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\DevLanding.tsx:27</div>
+                    
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: @typescript-eslint/no-unused-vars</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">'layout' is assigned a value but never used.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\DevLanding.tsx:28</div>
+                    
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: @typescript-eslint/no-unused-vars</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">'isDirty' is assigned a value but never used.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\DevLanding.tsx:30</div>
+                    
                 </div>
             
                 <div class="result fail" data-status="fail">
@@ -664,6 +1154,1646 @@
                     <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
                 </div>
             
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\utils\PreloadManager.ts:4</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\utils\PerformanceMonitor.ts:122</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\types\workflow.types.ts:24</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\tools\StateDemo.tsx:7</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\tools\StateDemo.tsx:111</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\synchronizer.ts:6</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\synchronizer.ts:16</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\synchronizer.ts:35</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\synchronizer.ts:69</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\synchronizer.ts:147</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\synchronizer.ts:252</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\synchronizer.ts:269</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\synchronizer.ts:269</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\DevCenterState.ts:27</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\DevCenterState.ts:46</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\DevCenterState.ts:49</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\DevCenterState.ts:81</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\DevCenterState.ts:83</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\DevCenterState.ts:86</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\DevCenterState.ts:91</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\DevCenterState.ts:109</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\DevCenterState.ts:110</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\DevCenterState.ts:118</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\DevCenterState.ts:131</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\DevCenterState.ts:132</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\DevCenterState.ts:139</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\DevCenterState.ts:140</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: @typescript-eslint/no-unused-vars</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">'currentState' is assigned a value but never used.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\DevCenterState.ts:359</div>
+                    
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\migration\MigrationManager.tsx:260</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\migration\MigrationManager.tsx:273</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: @typescript-eslint/no-unused-vars</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">'workflows' is assigned a value but never used.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\migration\MigrationManager.tsx:325</div>
+                    
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: @typescript-eslint/no-unused-vars</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">'location' is assigned a value but never used.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\migration\MigrationManager.tsx:362</div>
+                    
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: @typescript-eslint/no-unused-vars</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">'preferredExperience' is assigned a value but never used.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\migration\MigrationManager.tsx:363</div>
+                    
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: Unknown Rule</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Parsing error: Invalid character.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\migration\MigrationDashboard.tsx:83</div>
+                    
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: Unknown Rule</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Parsing error: Type expected.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\migration\FeatureFlags.ts:281</div>
+                    
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: react/no-unescaped-entities</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">`"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\navigation\QuickActions.tsx:169</div>
+                    <div class="result-details">💡 Replace with `&quot;`.</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: react/no-unescaped-entities</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">`"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\navigation\QuickActions.tsx:169</div>
+                    <div class="result-details">💡 Replace with `&quot;`.</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: @typescript-eslint/no-unused-vars</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">'workflows' is defined but never used.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\navigation\DevToolbar.tsx:4</div>
+                    
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: @typescript-eslint/no-unused-vars</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">'store' is assigned a value but never used.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\ToolIntegrations.ts:179</div>
+                    
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\ToolIntegrations.ts:262</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\ToolIntegrations.ts:320</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:7</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:17</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:46</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:80</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:109</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:171</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:244</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:310</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:318</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:327</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:345</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:359</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:367</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:376</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:386</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:413</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:418</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:442</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:469</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:494</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:498</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: @typescript-eslint/no-unused-vars</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">'index' is defined but never used. Allowed unused args must match /^_/u.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:501</div>
+                    
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:515</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:529</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\DataBridge.ts:529</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: @typescript-eslint/no-unused-vars</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">'useDevCenterStore' is defined but never used.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\contexts\DevWorkflowContext.tsx:4</div>
+                    
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\contexts\DevWorkflowContext.tsx:12</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\contexts\DevWorkflowContext.tsx:83</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: @typescript-eslint/no-unused-vars</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">'toolId' is defined but never used. Allowed unused args must match /^_/u.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\components\WorkflowToolPage.tsx:12</div>
+                    
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\tools\ThemeStudio\Typography.tsx:82</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\tools\ThemeStudio\SpacingLayout.tsx:78</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\tools\ThemeStudio\EffectsAnimation.tsx:61</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: @typescript-eslint/no-unused-vars</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">'setVerificationResults' is assigned a value but never used.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\tools\QualityGate\VerifyResults.tsx:4</div>
+                    
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: react-hooks/exhaustive-deps</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">React Hook useEffect has a missing dependency: 'baselineMetrics'. Either include it or remove the dependency array.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\tools\QualityGate\MeasureBaseline.tsx:31</div>
+                    <div class="result-details">💡 Update the dependencies array to be: [baselineMetrics]</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\tools\QualityGate\AnalyzeIssues.tsx:32</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: @typescript-eslint/no-unused-vars</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">'useCallback' is defined but never used.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\tools\LayoutDesigner\StructureDesign.tsx:1</div>
+                    
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\tools\LayoutDesigner\StructureDesign.tsx:79</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: @typescript-eslint/no-unused-vars</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">'index' is defined but never used. Allowed unused args must match /^_/u.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\tools\LayoutDesigner\StructureDesign.tsx:174</div>
+                    
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\tools\LayoutDesigner\StructureDesign.tsx:335</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\tools\LayoutDesigner\ResponsiveDesign.tsx:21</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\tools\ComponentWorkshop\ValidateComponent.tsx:127</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\tools\ComponentWorkshop\TestStates.tsx:6</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: Unknown Rule</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Parsing error: Unexpected token. Did you mean `{'>'}` or `&gt;`?</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\tools\ComponentWorkshop\DeployComponent.tsx:332</div>
+                    
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\tools\ComponentWorkshop\BuildComponent.tsx:6</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: @typescript-eslint/no-unused-vars</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">'propsString' is assigned a value but never used.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\tools\ComponentWorkshop\BuildComponent.tsx:43</div>
+                    
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\stores\DevCenterState.ts:27</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\stores\DevCenterState.ts:46</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\stores\DevCenterState.ts:49</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\stores\DevCenterState.ts:81</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\stores\DevCenterState.ts:83</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\stores\DevCenterState.ts:86</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\stores\DevCenterState.ts:91</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\stores\DevCenterState.ts:109</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\stores\DevCenterState.ts:110</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\stores\DevCenterState.ts:118</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\stores\DevCenterState.ts:131</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\stores\DevCenterState.ts:132</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\stores\DevCenterState.ts:139</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\stores\DevCenterState.ts:140</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: @typescript-eslint/no-unused-vars</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">'currentState' is assigned a value but never used.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\stores\DevCenterState.ts:359</div>
+                    
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\middleware\synchronizer.ts:6</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\middleware\synchronizer.ts:16</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\middleware\synchronizer.ts:35</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\middleware\synchronizer.ts:69</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\middleware\synchronizer.ts:147</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\middleware\synchronizer.ts:252</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\middleware\synchronizer.ts:269</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\state\middleware\synchronizer.ts:269</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: @typescript-eslint/no-unused-vars</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">'store' is assigned a value but never used.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\managers\ToolIntegrations.ts:179</div>
+                    
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\managers\ToolIntegrations.ts:262</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\managers\ToolIntegrations.ts:320</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:7</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:17</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:46</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:80</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:109</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:171</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:244</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:310</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:318</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:327</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:345</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:359</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:367</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:376</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:386</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:413</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:418</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:442</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:469</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:494</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:498</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ ESLint: @typescript-eslint/no-unused-vars</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">'index' is defined but never used. Allowed unused args must match /^_/u.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:501</div>
+                    
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:515</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:529</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\integrations\bridges\DataBridge.ts:529</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\infrastructure\optimization\PreloadManager.ts:4</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\infrastructure\monitoring\PerformanceMonitor.ts:122</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ ESLint: @typescript-eslint/no-explicit-any</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Unexpected any. Specify a different type.</div>
+                    <div class="result-details">📁 C:\Projects\lucaverse\lucaverse-hub-react\src\components\dev-center\core\types\workflow.types.ts:24</div>
+                    <div class="result-details">💡 Use `unknown` instead, this will force you to explicitly, and safely assert the type is correct.</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Deep Relative Import</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Avoid deep relative imports: ../../../contexts/ThemeContext</div>
+                    <div class="result-details">📁 src\components\dev-center\navigation\QuickActions.tsx:3</div>
+                    <div class="result-details">💡 Use absolute imports or restructure your code</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Deep Relative Import</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Avoid deep relative imports: ../../../../contexts/ThemeContext</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\ThemeStudio\Typography.tsx:2</div>
+                    <div class="result-details">💡 Use absolute imports or restructure your code</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Deep Relative Import</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Avoid deep relative imports: ../../../../contexts/ThemeContext</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\ThemeStudio\SpacingLayout.tsx:2</div>
+                    <div class="result-details">💡 Use absolute imports or restructure your code</div>
+                </div>
+            
+                <div class="result warning" data-status="warning">
+                    <div class="result-header">
+                        <div class="result-name">⚠️ Deep Relative Import</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Avoid deep relative imports: ../../../../contexts/ThemeContext</div>
+                    <div class="result-details">📁 src\components\dev-center\tools\ThemeStudio\ColorHarmony.tsx:2</div>
+                    <div class="result-details">💡 Use absolute imports or restructure your code</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Forbidden API Usage</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Forbidden API usage: localStorage.getItem</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\MigrationManager.tsx:21</div>
+                    <div class="result-details">💡 Use storageAdapter.getItem() instead</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Forbidden API Usage</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Forbidden API usage: localStorage.setItem</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\MigrationManager.tsx:39</div>
+                    <div class="result-details">💡 Use storageAdapter.setItem() instead</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Forbidden API Usage</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Forbidden API usage: localStorage.getItem</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\MigrationManager.tsx:292</div>
+                    <div class="result-details">💡 Use storageAdapter.getItem() instead</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Forbidden API Usage</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Forbidden API usage: localStorage.getItem</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\MigrationManager.tsx:297</div>
+                    <div class="result-details">💡 Use storageAdapter.getItem() instead</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Forbidden API Usage</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Forbidden API usage: localStorage.getItem</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\MigrationManager.tsx:308</div>
+                    <div class="result-details">💡 Use storageAdapter.getItem() instead</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Forbidden API Usage</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Forbidden API usage: localStorage.getItem</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\MigrationManager.tsx:322</div>
+                    <div class="result-details">💡 Use storageAdapter.getItem() instead</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Forbidden API Usage</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Forbidden API usage: localStorage.getItem</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\MigrationManager.tsx:342</div>
+                    <div class="result-details">💡 Use storageAdapter.getItem() instead</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Forbidden API Usage</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Forbidden API usage: localStorage.getItem</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\MigrationDashboard.tsx:25</div>
+                    <div class="result-details">💡 Use storageAdapter.getItem() instead</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Forbidden API Usage</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Forbidden API usage: localStorage.getItem</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\MigrationDashboard.tsx:26</div>
+                    <div class="result-details">💡 Use storageAdapter.getItem() instead</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Forbidden API Usage</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Forbidden API usage: localStorage.getItem</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\MigrationDashboard.tsx:48</div>
+                    <div class="result-details">💡 Use storageAdapter.getItem() instead</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Forbidden API Usage</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Forbidden API usage: localStorage.getItem</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\MigrationDashboard.tsx:53</div>
+                    <div class="result-details">💡 Use storageAdapter.getItem() instead</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Forbidden API Usage</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Forbidden API usage: localStorage.getItem</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\MigrationDashboard.tsx:58</div>
+                    <div class="result-details">💡 Use storageAdapter.getItem() instead</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Forbidden API Usage</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Forbidden API usage: localStorage.getItem</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\FeatureFlags.ts:59</div>
+                    <div class="result-details">💡 Use storageAdapter.getItem() instead</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Forbidden API Usage</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Forbidden API usage: localStorage.setItem</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\FeatureFlags.ts:83</div>
+                    <div class="result-details">💡 Use storageAdapter.setItem() instead</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Forbidden API Usage</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Forbidden API usage: localStorage.getItem</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\FeatureFlags.ts:157</div>
+                    <div class="result-details">💡 Use storageAdapter.getItem() instead</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Forbidden API Usage</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Forbidden API usage: localStorage.setItem</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\FeatureFlags.ts:160</div>
+                    <div class="result-details">💡 Use storageAdapter.setItem() instead</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Forbidden API Usage</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Forbidden API usage: localStorage.getItem</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\FeatureFlags.ts:180</div>
+                    <div class="result-details">💡 Use storageAdapter.getItem() instead</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Forbidden API Usage</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Forbidden API usage: localStorage.setItem</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\FeatureFlags.ts:184</div>
+                    <div class="result-details">💡 Use storageAdapter.setItem() instead</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Forbidden API Usage</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Forbidden API usage: localStorage.getItem</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\FeatureFlags.ts:192</div>
+                    <div class="result-details">💡 Use storageAdapter.getItem() instead</div>
+                </div>
+            
+                <div class="result fail" data-status="fail">
+                    <div class="result-header">
+                        <div class="result-name">❌ Forbidden API Usage</div>
+                        <div class="result-duration">0ms</div>
+                    </div>
+                    <div class="result-message">Forbidden API usage: localStorage.setItem</div>
+                    <div class="result-details">📁 src\components\dev-center\migration\FeatureFlags.ts:195</div>
+                    <div class="result-details">💡 Use storageAdapter.setItem() instead</div>
+                </div>
+            
                 <div class="result pass" data-status="pass">
                     <div class="result-header">
                         <div class="result-name">✅ Node.js Version OK</div>
@@ -679,7 +2809,7 @@
                         <div class="result-name">⚠️ High Memory Usage</div>
                         <div class="result-duration">0ms</div>
                     </div>
-                    <div class="result-message">Memory usage 125.22MB exceeds threshold 50.00MB</div>
+                    <div class="result-message">Memory usage 210.09MB exceeds threshold 50.00MB</div>
                     
                     <div class="result-details">💡 Monitor for memory leaks</div>
                 </div>
