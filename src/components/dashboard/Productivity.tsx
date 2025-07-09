@@ -1,313 +1,153 @@
-import React, { useState, useEffect, useCallback } from 'react';
-
-interface PomodoroSession {
-  id: string;
-  type: 'work' | 'break';
-  duration: number;
-  startTime: Date;
-  endTime?: Date;
-  completed: boolean;
-}
-
-interface ProductivityMetrics {
-  todayFocusTime: number;
-  completedSessions: number;
-  currentStreak: number;
-  totalSessions: number;
-}
+import React, { useState } from 'react';
+import { useTheme } from '../../contexts/ThemeContext';
 
 export default function Productivity() {
-  const [activeSession, setActiveSession] = useState<PomodoroSession | null>(null);
-  const [timeRemaining, setTimeRemaining] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
-  const [sessionType, setSessionType] = useState<'work' | 'break'>('work');
-  const [customDuration, setCustomDuration] = useState(25);
-  
-  const [metrics, setMetrics] = useState<ProductivityMetrics>({
-    todayFocusTime: 145, // minutes
-    completedSessions: 8,
-    currentStreak: 3,
-    totalSessions: 47,
-  });
+  const { themeConfig } = useTheme();
+  const [selectedMode, setSelectedMode] = useState('Focus');
+  const [notes, setNotes] = useState('');
 
-  const [sessions] = useState<PomodoroSession[]>([
-    {
-      id: '1',
-      type: 'work',
-      duration: 25,
-      startTime: new Date(Date.now() - 2 * 60 * 60 * 1000),
-      endTime: new Date(Date.now() - 1.5 * 60 * 60 * 1000),
-      completed: true,
-    },
-    {
-      id: '2',
-      type: 'break',
-      duration: 5,
-      startTime: new Date(Date.now() - 1.5 * 60 * 60 * 1000),
-      endTime: new Date(Date.now() - 1.25 * 60 * 60 * 1000),
-      completed: true,
-    },
-    {
-      id: '3',
-      type: 'work',
-      duration: 25,
-      startTime: new Date(Date.now() - 1.25 * 60 * 60 * 1000),
-      endTime: new Date(Date.now() - 60 * 60 * 1000),
-      completed: true,
-    },
-  ]);
+  const modes = ['Focus', 'Break', 'Long'];
+  const controls = ['Start', 'Reset'];
 
-  const presetDurations = [
-    { label: 'Pomodoro', work: 25, break: 5 },
-    { label: 'Short Focus', work: 15, break: 3 },
-    { label: 'Long Focus', work: 45, break: 10 },
-    { label: 'Custom', work: customDuration, break: Math.ceil(customDuration / 5) },
-  ];
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    
-    if (isRunning && timeRemaining > 0) {
-      interval = setInterval(() => {
-        setTimeRemaining(prev => {
-          if (prev <= 1) {
-            setIsRunning(false);
-            handleSessionComplete();
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
-
-    return () => clearInterval(interval);
-  }, [isRunning, timeRemaining, handleSessionComplete]);
-
-  const startSession = useCallback((type: 'work' | 'break', duration: number) => {
-    const session: PomodoroSession = {
-      id: Date.now().toString(),
-      type,
-      duration,
-      startTime: new Date(),
-      completed: false,
-    };
-
-    setActiveSession(session);
-    setTimeRemaining(duration * 60);
-    setIsRunning(true);
-    setSessionType(type);
-  }, []);
-
-  const pauseSession = () => {
-    setIsRunning(false);
-  };
-
-  const resumeSession = () => {
-    setIsRunning(true);
-  };
-
-  const stopSession = () => {
-    setIsRunning(false);
-    setActiveSession(null);
-    setTimeRemaining(0);
-  };
-
-  const handleSessionComplete = useCallback(() => {
-    if (activeSession) {
-      // Update metrics
-      setMetrics(prev => ({
-        ...prev,
-        completedSessions: prev.completedSessions + 1,
-        todayFocusTime: prev.todayFocusTime + (sessionType === 'work' ? activeSession.duration : 0),
-        currentStreak: prev.currentStreak + 1,
-        totalSessions: prev.totalSessions + 1,
-      }));
-
-      // Auto-start break after work session
-      if (sessionType === 'work') {
-        setTimeout(() => {
-          startSession('break', 5);
-        }, 1000);
-      }
-    }
-    setActiveSession(null);
-  }, [activeSession, sessionType, startSession]);
-
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-  };
-
-  const getSessionTypeColor = (type: 'work' | 'break') => {
-    return type === 'work' ? 'text-primary' : 'text-secondary';
-  };
-
-  const getSessionTypeIcon = (type: 'work' | 'break') => {
-    return type === 'work' ? '🎯' : '☕';
-  };
+  const focusTime = 25;
+  const breakTime = 5;
 
   return (
-    <div className="h-full flex flex-col bg-surface rounded-lg border border-neutral-700">
-      {/* Header */}
-      <div className="p-4 border-b border-neutral-700 bg-elevated rounded-t-lg">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-success/20 rounded-full flex items-center justify-center">
-              <span className="text-success">⚡</span>
-            </div>
-            <div>
-              <h3 className="font-medium text-success">Productivity Tools</h3>
-              <p className="text-xs text-neutral-400">
-                Focus timer and productivity tracking
-              </p>
-            </div>
-          </div>
+    <div className="h-full flex flex-col overflow-hidden">
+      {/* Title bar with lightning icon + title + expand */}
+      <div className="flex items-center justify-between mb-3 flex-shrink-0">
+        <div className="flex items-center space-x-2">
+          <span className="text-lg filter drop-shadow-lg">⚡</span>
+          <h2 className="text-lg font-bold" style={{ 
+            color: themeConfig.colors.primary[200],
+            textShadow: `0 0 10px ${themeConfig.colors.primary[500]}60`
+          }}>Productivity Nexus</h2>
         </div>
+        <button className="transition-colors hover:opacity-75" style={{ color: themeConfig.colors.neutral[400] }}>
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
+          </svg>
+        </button>
       </div>
 
-      {/* Timer Section */}
-      <div className="p-4 border-b border-neutral-700">
-        <div className="text-center mb-4">
-          <div className={`text-6xl font-mono font-bold mb-2 ${
-            activeSession ? getSessionTypeColor(sessionType) : 'text-neutral-400'
-          }`}>
-            {formatTime(timeRemaining)}
+      {/* Two columns */}
+      <div className="grid grid-cols-2 gap-3 flex-1 overflow-hidden">
+        {/* Left column: Timer */}
+        <div className="flex flex-col items-center justify-center space-y-3 overflow-hidden">
+          {/* Circular timer graphic */}
+          <div className="relative w-32 h-32 flex-shrink-0">
+            {/* Circular progress background */}
+            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+              <circle
+                cx="50"
+                cy="50"
+                r="45"
+                stroke={themeConfig.colors.neutral[700]}
+                strokeWidth="6"
+                fill="none"
+              />
+              {/* Progress circle (currently empty/reset state) */}
+              <circle
+                cx="50"
+                cy="50"
+                r="45"
+                stroke={themeConfig.colors.primary[500]}
+                strokeWidth="6"
+                fill="none"
+                strokeDasharray={`0 ${2 * Math.PI * 45}`}
+              />
+            </svg>
+            
+            {/* Timer Text in Center - Large "NaN : NaN" */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-2xl font-mono font-bold" style={{ 
+                color: themeConfig.colors.primary[300],
+                textShadow: `0 0 15px ${themeConfig.colors.primary[500]}80`
+              }}>
+                25 : 00
+              </div>
+            </div>
           </div>
-          <div className="flex items-center justify-center space-x-2 text-sm text-neutral-400">
-            {activeSession && (
-              <>
-                <span className="text-2xl">{getSessionTypeIcon(sessionType)}</span>
-                <span className={getSessionTypeColor(sessionType)}>
-                  {sessionType === 'work' ? 'Focus Session' : 'Break Time'}
-                </span>
-              </>
-            )}
+
+          {/* Three mode buttons below timer */}
+          <div className="flex gap-1 flex-shrink-0">
+            {modes.map((mode) => (
+              <button
+                key={mode}
+                onClick={() => setSelectedMode(mode)}
+                className="px-2 py-1 rounded text-xs transition-all"
+                style={{
+                  backgroundColor: selectedMode === mode ? themeConfig.colors.primary[700] : themeConfig.colors.neutral[800],
+                  color: selectedMode === mode ? themeConfig.colors.neutral[100] : themeConfig.colors.neutral[300]
+                }}
+              >
+                {mode}
+              </button>
+            ))}
+          </div>
+
+          {/* Start/Reset controls */}
+          <div className="flex gap-2 flex-shrink-0">
+            {controls.map((control) => (
+              <button
+                key={control}
+                className="px-3 py-1 text-white rounded text-xs transition-all"
+                style={{ backgroundColor: themeConfig.colors.neutral[800] }}
+              >
+                {control}
+              </button>
+            ))}
+          </div>
+
+          {/* Numeric inputs beneath controls */}
+          <div className="text-xs space-y-1 text-center flex-shrink-0" style={{ color: themeConfig.colors.neutral[400] }}>
+            <div>Focus: {focusTime} min</div>
+            <div>Break: {breakTime} min</div>
           </div>
         </div>
 
-        <div className="flex items-center justify-center space-x-2 mb-4">
-          {!activeSession ? (
-            <div className="grid grid-cols-2 gap-2">
-              {presetDurations.map((preset) => (
-                <button
-                  key={preset.label}
-                  onClick={() => startSession('work', preset.work)}
-                  className="px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded text-sm transition-colors"
-                  aria-label={`Start ${preset.label} session`}
-                >
-                  {preset.label}
-                  <div className="text-xs opacity-80">{preset.work}min</div>
+        {/* Right column: Smart Notes */}
+        <div className="flex flex-col overflow-hidden">
+          {/* Smart Notes header with toolbar icons */}
+          <div className="mb-2 flex-shrink-0">
+            <div className="flex items-center space-x-2 mb-2">
+              <h3 className="text-xs font-bold flex items-center" style={{ color: themeConfig.colors.neutral[300] }}>
+                <span className="mr-1">📝</span>
+                Smart Notes
+              </h3>
+              <div className="flex items-center space-x-1">
+                <button className="transition-colors hover:opacity-75" style={{ color: themeConfig.colors.neutral[400] }} title="Grid view">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                  </svg>
                 </button>
-              ))}
-            </div>
-          ) : (
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={isRunning ? pauseSession : resumeSession}
-                className="px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded text-sm transition-colors"
-                aria-label={isRunning ? 'Pause timer' : 'Resume timer'}
-              >
-                {isRunning ? '⏸️ Pause' : '▶️ Resume'}
-              </button>
-              <button
-                onClick={stopSession}
-                className="px-4 py-2 bg-danger hover:bg-danger/80 text-white rounded text-sm transition-colors"
-                aria-label="Stop timer"
-              >
-                🛑 Stop
-              </button>
-            </div>
-          )}
-        </div>
-
-        {presetDurations.some(p => p.label === 'Custom') && (
-          <div className="flex items-center justify-center space-x-2 text-sm">
-            <label className="text-neutral-400">Custom duration:</label>
-            <input
-              type="number"
-              value={customDuration}
-              onChange={(e) => setCustomDuration(Number(e.target.value))}
-              className="w-16 px-2 py-1 bg-neutral-800 border border-neutral-700 rounded text-center"
-              min="1"
-              max="120"
-            />
-            <span className="text-neutral-400">minutes</span>
-          </div>
-        )}
-      </div>
-
-      {/* Metrics */}
-      <div className="p-4 border-b border-neutral-700">
-        <h4 className="font-medium text-neutral-300 mb-3">Today&apos;s Metrics</h4>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="text-center p-3 bg-elevated rounded-lg border border-neutral-700">
-            <div className="text-lg font-bold text-primary">{metrics.todayFocusTime}</div>
-            <div className="text-xs text-neutral-400">Focus Minutes</div>
-          </div>
-          <div className="text-center p-3 bg-elevated rounded-lg border border-neutral-700">
-            <div className="text-lg font-bold text-success">{metrics.completedSessions}</div>
-            <div className="text-xs text-neutral-400">Completed Sessions</div>
-          </div>
-          <div className="text-center p-3 bg-elevated rounded-lg border border-neutral-700">
-            <div className="text-lg font-bold text-warning">{metrics.currentStreak}</div>
-            <div className="text-xs text-neutral-400">Current Streak</div>
-          </div>
-          <div className="text-center p-3 bg-elevated rounded-lg border border-neutral-700">
-            <div className="text-lg font-bold text-secondary">{metrics.totalSessions}</div>
-            <div className="text-xs text-neutral-400">Total Sessions</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Quick Tools */}
-      <div className="p-4 border-b border-neutral-700">
-        <h4 className="font-medium text-neutral-300 mb-3">Quick Tools</h4>
-        <div className="grid grid-cols-2 gap-2">
-          <button className="p-2 bg-elevated hover:bg-neutral-700 rounded border border-neutral-700 text-sm transition-colors" aria-label="View progress report">
-            <span className="block text-lg mb-1">📊</span>
-            <span>Progress Report</span>
-          </button>
-          <button className="p-2 bg-elevated hover:bg-neutral-700 rounded border border-neutral-700 text-sm transition-colors" aria-label="Set productivity goals">
-            <span className="block text-lg mb-1">🎯</span>
-            <span>Set Goals</span>
-          </button>
-          <button className="p-2 bg-elevated hover:bg-neutral-700 rounded border border-neutral-700 text-sm transition-colors" aria-label="Manage schedule">
-            <span className="block text-lg mb-1">📅</span>
-            <span>Schedule</span>
-          </button>
-          <button className="p-2 bg-elevated hover:bg-neutral-700 rounded border border-neutral-700 text-sm transition-colors" aria-label="Open settings">
-            <span className="block text-lg mb-1">⚙️</span>
-            <span>Settings</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Recent Sessions */}
-      <div className="flex-1 p-4 overflow-y-auto">
-        <h4 className="font-medium text-neutral-300 mb-3">Recent Sessions</h4>
-        <div className="space-y-2">
-          {sessions.map((session) => (
-            <div
-              key={session.id}
-              className="flex items-center justify-between p-2 bg-elevated rounded border border-neutral-700"
-            >
-              <div className="flex items-center space-x-3">
-                <span className="text-lg">{getSessionTypeIcon(session.type)}</span>
-                <div>
-                  <div className={`text-sm font-medium ${getSessionTypeColor(session.type)}`}>
-                    {session.type === 'work' ? 'Focus' : 'Break'} ({session.duration}min)
-                  </div>
-                  <div className="text-xs text-neutral-500">
-                    {session.startTime.toLocaleTimeString()} - {session.endTime?.toLocaleTimeString()}
-                  </div>
-                </div>
-              </div>
-              <div className="text-xs text-success">
-                {session.completed ? '✅' : '⏳'}
+                <button className="transition-colors hover:opacity-75" style={{ color: themeConfig.colors.neutral[400] }} title="List view">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                  </svg>
+                </button>
+                <button className="transition-colors hover:opacity-75" style={{ color: themeConfig.colors.neutral[400] }} title="Checklist">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </button>
+                <button className="transition-colors hover:opacity-75" style={{ color: themeConfig.colors.neutral[400] }} title="Delete">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
               </div>
             </div>
-          ))}
+          </div>
+
+          {/* Large text area */}
+          <textarea
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="Capture thoughts, insights, and breakthroughs…"
+            className="flex-1 w-full px-3 py-2 rounded text-white placeholder-gray-400 focus:outline-none resize-none text-xs"
+            style={{ backgroundColor: themeConfig.colors.neutral[800], borderColor: themeConfig.colors.neutral[700] }}
+          />
         </div>
       </div>
     </div>

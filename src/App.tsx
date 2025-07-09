@@ -62,8 +62,8 @@ function App() {
         <BrowserRouter>
           <ErrorBoundary>
             <Routes>
-              <Route path="/" element={<DevCenter />} />
-              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/dev-center" element={<DevCenter />} />
               <Route path="/theme-demo" element={<ThemeDemo />} />
               <Route path="/animation-demo" element={<AnimationDemo />} />
               <Route path="*" element={
@@ -72,7 +72,7 @@ function App() {
                     <h1 className="text-4xl font-bold text-primary mb-4">404 - Page Not Found</h1>
                     <p className="text-neutral-300 mb-6">The requested route does not exist.</p>
                     <a 
-                      href="/" 
+                      href="/dev-center" 
                       className="px-6 py-3 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
                     >
                       Go to Dev Center

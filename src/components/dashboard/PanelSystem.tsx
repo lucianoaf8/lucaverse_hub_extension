@@ -1,5 +1,11 @@
 import React, { useState, ReactNode } from 'react';
 
+/**
+ * @deprecated PanelSystem is deprecated in favor of QuadrantSystem for production layouts.
+ * This component is maintained for development mode and backwards compatibility only.
+ * Use QuadrantSystem for new implementations.
+ */
+
 export interface PanelProps {
   id: string;
   title: string;
@@ -106,6 +112,13 @@ export default function PanelSystem({
   onPanelSettings,
   className = ''
 }: PanelSystemProps) {
+  // Add deprecation warning in development
+  if (process.env.NODE_ENV === 'development') {
+    console.warn(
+      'PanelSystem is deprecated. Use QuadrantSystem for production layouts. ' +
+      'This component is maintained for development mode only.'
+    );
+  }
   const handlePanelAction = (panelId: string, action: 'close' | 'minimize' | 'settings') => {
     switch (action) {
       case 'close':

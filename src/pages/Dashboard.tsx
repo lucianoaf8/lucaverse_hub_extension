@@ -1,224 +1,152 @@
-import React, { useState } from 'react';
-import DashboardLayout from '../components/dashboard/DashboardLayout';
-import PanelSystem, { PanelProps } from '../components/dashboard/PanelSystem';
+import React from 'react';
+import { useTheme } from '../contexts/ThemeContext';
 import SmartHub from '../components/dashboard/SmartHub';
 import AIChat from '../components/dashboard/AIChat';
 import TaskManager from '../components/dashboard/TaskManager';
 import Productivity from '../components/dashboard/Productivity';
-import useNavigation from '../hooks/useNavigation';
 
 export default function Dashboard() {
-  const { validateNavigationState } = useNavigation();
-  
-  // Validate navigation state on component mount
+  const { themeConfig } = useTheme();
+  const [currentTime, setCurrentTime] = React.useState(new Date());
+
   React.useEffect(() => {
-    const validateState = async () => {
-      try {
-        await validateNavigationState();
-      } catch (error) {
-        console.error('Navigation validation failed:', error);
-      }
-    };
-    
-    validateState();
-  }, [validateNavigationState]);
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
-  const [panels, setPanels] = useState<PanelProps[]>([
-    {
-      id: 'smart-hub',
-      title: 'Smart Hub',
-      children: <SmartHub />,
-      isMinimized: false,
-    },
-    {
-      id: 'ai-chat',
-      title: 'AI Chat',
-      children: <AIChat />,
-      isMinimized: false,
-    },
-    {
-      id: 'task-manager',
-      title: 'Task Manager',
-      children: <TaskManager />,
-      isMinimized: false,
-    },
-    {
-      id: 'productivity',
-      title: 'Productivity',
-      children: <Productivity />,
-      isMinimized: true,
-    },
-  ]);
-
-  const handlePanelClose = (panelId: string) => {
-    setPanels(prev => prev.filter(panel => panel.id !== panelId));
-  };
-
-  const handlePanelMinimize = (panelId: string) => {
-    setPanels(prev =>
-      prev.map(panel =>
-        panel.id === panelId
-          ? { ...panel, isMinimized: !panel.isMinimized }
-          : panel
-      )
-    );
-  };
-
-  const handlePanelSettings = (panelId: string) => {
-    console.log(`Settings for panel: ${panelId}`);
-    // In a real implementation, this would open a settings modal
-  };
-
-  const addPanel = (type: string) => {
-    const newPanel: PanelProps = {
-      id: `${type}-${Date.now()}`,
-      title: `New ${type}`,
-      children: <div className="p-4 text-center text-neutral-400">New {type} panel</div>,
-      isMinimized: false,
-    };
-    setPanels(prev => [...prev, newPanel]);
+  const formatTime = (date: Date) => {
+    return date.toLocaleTimeString('en-US', {
+      hour12: false,
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
   };
 
   return (
-    <DashboardLayout>
-      <div className="space-y-6">
-        {/* Dashboard Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-primary">Dashboard</h1>
-            <p className="text-neutral-400 mt-1">
-              Welcome to your productivity command center
-            </p>
+    <div className="h-screen w-screen flex flex-col overflow-hidden" 
+         style={{ backgroundColor: themeConfig.colors.neutral[950] }}>
+      {/* Header - with glassmorphism effect */}
+      <header className="h-[60px] flex-shrink-0 px-4 border-b backdrop-blur-sm" 
+              style={{ 
+                backgroundColor: `${themeConfig.colors.neutral[900]}E6`,
+                borderColor: `${themeConfig.colors.primary[500]}40`,
+                boxShadow: `inset 0 1px 0 ${themeConfig.colors.primary[500]}20, 0 0 20px ${themeConfig.colors.primary[500]}10`
+              }}>
+        <div className="flex items-center justify-between h-full">
+          {/* Left: Logo with glow effect */}
+          <div className="flex items-center space-x-2">
+            <span className="text-2xl filter drop-shadow-lg">🌐</span>
+            <h1 className="text-xl font-bold" style={{ 
+              color: themeConfig.colors.neutral[100],
+              textShadow: `0 0 10px ${themeConfig.colors.primary[500]}40`
+            }}>
+              Lucaverse Hub
+            </h1>
           </div>
           
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-neutral-400">Add Panel:</span>
-              <button
-                onClick={() => addPanel('widget')}
-                className="px-3 py-1 bg-primary/20 hover:bg-primary/30 border border-primary/40 
-                           rounded text-sm transition-colors"
-              >
-                + Widget
-              </button>
-              <button
-                onClick={() => addPanel('tool')}
-                className="px-3 py-1 bg-secondary/20 hover:bg-secondary/30 border border-secondary/40 
-                           rounded text-sm transition-colors"
-              >
-                + Tool
-              </button>
-            </div>
-            
-            <div className="flex items-center space-x-2 text-sm text-neutral-400">
-              <span>Panels: {panels.length}</span>
-              <span>•</span>
-              <span>Active: {panels.filter(p => !p.isMinimized).length}</span>
+          {/* Center: Search bar with glassmorphism */}
+          <div className="flex-1 max-w-2xl mx-8">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search everything…"
+                className="w-full px-4 py-2 rounded-xl text-white placeholder-gray-400 
+                           focus:outline-none focus:ring-2 transition-all backdrop-blur-sm"
+                style={{ 
+                  backgroundColor: `${themeConfig.colors.neutral[800]}B3`,
+                  borderColor: `${themeConfig.colors.primary[500]}60`,
+                  borderWidth: '1px',
+                  boxShadow: `inset 0 2px 4px 0 ${themeConfig.colors.neutral[950]}40, 0 0 10px ${themeConfig.colors.primary[500]}20`
+                }}
+              />
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                     style={{ color: themeConfig.colors.primary[400] }}>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
             </div>
           </div>
-        </div>
-
-        {/* Panel System */}
-        <PanelSystem
-          panels={panels}
-          onPanelClose={handlePanelClose}
-          onPanelMinimize={handlePanelMinimize}
-          onPanelSettings={handlePanelSettings}
-        />
-
-        {/* Dashboard Features Info */}
-        <div className="bg-elevated rounded-xl p-6 border border-neutral-700">
-          <h2 className="text-xl font-semibold text-secondary mb-4">Dashboard Features</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="p-4 bg-surface rounded-lg border border-neutral-700">
-              <div className="flex items-center space-x-3 mb-2">
-                <span className="text-2xl">🎯</span>
-                <h3 className="font-medium text-primary">Smart Hub</h3>
-              </div>
-              <p className="text-sm text-neutral-400">
-                Central command center with quick actions, recent items, and system status monitoring.
-              </p>
-            </div>
-            
-            <div className="p-4 bg-surface rounded-lg border border-neutral-700">
-              <div className="flex items-center space-x-3 mb-2">
-                <span className="text-2xl">🤖</span>
-                <h3 className="font-medium text-secondary">AI Chat</h3>
-              </div>
-              <p className="text-sm text-neutral-400">
-                Interactive AI assistant with model selection, chat history, and export capabilities.
-              </p>
-            </div>
-            
-            <div className="p-4 bg-surface rounded-lg border border-neutral-700">
-              <div className="flex items-center space-x-3 mb-2">
-                <span className="text-2xl">📋</span>
-                <h3 className="font-medium text-warning">Task Manager</h3>
-              </div>
-              <p className="text-sm text-neutral-400">
-                Comprehensive task management with priorities, categories, and progress tracking.
-              </p>
-            </div>
-            
-            <div className="p-4 bg-surface rounded-lg border border-neutral-700">
-              <div className="flex items-center space-x-3 mb-2">
-                <span className="text-2xl">⚡</span>
-                <h3 className="font-medium text-success">Productivity</h3>
-              </div>
-              <p className="text-sm text-neutral-400">
-                Pomodoro timer, focus sessions, and productivity metrics tracking.
-              </p>
-            </div>
-            
-            <div className="p-4 bg-surface rounded-lg border border-neutral-700">
-              <div className="flex items-center space-x-3 mb-2">
-                <span className="text-2xl">📱</span>
-                <h3 className="font-medium text-info">Panel System</h3>
-              </div>
-              <p className="text-sm text-neutral-400">
-                Flexible panel management with drag-and-drop, minimize/maximize, and custom layouts.
-              </p>
-            </div>
-            
-            <div className="p-4 bg-surface rounded-lg border border-neutral-700">
-              <div className="flex items-center space-x-3 mb-2">
-                <span className="text-2xl">🔄</span>
-                <h3 className="font-medium text-neutral-300">Extensible</h3>
-              </div>
-              <p className="text-sm text-neutral-400">
-                Foundation ready for adding new panels, widgets, and custom functionality.
-              </p>
-            </div>
+          
+          {/* Right: Digital clock with glow */}
+          <div className="font-mono text-sm" style={{ 
+            color: themeConfig.colors.primary[300],
+            textShadow: `0 0 8px ${themeConfig.colors.primary[500]}60`
+          }}>
+            {formatTime(currentTime)}
           </div>
         </div>
+      </header>
 
-        {/* Usage Instructions */}
-        <div className="bg-surface rounded-xl p-6 border border-neutral-700">
-          <h2 className="text-xl font-semibold text-primary mb-4">Getting Started</h2>
-          <div className="space-y-3 text-sm text-neutral-300">
-            <div className="flex items-start space-x-3">
-              <span className="text-primary">1.</span>
-              <p>Use the <strong>Smart Hub</strong> for quick actions and system overview</p>
-            </div>
-            <div className="flex items-start space-x-3">
-              <span className="text-primary">2.</span>
-              <p>Chat with the <strong>AI Assistant</strong> for help and information</p>
-            </div>
-            <div className="flex items-start space-x-3">
-              <span className="text-primary">3.</span>
-              <p>Manage your tasks with the <strong>Task Manager</strong></p>
-            </div>
-            <div className="flex items-start space-x-3">
-              <span className="text-primary">4.</span>
-              <p>Use <strong>Productivity Tools</strong> for focused work sessions</p>
-            </div>
-            <div className="flex items-start space-x-3">
-              <span className="text-primary">5.</span>
-              <p>Customize your workspace by adding, removing, or rearranging panels</p>
-            </div>
+      {/* Main content - 2x2 grid with glassmorphism panels */}
+      <main className="flex-1 grid grid-cols-2 grid-rows-2 overflow-hidden gap-[1px]" 
+            style={{ backgroundColor: themeConfig.colors.neutral[800] }}>
+        {/* Top-left: Smart Access Hub */}
+        <div className="overflow-hidden backdrop-blur-sm" 
+             style={{ 
+               backgroundColor: `${themeConfig.colors.neutral[900]}E6`,
+               border: `1px solid ${themeConfig.colors.primary[500]}40`,
+               boxShadow: `inset 0 1px 0 ${themeConfig.colors.primary[500]}20, 0 0 20px ${themeConfig.colors.primary[500]}10`
+             }}>
+          <div className="h-full p-6 overflow-hidden">
+            <SmartHub />
           </div>
         </div>
-      </div>
-    </DashboardLayout>
+        
+        {/* Top-right: AI Command Center */}
+        <div className="overflow-hidden backdrop-blur-sm" 
+             style={{ 
+               backgroundColor: `${themeConfig.colors.neutral[900]}E6`,
+               border: `1px solid ${themeConfig.colors.primary[500]}40`,
+               boxShadow: `inset 0 1px 0 ${themeConfig.colors.primary[500]}20, 0 0 20px ${themeConfig.colors.primary[500]}10`
+             }}>
+          <div className="h-full p-6 overflow-hidden">
+            <AIChat />
+          </div>
+        </div>
+        
+        {/* Bottom-left: Mission Control */}
+        <div className="overflow-hidden backdrop-blur-sm" 
+             style={{ 
+               backgroundColor: `${themeConfig.colors.neutral[900]}E6`,
+               border: `1px solid ${themeConfig.colors.primary[500]}40`,
+               boxShadow: `inset 0 1px 0 ${themeConfig.colors.primary[500]}20, 0 0 20px ${themeConfig.colors.primary[500]}10`
+             }}>
+          <div className="h-full p-6 overflow-hidden">
+            <TaskManager />
+          </div>
+        </div>
+        
+        {/* Bottom-right: Productivity Nexus */}
+        <div className="overflow-hidden backdrop-blur-sm" 
+             style={{ 
+               backgroundColor: `${themeConfig.colors.neutral[900]}E6`,
+               border: `1px solid ${themeConfig.colors.primary[500]}40`,
+               boxShadow: `inset 0 1px 0 ${themeConfig.colors.primary[500]}20, 0 0 20px ${themeConfig.colors.primary[500]}10`
+             }}>
+          <div className="h-full p-6 overflow-hidden">
+            <Productivity />
+          </div>
+        </div>
+      </main>
+
+      {/* Footer - increased to 40px height with glassmorphism */}
+      <footer className="h-[40px] flex-shrink-0 px-4 border-t flex items-center justify-center backdrop-blur-sm" 
+              style={{ 
+                backgroundColor: `${themeConfig.colors.neutral[900]}E6`,
+                borderColor: `${themeConfig.colors.primary[500]}40`,
+                boxShadow: `inset 0 1px 0 ${themeConfig.colors.primary[500]}20`
+              }}>
+        <p className="text-xs" style={{ 
+          color: themeConfig.colors.primary[300],
+          textShadow: `0 0 8px ${themeConfig.colors.primary[500]}40`
+        }}>
+          Lucaverse Hub v2.0 • Enhanced Productivity Suite • Modular Architecture
+        </p>
+      </footer>
+    </div>
   );
 }

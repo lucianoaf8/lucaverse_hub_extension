@@ -11,7 +11,7 @@ export default function useNavigation() {
   const goToDashboard = useCallback(async () => {
     try {
       await storageAdapter.setItem(DEV_CENTER_SOURCE_KEY, 'true');
-      navigate('/dashboard');
+      navigate('/');
     } catch (error) {
       throw new Error(`Failed to navigate to dashboard: ${error}`);
     }
@@ -20,7 +20,7 @@ export default function useNavigation() {
   const goToDevCenter = useCallback(async () => {
     try {
       await storageAdapter.removeItem(DEV_CENTER_SOURCE_KEY);
-      navigate('/');
+      navigate('/dev-center');
     } catch (error) {
       throw new Error(`Failed to navigate to dev center: ${error}`);
     }
@@ -48,11 +48,11 @@ export default function useNavigation() {
       const currentPath = location.pathname;
       const fromDevCenter = await isFromDevCenter();
       
-      if (currentPath === '/dashboard' && fromDevCenter === null) {
+      if (currentPath === '/' && fromDevCenter === null) {
         throw new Error('Navigation state corrupted: Dashboard accessed without proper navigation state');
       }
       
-      if (currentPath !== '/dashboard' && currentPath !== '/' && !currentPath.startsWith('/theme-demo') && !currentPath.startsWith('/animation-demo')) {
+      if (currentPath !== '/' && currentPath !== '/dev-center' && !currentPath.startsWith('/theme-demo') && !currentPath.startsWith('/animation-demo')) {
         throw new Error(`Invalid route: ${currentPath}`);
       }
       

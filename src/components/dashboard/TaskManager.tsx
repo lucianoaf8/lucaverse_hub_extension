@@ -1,288 +1,165 @@
 import React, { useState } from 'react';
-
-interface Task {
-  id: string;
-  title: string;
-  description: string;
-  completed: boolean;
-  priority: 'low' | 'medium' | 'high';
-  category: string;
-  dueDate?: string;
-  createdAt: Date;
-}
+import { useTheme } from '../../contexts/ThemeContext';
 
 export default function TaskManager() {
-  const [tasks, setTasks] = useState<Task[]>([
-    {
-      id: '1',
-      title: 'Complete project documentation',
-      description: 'Write comprehensive documentation for the new feature',
-      completed: false,
-      priority: 'high',
-      category: 'Development',
-      dueDate: '2024-12-31',
-      createdAt: new Date('2024-12-01'),
-    },
-    {
-      id: '2',
-      title: 'Review code changes',
-      description: 'Review pull requests from team members',
-      completed: true,
-      priority: 'medium',
-      category: 'Review',
-      createdAt: new Date('2024-12-02'),
-    },
-    {
-      id: '3',
-      title: 'Plan next sprint',
-      description: 'Organize tasks and priorities for the upcoming sprint',
-      completed: false,
-      priority: 'low',
-      category: 'Planning',
-      dueDate: '2024-12-15',
-      createdAt: new Date('2024-12-03'),
-    },
-  ]);
+  const { themeConfig } = useTheme();
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
-  const [newTask, setNewTask] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [searchTerm, setSearchTerm] = useState('');
+  const mainTasks = [
+    { id: 1, title: 'Design system architecture', progress: 80, priority: 'high', statusColor: themeConfig.colors.danger[500] },
+    { id: 2, title: 'Implement authentication flow', progress: 60, priority: 'medium', statusColor: themeConfig.colors.warning[500] },
+    { id: 3, title: 'Build dashboard components', progress: 40, priority: 'normal', statusColor: themeConfig.colors.success[500] },
+  ];
 
-  const categories = ['All', 'Development', 'Review', 'Planning', 'Design', 'Testing'];
+  const subtasks = [
+    { id: 1, title: 'Design glassmorphism components', completed: 0, total: 0 },
+  ];
 
-  const addTask = () => {
-    if (!newTask.trim()) return;
+  const filters = ['Daily', 'Meeting', 'Research', 'Code'];
+  const actions = ['Export', 'Clear Done'];
 
-    const task: Task = {
-      id: Date.now().toString(),
-      title: newTask,
-      description: '',
-      completed: false,
-      priority: 'medium',
-      category: 'Development',
-      createdAt: new Date(),
-    };
-
-    setTasks(prev => [task, ...prev]);
-    setNewTask('');
-  };
-
-  const toggleTask = (id: string) => {
-    setTasks(prev =>
-      prev.map(task =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
+  const toggleFilter = (filter: string) => {
+    setSelectedFilters(prev => 
+      prev.includes(filter) 
+        ? prev.filter(f => f !== filter)
+        : [...prev, filter]
     );
   };
 
-  const deleteTask = (id: string) => {
-    setTasks(prev => prev.filter(task => task.id !== id));
-  };
-
-  const filteredTasks = tasks.filter(task => {
-    const matchesCategory = selectedCategory === 'All' || task.category === selectedCategory;
-    const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         task.description.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
-
-  const completedTasks = tasks.filter(task => task.completed);
-  const pendingTasks = tasks.filter(task => !task.completed);
-  const highPriorityTasks = tasks.filter(task => task.priority === 'high' && !task.completed);
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'high':
-        return 'text-danger';
-      case 'medium':
-        return 'text-warning';
-      case 'low':
-        return 'text-success';
-      default:
-        return 'text-neutral-400';
-    }
-  };
-
-  const getPriorityIcon = (priority: string) => {
-    switch (priority) {
-      case 'high':
-        return '🔴';
-      case 'medium':
-        return '🟡';
-      case 'low':
-        return '🟢';
-      default:
-        return '⚪';
-    }
-  };
+  const completedCount = 1;
+  const totalCount = 3;
+  const progressPercentage = 33;
+  const highPriorityCount = 1;
 
   return (
-    <div className="h-full flex flex-col bg-surface rounded-lg border border-neutral-700">
-      {/* Header */}
-      <div className="p-4 border-b border-neutral-700 bg-elevated rounded-t-lg">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-warning/20 rounded-full flex items-center justify-center">
-              <span className="text-warning">📋</span>
-            </div>
-            <div>
-              <h3 className="font-medium text-warning">Task Manager</h3>
-              <p className="text-xs text-neutral-400">
-                {pendingTasks.length} pending, {completedTasks.length} completed
-              </p>
-            </div>
-          </div>
-          
+    <div className="h-full flex flex-col overflow-hidden">
+      {/* Title bar with target icon + title + expand + subtitle */}
+      <div className="mb-3 flex-shrink-0">
+        <div className="flex items-center justify-between mb-1">
           <div className="flex items-center space-x-2">
-            <input
-              type="text"
-              placeholder="Search tasks..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="text-xs bg-neutral-800 border border-neutral-700 rounded px-2 py-1 w-32"
-            />
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="text-xs bg-neutral-800 border border-neutral-700 rounded px-2 py-1"
-            >
-              {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
+            <span className="text-lg filter drop-shadow-lg">🎯</span>
+            <h2 className="text-lg font-bold" style={{ 
+              color: themeConfig.colors.primary[200],
+              textShadow: `0 0 10px ${themeConfig.colors.primary[500]}60`
+            }}>Mission Control</h2>
           </div>
-        </div>
-
-        {/* Add Task */}
-        <div className="flex items-center space-x-2">
-          <input
-            type="text"
-            placeholder="Add new task..."
-            value={newTask}
-            onChange={(e) => setNewTask(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && addTask()}
-            className="flex-1 px-3 py-2 bg-neutral-800 border border-neutral-700 rounded text-sm
-                       focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
-          />
-          <button
-            onClick={addTask}
-            className="px-3 py-2 bg-primary hover:bg-primary/80 text-white rounded text-sm transition-colors"
-          >
-            ➕ Add
+          <button className="transition-colors hover:opacity-75" style={{ color: themeConfig.colors.neutral[400] }}>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
+            </svg>
           </button>
         </div>
+        <p className="text-xs" style={{ color: themeConfig.colors.neutral[400] }}>
+          {completedCount}/{totalCount} Completed · {progressPercentage}% Progress · {highPriorityCount} High Priority
+        </p>
       </div>
 
-      {/* Stats */}
-      <div className="p-4 border-b border-neutral-700 bg-neutral-800/50">
-        <div className="grid grid-cols-3 gap-4">
-          <div className="text-center">
-            <div className="text-lg font-bold text-primary">{pendingTasks.length}</div>
-            <div className="text-xs text-neutral-400">Pending</div>
-          </div>
-          <div className="text-center">
-            <div className="text-lg font-bold text-success">{completedTasks.length}</div>
-            <div className="text-xs text-neutral-400">Completed</div>
-          </div>
-          <div className="text-center">
-            <div className="text-lg font-bold text-danger">{highPriorityTasks.length}</div>
-            <div className="text-xs text-neutral-400">High Priority</div>
-          </div>
-        </div>
-      </div>
+      {/* Content split: Left and Right */}
+      <div className="grid grid-cols-2 gap-3 flex-1 overflow-hidden">
+        {/* Left side */}
+        <div className="flex flex-col space-y-2 overflow-hidden">
+          {/* Main Tasks section */}
+          <div className="flex-1 overflow-hidden">
+            <div className="flex items-center justify-between mb-2 flex-shrink-0">
+              <h3 className="text-xs font-bold flex items-center" style={{ color: themeConfig.colors.neutral[300] }}>
+                <span className="mr-1">📋</span>
+                Main Tasks
+              </h3>
+              <button className="px-2 py-1 text-white rounded text-xs transition-all"
+                      style={{ backgroundColor: themeConfig.colors.primary[700] }}>
+                + Add
+              </button>
+            </div>
 
-      {/* Task List */}
-      <div className="flex-1 overflow-y-auto p-4">
-        {filteredTasks.length > 0 ? (
-          <div className="space-y-2">
-            {filteredTasks.map((task) => (
-              <div
-                key={task.id}
-                className={`p-3 bg-elevated rounded-lg border transition-all duration-base ${
-                  task.completed
-                    ? 'border-success/30 bg-success/5'
-                    : 'border-neutral-700 hover:border-neutral-600'
-                }`}
-              >
-                <div className="flex items-start space-x-3">
-                  <button
-                    onClick={() => toggleTask(task.id)}
-                    className={`mt-1 w-4 h-4 rounded border-2 flex items-center justify-center transition-colors ${
-                      task.completed
-                        ? 'bg-success border-success text-white'
-                        : 'border-neutral-600 hover:border-primary'
-                    }`}
-                  >
-                    {task.completed && '✓'}
-                  </button>
-                  
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center space-x-2">
-                      <h4 className={`font-medium ${
-                        task.completed ? 'line-through text-neutral-500' : 'text-neutral-300'
-                      }`}>
-                        {task.title}
-                      </h4>
-                      <span className={getPriorityColor(task.priority)}>
-                        {getPriorityIcon(task.priority)}
-                      </span>
-                    </div>
-                    
-                    {task.description && (
-                      <p className={`text-sm mt-1 ${
-                        task.completed ? 'text-neutral-600' : 'text-neutral-400'
-                      }`}>
-                        {task.description}
-                      </p>
-                    )}
-                    
-                    <div className="flex items-center space-x-3 mt-2 text-xs text-neutral-500">
-                      <span className="px-2 py-1 bg-neutral-700 rounded">
-                        {task.category}
-                      </span>
-                      {task.dueDate && (
-                        <span>Due: {new Date(task.dueDate).toLocaleDateString()}</span>
-                      )}
-                      <span>Created: {task.createdAt.toLocaleDateString()}</span>
+            <div className="space-y-1 mb-2 flex-1 overflow-y-auto">
+              {mainTasks.map((task) => (
+                <div
+                  key={task.id}
+                  className="p-2 rounded border transition-all"
+                  style={{ backgroundColor: themeConfig.colors.neutral[800], borderColor: themeConfig.colors.neutral[700] }}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center space-x-2 min-w-0">
+                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: task.statusColor }}></div>
+                      <span className="text-xs truncate" style={{ color: themeConfig.colors.neutral[100] }}>{task.title}</span>
                     </div>
                   </div>
-                  
-                  <button
-                    onClick={() => deleteTask(task.id)}
-                    className="p-1 hover:bg-neutral-700 rounded transition-colors text-neutral-400 hover:text-danger"
-                  >
-                    🗑️
-                  </button>
+                  <div className="w-full rounded-full h-1 mb-1" style={{ backgroundColor: themeConfig.colors.neutral[700] }}>
+                    <div 
+                      className="h-1 rounded-full transition-all duration-300"
+                      style={{ width: `${task.progress}%`, backgroundColor: themeConfig.colors.primary[500] }}
+                    ></div>
+                  </div>
+                  <div className="text-xs" style={{ color: themeConfig.colors.neutral[400] }}>{task.progress}% complete</div>
                 </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-8">
-            <div className="text-4xl mb-2">📋</div>
-            <p className="text-neutral-400">No tasks found</p>
-            <p className="text-sm text-neutral-500 mt-1">
-              {searchTerm || selectedCategory !== 'All'
-                ? 'Try adjusting your search or filters'
-                : 'Add your first task to get started'
-              }
-            </p>
-          </div>
-        )}
-      </div>
+              ))}
+            </div>
 
-      {/* Footer */}
-      <div className="p-4 border-t border-neutral-700 bg-elevated rounded-b-lg">
-        <div className="flex items-center justify-between text-xs text-neutral-500">
-          <div>
-            Drag and drop support coming soon
+            {/* Tag buttons */}
+            <div className="mb-2 flex-shrink-0">
+              <div className="flex flex-wrap gap-1">
+                {filters.map((filter) => (
+                  <button
+                    key={filter}
+                    onClick={() => toggleFilter(filter)}
+                    className="px-2 py-1 rounded text-xs transition-all"
+                    style={{
+                      backgroundColor: selectedFilters.includes(filter) ? themeConfig.colors.primary[700] : themeConfig.colors.neutral[800],
+                      color: selectedFilters.includes(filter) ? themeConfig.colors.neutral[100] : themeConfig.colors.neutral[300]
+                    }}
+                  >
+                    {filter}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Footer buttons */}
+            <div className="flex gap-1 flex-shrink-0">
+              {actions.map((action) => (
+                <button
+                  key={action}
+                  className="px-2 py-1 rounded text-xs transition-all"
+                  style={{ backgroundColor: themeConfig.colors.neutral[800], color: themeConfig.colors.neutral[300] }}
+                >
+                  {action}
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="flex items-center space-x-4">
-            <span>Total: {tasks.length}</span>
-            <span>•</span>
-            <span>Progress: {Math.round((completedTasks.length / tasks.length) * 100)}%</span>
+        </div>
+
+        {/* Right side */}
+        <div className="flex flex-col overflow-hidden">
+          {/* Subtasks section */}
+          <div className="flex-1 overflow-hidden">
+            <div className="flex items-center justify-between mb-2 flex-shrink-0">
+              <h3 className="text-xs font-bold flex items-center" style={{ color: themeConfig.colors.neutral[300] }}>
+                <span className="mr-1">➤</span>
+                Subtasks
+              </h3>
+              <button className="px-2 py-1 text-white rounded text-xs transition-all"
+                      style={{ backgroundColor: themeConfig.colors.primary[700] }}>
+                + Add
+              </button>
+            </div>
+
+            <div className="space-y-1 overflow-y-auto">
+              {subtasks.map((subtask) => (
+                <div
+                  key={subtask.id}
+                  className="p-2 rounded border transition-all"
+                  style={{ backgroundColor: themeConfig.colors.neutral[800], borderColor: themeConfig.colors.neutral[700] }}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs truncate" style={{ color: themeConfig.colors.neutral[100] }}>{subtask.title}</span>
+                    <span className="text-xs flex-shrink-0" style={{ color: themeConfig.colors.neutral[400] }}>
+                      {subtask.completed}/{subtask.total} completed
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

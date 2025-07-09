@@ -44,7 +44,7 @@ export default function DevNavigation() {
   const { goToDashboard } = useNavigation();
 
   const navItems = [
-    { path: '/', label: 'Dev Center', icon: '🏠' },
+    { path: '/dev-center', label: 'Dev Center', icon: '🏠' },
     { path: '/theme-demo', label: 'Theme Demo', icon: '🎨' },
     { path: '/animation-demo', label: 'Animations', icon: '⚡' },
   ];
@@ -58,7 +58,7 @@ export default function DevNavigation() {
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-6">
-            <Link to="/" className="text-xl font-bold text-primary hover:text-primary/80 transition-colors">
+            <Link to="/dev-center" className="text-xl font-bold text-primary hover:text-primary/80 transition-colors">
               {t('app.name')} Dev
             </Link>
             
@@ -121,10 +121,10 @@ export default function DevNavigation() {
           ))}
         </div>
 
-        {location.pathname !== '/' && (
+        {location.pathname !== '/dev-center' && (
           <div className="mt-4 text-sm text-neutral-400">
             <span className="mr-2">📍</span>
-            <Link to="/" className="hover:text-primary transition-colors">
+            <Link to="/dev-center" className="hover:text-primary transition-colors">
               Dev Center
             </Link>
             <span className="mx-2">→</span>
