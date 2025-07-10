@@ -11,5 +11,6 @@ export default defineConfig({
   },
   server: {
     port: 5666,
+    open: 'C:/Users/lucia/.codeium/windsurf/ws-browser/chromium-1155/chrome-win/chrome.exe'
   },
 })

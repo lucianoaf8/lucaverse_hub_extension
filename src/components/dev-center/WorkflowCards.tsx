@@ -1,122 +1,47 @@
-// Create compact workflow cards that replace the current bloated cards
-// Requirements:
-// - Each card exactly 40px height
-// - Horizontal layout with icon, title, progress bar, action button
-// - No descriptions or time estimates
-// - Progress bar shows completion percentage
-// - Single click to start/continue workflow
-// - Cards arranged in 3 columns across the top row
-
 import React from 'react';
-
-interface WorkflowCard {
-  id: string;
-  icon: string;
-  title: string;
-  progress: number; // 0-100
-  status: 'not-started' | 'in-progress' | 'completed';
-  action: () => void;
-}
-
-const workflows: WorkflowCard[] = [
-  {
-    id: 'theme',
-    icon: '🎨',
-    title: 'Theme Studio',
-    progress: 80,
-    status: 'in-progress',
-    action: () => window.location.href = '/dev-center/theme'
-  },
-  {
-    id: 'components',
-    icon: '📦',
-    title: 'Component Testing',
-    progress: 60,
-    status: 'in-progress', 
-    action: () => window.location.href = '/dev-center/components'
-  },
-  {
-    id: 'layout',
-    icon: '📐',
-    title: 'Layout Designer',
-    progress: 20,
-    status: 'not-started',
-    action: () => window.location.href = '/dev-center/layout'
-  }
-];
+import { useNavigate } from 'react-router-dom';
 
 export default function WorkflowCards() {
+  const navigate = useNavigate();
+
+  const workflows = [
+    {
+      id: 'theme',
+      icon: '🎨',
+      title: 'Theme Studio',
+      progress: 80,
+      action: () => navigate('/dev-center/theme')
+    },
+    {
+      id: 'components',
+      icon: '📦',
+      title: 'Component Testing',
+      progress: 60,
+      action: () => navigate('/dev-center/components')
+    },
+    {
+      id: 'layout',
+      icon: '📐',
+      title: 'Layout Designer',
+      progress: 20,
+      action: () => navigate('/dev-center/layout')
+    }
+  ];
+
   return (
-    <div className="workflow-grid">
-      <style jsx>{`
-        .workflow-grid {
-          grid-column: 1 / -1;
-          grid-row: 1;
-          display: grid;
-          grid-template-columns: 1fr 1fr 1fr;
-          gap: 16px;
-        }
-        .workflow-card {
-          height: 40px;
-          background: var(--color-neutral-900);
-          border: 1px solid var(--color-neutral-800);
-          border-radius: 8px;
-          display: flex;
-          align-items: center;
-          padding: 0 16px;
-          cursor: pointer;
-          transition: border-color 0.2s;
-        }
-        .workflow-card:hover {
-          border-color: var(--color-primary-500);
-        }
-        .workflow-icon {
-          font-size: 16px;
-          margin-right: 8px;
-        }
-        .workflow-title {
-          flex: 1;
-          font-size: 14px;
-          font-weight: 500;
-          color: var(--color-neutral-200);
-        }
-        .workflow-progress {
-          width: 60px;
-          height: 4px;
-          background: var(--color-neutral-800);
-          border-radius: 2px;
-          margin: 0 12px;
-          overflow: hidden;
-        }
-        .workflow-progress-fill {
-          height: 100%;
-          background: var(--color-primary-500);
-          border-radius: 2px;
-          transition: width 0.3s;
-        }
-        .workflow-action {
-          font-size: 12px;
-          color: var(--color-primary-400);
-        }
-      `}</style>
-      {workflows.map(workflow => (
-        <div 
+    <div className="grid grid-cols-3 gap-4">
+      {workflows.map((workflow) => (
+        <button
           key={workflow.id}
-          className="workflow-card"
           onClick={workflow.action}
+          className="h-16 bg-elevated border border-neutral-700 rounded-lg p-4 hover:border-primary-500 transition-colors flex items-center space-x-3"
         >
-          <span className="workflow-icon">{workflow.icon}</span>
-          <span className="workflow-title">{workflow.title}</span>
-          <div className="workflow-progress">
-            <div 
-              className="workflow-progress-fill"
-              style={{ width: `${workflow.progress}%` }}
-            />
+          <span className="text-2xl">{workflow.icon}</span>
+          <div className="flex-1 text-left">
+            <div className="font-medium text-neutral-200">{workflow.title}</div>
+            <div className="text-sm text-neutral-500">{workflow.progress}% complete</div>
           </div>
-          <span className="workflow-action">
-            {workflow.status === 'not-started' ? 'Start →' : 'Continue →'}
-          </span>
-        </div>
+        </button>
       ))}
     </div>
   );
