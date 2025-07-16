@@ -632,28 +632,28 @@ const darkTheme: Theme = {
   ...lightTheme,
   colors: {
     primary: {
-      50: '#f8fafc',
-      100: '#f1f5f9',
-      200: '#e2e8f0',
-      300: '#cbd5e1',
-      400: '#94a3b8',
-      500: '#64748b',  // Subtle gray for primary elements
-      600: '#475569',
-      700: '#334155',
-      800: '#1e293b',
-      900: '#0f172a',
+      50: '#faf5ff',
+      100: '#f3e8ff',
+      200: '#e9d5ff',
+      300: '#d8b4fe',
+      400: '#c084fc',  // Purple accent for UI elements
+      500: '#a855f7',  // Main purple
+      600: '#9333ea',
+      700: '#7c3aed',
+      800: '#6b21a8',
+      900: '#581c87',
     },
     secondary: {
-      50: '#f8fafc',
-      100: '#f1f5f9',
-      200: '#e2e8f0',
-      300: '#cbd5e1',
-      400: '#94a3b8',
-      500: '#64748b',
-      600: '#475569',
-      700: '#334155',
-      800: '#1e293b',
-      900: '#0f172a',
+      50: '#ecfeff',
+      100: '#cffafe',
+      200: '#a5f3fc',
+      300: '#67e8f9',
+      400: '#22d3ee',  // Cyan accent for secondary elements
+      500: '#06b6d4',
+      600: '#0891b2',
+      700: '#0e7490',
+      800: '#155e75',
+      900: '#164e63',
     },
     success: {
       50: '#f0fdf4',
@@ -717,13 +717,13 @@ const darkTheme: Theme = {
   },
   backgrounds: {
     gradients: {
-      primary: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
-      secondary: 'linear-gradient(135deg, #334155 0%, #1e293b 100%)',
+      primary: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)',
+      secondary: 'linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%)',
       success: 'linear-gradient(90deg, #22c55e 0%, #16a34a 100%)',
       warning: 'linear-gradient(90deg, #f59e0b 0%, #d97706 100%)',
       danger: 'linear-gradient(90deg, #ef4444 0%, #dc2626 100%)',
-      hero: 'radial-gradient(circle at center, #1e293b, #020617)',
-      subtle: 'linear-gradient(135deg, #020617 0%, #0f172a 100%)',
+      hero: 'radial-gradient(circle at center, #581c87, #020617)',
+      subtle: 'linear-gradient(135deg, #020617 0%, #1a0f2e 100%)',
     },
     patterns: {
       dots: 'radial-gradient(circle, #334155 1px, transparent 1px)',

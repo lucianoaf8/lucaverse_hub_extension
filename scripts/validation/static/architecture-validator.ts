@@ -180,7 +180,7 @@ export class ArchitectureValidator {
     }
 
     const fromDir = path.dirname(fromFile);
-    let resolvedPath = path.resolve(fromDir, importPath);
+    const resolvedPath = path.resolve(fromDir, importPath);
 
     // Try different extensions
     const extensions = ['.ts', '.tsx', '.js', '.jsx'];
@@ -601,7 +601,7 @@ export class ArchitectureValidator {
     const results: ValidationResult[] = [];
     
     // Calculate metrics
-    let totalFiles = this.dependencyGraph.size;
+    const totalFiles = this.dependencyGraph.size;
     let totalDependencies = 0;
     let maxDependencies = 0;
     let maxDependents = 0;

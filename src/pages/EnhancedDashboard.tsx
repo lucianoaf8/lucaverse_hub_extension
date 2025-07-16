@@ -1,117 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Search,
-  Bell,
-  User,
-  Plus,
-  CheckCircle,
-  Circle,
-  Rss,
-  Github,
-  Twitter,
-  Dribbble,
-  BrainCircuit,
-  Timer,
-  Zap,
-  Target,
   Maximize,
   Minimize,
-  Book,
-  History,
   Edit,
-  CloudSun,
-  Volume2,
-  VolumeX,
-  ListTodo,
-  Save,
-  Moon,
-  Sun,
-  Play,
-  Pause,
-  RotateCcw,
-  Activity,
-  Clock,
 } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import Header from '../components/dashboard/Header';
+import { SmartHub, TaskManager, Productivity } from '../components/dashboard';
 
-/* ---------------------------------- Mock Data --------------------------------- */
-
-const quickTags = [
-  { icon: <Github size={16} />, name: 'GitHub', url: 'https://github.com' },
-  { icon: <Twitter size={16} />, name: 'Twitter', url: 'https://twitter.com' },
-  { icon: <Dribbble size={16} />, name: 'Dribbble', url: 'https://dribbble.com' },
-  { icon: <Rss size={16} />, name: 'Blog', url: '#' },
-];
-
-const initialTasks = [
-  {
-    id: 1,
-    text: 'Finalize Q3 marketing strategy',
-    completed: false,
-    priority: 'High',
-    dueDate: '2025-07-20',
-    subtasks: [
-      { id: '1a', text: 'Gather market research data', completed: true },
-      { id: '1b', text: 'Draft presentation slides', completed: false },
-      { id: '1c', text: 'Review with team lead', completed: false },
-    ],
-  },
-  { id: 2, text: 'Develop AR prototype', completed: false, priority: 'High', dueDate: '2025-07-25', subtasks: [] },
-  { id: 3, text: 'Onboard design team', completed: true, priority: 'Medium', dueDate: '2025-07-15', subtasks: [] },
-  { id: 4, text: 'Review budget submissions', completed: false, priority: 'Low', dueDate: '2025-07-30', subtasks: [] },
-  { id: 5, text: 'Plan September offsite', completed: true, priority: 'Medium', dueDate: '2025-08-01', subtasks: [] },
-];
-
-const recentBookmarks = [
-  { id: 1, text: 'React Performance Guide', url: '#' },
-  { id: 2, text: 'Figma Prototyping', url: '#' },
-  { id: 3, text: 'TypeScript Guide', url: '#' },
-  { id: 4, text: 'Next.js Documentation', url: '#' },
-  { id: 5, text: 'Tailwind CSS Docs', url: '#' },
-];
-
-const recentlyClosed = [
-  { id: 1, text: 'Linear - Project Planning', url: '#' },
-  { id: 2, text: 'Slack Team Chat', url: '#' },
-  { id: 3, text: 'Notion Meeting Notes', url: '#' },
-  { id: 4, text: 'Gmail Dashboard', url: '#' },
-  { id: 5, text: 'Figma Design File', url: '#' },
-];
-
-const motivationalQuotes = [
-  { text: 'The only way to do great work is to love what you do.', author: 'Steve Jobs' },
-  { text: 'Innovation distinguishes between a leader and a follower.', author: 'Steve Jobs' },
-  { text: 'Life is 10% what happens to you and 90% how you react to it.', author: 'Charles R. Swindoll' },
-  { text: 'The future belongs to those who believe in the beauty of their dreams.', author: 'Eleanor Roosevelt' },
-  { text: 'Success is not final, failure is not fatal: it is the courage to continue that counts.', author: 'Winston Churchill' },
-];
-
-const noteTemplates = [
-  {
-    name: 'Standup',
-    icon: '🎯',
-    content: `## Daily Standup - ${new Date().toLocaleDateString()}\n\n**Yesterday:**\n- \n\n**Today:**\n- \n\n**Blockers:**\n- `,
-  },
-  {
-    name: 'Meeting',
-    icon: '📝',
-    content: `## Meeting Notes\n\n**Attendees:**\n- \n\n**Topics:**\n- \n\n**Actions:**\n- [ ] `,
-  },
-  {
-    name: 'Ideas',
-    icon: '💡',
-    content: `## Brainstorm\n\n**Problem:**\n- \n\n**Ideas:**\n- \n\n**Next Steps:**\n- `,
-  },
-];
-
-/* ------------------------------- Timer Configs ------------------------------- */
-
-const TIMER_CONFIGS: Record<string, { duration: number; label: string }> = {
-  pomodoro: { duration: 25 * 60, label: 'Pomodoro' },
-  shortBreak: { duration: 5 * 60, label: 'Break' },
-  deepWork: { duration: 90 * 60, label: 'Deep Work' },
-  custom: { duration: 30 * 60, label: 'Custom' },
-};
 
 /* ----------------------------- Shared UI Pieces ----------------------------- */
 
@@ -157,144 +53,51 @@ const GlowCard: React.FC<GlowCardProps> = ({ children, className = '', panelId, 
   );
 };
 
-/* ---------------------------------- Header ---------------------------------- */
-
-interface HeaderProps {
-  time: Date;
-  isDarkMode: boolean;
-  toggleDarkMode: () => void;
-}
-
-const Header: React.FC<HeaderProps> = ({ time, isDarkMode, toggleDarkMode }) => {
-  const { themeConfig } = useTheme();
-  const [quote, setQuote] = useState(motivationalQuotes[0]);
-  const [searchFocused, setSearchFocused] = useState(false);
-
-  useEffect(() => {
-    const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
-    setQuote(randomQuote);
-  }, []);
-
-  const mockWeather = {
-    temperature: 22,
-    condition: 'Partly Cloudy',
-    location: 'San Francisco',
-    icon: <CloudSun size={18} className="text-yellow-400" />,
-  };
-
-  return (
-    <header className="flex items-center justify-between p-4 text-white h-24 flex-shrink-0 space-x-6">
-      {/* Left section: logo + name + search */}
-      <div className="flex items-center gap-4 min-w-0">
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <BrainCircuit className="text-indigo-400" size={32} />
-            <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse" />
-          </div>
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold tracking-wider bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-              Lucaverse Hub
-            </h1>
-            <div
-              className={`relative transition-all duration-300 ${searchFocused ? 'w-96' : 'w-80'} flex-shrink-0`}
-            >
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-              <input
-                type="text"
-                placeholder="Search everything... (Ctrl+K)"
-                className="w-full rounded-full py-1.5 pl-12 pr-4 text-white placeholder-slate-400 focus:outline-none transition-all"
-                style={{
-                  backgroundColor: `${themeConfig.colors.neutral[800]}${themeConfig.opacity.glass.medium}`,
-                  border: `1px solid ${themeConfig.colors.primary[500]}${themeConfig.opacity.border.medium}`,
-                  boxShadow: `inset 0 1px 2px 0 ${themeConfig.colors.neutral[950]}${themeConfig.opacity.border.light}`,
-                }}
-                onFocus={() => setSearchFocused(true)}
-                onBlur={() => setSearchFocused(false)}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="text-center">
-          {quote.text && (
-            <p className="text-sm text-slate-400 italic max-w-lg ml-20">
-              "{quote.text}" <span className="text-slate-500">— {quote.author}</span>
-            </p>
-          )}
-        </div>
-      </div>
-
-      <div className="flex items-center gap-6">
-        <div className="flex items-center gap-5">
-          <div
-            className="flex items-center gap-2 rounded-full px-4 py-1.5"
-            style={{ backgroundColor: `${themeConfig.colors.neutral[800]}${themeConfig.opacity.glass.low}` }}
-          >
-            {mockWeather.icon}
-            <div className="text-sm">
-              <div className="font-semibold">{mockWeather.temperature}°C</div>
-              <div className="text-slate-400 text-xs">{mockWeather.condition}</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="text-center">
-          <div className="text-4xl font-bold tracking-tighter bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-            {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-          </div>
-          <div className="text-xs text-slate-400 font-medium">
-            {time.toLocaleDateString([], { weekday: 'long', month: 'short', day: 'numeric' })}
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            onClick={toggleDarkMode}
-            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700/50 transition-colors"
-            title="Toggle theme"
-          >
-            {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
-          <button className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700/50 transition-colors relative">
-            <Bell size={18} />
-            <div className="absolute top-1 right-1 w-2 h-2 bg-red-400 rounded-full" />
-          </button>
-          <button className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700/50 transition-colors">
-            <User size={18} />
-          </button>
-        </div>
-      </div>
-    </header>
-  );
-};
-
-
 /* ------------------------------- Panel Components (stubs) ------------------------------- */
 
 const QuickAccessCard: React.FC<GlowCardProps> = ({ className = '', ...props }) => (
   <GlowCard className={`p-4 ${className}`} {...props}>
-    <h2 className="text-lg font-bold text-slate-200 mb-2">Quick Access</h2>
-    <p className="text-slate-400 text-sm">Panel content coming soon...</p>
+    <SmartHub />
   </GlowCard>
 );
 
 const MissionControlCard: React.FC<GlowCardProps> = ({ className = '', ...props }) => (
   <GlowCard className={`p-4 ${className}`} {...props}>
-    <h2 className="text-lg font-bold text-slate-200 mb-2">Mission Control</h2>
-    <p className="text-slate-400 text-sm">Panel content coming soon...</p>
+    <TaskManager />
   </GlowCard>
 );
 
 const FocusHubCard: React.FC<GlowCardProps> = ({ className = '', ...props }) => (
   <GlowCard className={`p-4 ${className}`} {...props}>
-    <h2 className="text-lg font-bold text-slate-200 mb-2">Focus Hub</h2>
-    <p className="text-slate-400 text-sm">Panel content coming soon...</p>
+    <Productivity />
   </GlowCard>
 );
 
 const NotesCard: React.FC<GlowCardProps> = ({ className = '', ...props }) => (
   <GlowCard className={`p-4 ${className}`} {...props}>
-    <h2 className="text-lg font-bold text-slate-200 mb-2">Smart Notes</h2>
-    <p className="text-slate-400 text-sm">Panel content coming soon...</p>
+    <div className="h-full flex flex-col">
+      <h2 className="text-lg font-bold text-slate-200 mb-4 flex items-center gap-2">
+        <Edit size={16} className="text-indigo-400" />
+        Smart Notes
+      </h2>
+      <div className="flex-1 space-y-4">
+        <div className="p-4 bg-slate-800/50 rounded-lg border border-slate-700">
+          <h3 className="font-semibold text-slate-300 mb-2">Quick Note</h3>
+          <textarea 
+            className="w-full h-24 bg-slate-900/50 border border-slate-600 rounded p-3 text-slate-200 resize-none focus:outline-none focus:border-indigo-500"
+            placeholder="Jot down your thoughts..."
+          />
+        </div>
+        <div className="space-y-2">
+          <h3 className="font-semibold text-slate-300 text-sm">Recent Notes</h3>
+          {['Meeting notes from today', 'Project ideas', 'Research findings'].map((note, i) => (
+            <div key={i} className="p-2 bg-slate-800/30 rounded border border-slate-700/50 hover:border-slate-600 transition-colors">
+              <span className="text-slate-400 text-sm">{note}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   </GlowCard>
 );
 
@@ -310,13 +113,7 @@ export default function Dashboard() {
   const { theme, toggleTheme, themeConfig } = useTheme();
   const isDarkMode = theme === 'dark';
 
-  const [time, setTime] = useState(new Date());
   const [focusedPanel, setFocusedPanel] = useState<string | null>(null);
-
-  useEffect(() => {
-    const timerId = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(timerId);
-  }, []);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -402,12 +199,22 @@ export default function Dashboard() {
 
       {/* Background gradients */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-slate-700/10 via-slate-800/5 to-slate-900/10" />
-        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-slate-800/10 via-slate-900/5 to-slate-700/10" />
+        <div 
+          className="absolute -top-1/2 -left-1/2 w-full h-full"
+          style={{
+            background: `linear-gradient(135deg, ${themeConfig.colors.primary[900]}20 0%, ${themeConfig.colors.primary[800]}10 50%, ${themeConfig.colors.neutral[900]}10 100%)`
+          }}
+        />
+        <div 
+          className="absolute -bottom-1/2 -right-1/2 w-full h-full"
+          style={{
+            background: `linear-gradient(-45deg, ${themeConfig.colors.secondary[900]}15 0%, ${themeConfig.colors.primary[900]}08 50%, ${themeConfig.colors.neutral[950]}05 100%)`
+          }}
+        />
       </div>
 
       <div className="relative z-10 flex flex-col h-screen">
-        <Header time={time} isDarkMode={isDarkMode} toggleDarkMode={toggleTheme} />
+        <Header isDarkMode={isDarkMode} toggleDarkMode={toggleTheme} />
 
         {/* Main Grid */}
         <main

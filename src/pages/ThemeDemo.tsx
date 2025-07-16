@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Layout } from '../components/common';
-import DevNavigation from '../components/dev-center/DevNavigation';
 import AnimationExamples from '../components/AnimationExamples';
 
 export default function ThemeDemo() {
@@ -33,7 +32,7 @@ export default function ThemeDemo() {
   ];
 
   return (
-    <Layout navigation={<DevNavigation />}>
+    <Layout>
       <div className="space-y-8">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-primary mb-4 animate-fade-in">
