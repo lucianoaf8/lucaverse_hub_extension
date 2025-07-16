@@ -100,6 +100,7 @@
     "commander": "^9.4.1",
     "framer-motion": "^10.16.4",
     "glob": "^10.3.10",
+    "lucide-react": "^0.525.0",
     "nanoid": "^5.0.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
