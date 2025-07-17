@@ -26,6 +26,7 @@ export default function Header({ onSearch, isDarkMode, toggleDarkMode }: HeaderP
   const [showNotifications, setShowNotifications] = useState(false);
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [isClockHovered, setIsClockHovered] = useState(false);
+  const [hapticEffects, setHapticEffects] = useState<{[key: string]: boolean}>({});
 
   const moodEmojis = ['🤔', '😐', '😊', '😎', '🥱', '😴', '😤', '🙄', '😌', '🤗', '😑', '🔥', '💀', '👻', '🤖', '⚡', '🌟', '💎', '🎯', '🚀', '⭐', '✨'];
 
@@ -83,15 +84,38 @@ export default function Header({ onSearch, isDarkMode, toggleDarkMode }: HeaderP
     onSearch?.(e.target.value);
   };
 
+  // Haptic feedback simulation
+  const triggerHapticFeedback = (elementId: string) => {
+    setHapticEffects(prev => ({ ...prev, [elementId]: true }));
+    setTimeout(() => {
+      setHapticEffects(prev => ({ ...prev, [elementId]: false }));
+    }, 300);
+    
+    // Audio feedback simulation
+    if ('vibrate' in navigator) {
+      navigator.vibrate(50);
+    }
+  };
+
+  // Enhanced click handler with effects
+  const handleInteractiveClick = (elementId: string, callback?: () => void) => {
+    triggerHapticFeedback(elementId);
+    callback?.();
+  };
+
   return (
     <header className="flex items-center justify-between p-4 text-white h-24 flex-shrink-0 space-x-6">
       {/* Left section: logo + name + search */}
       <div className="flex items-center gap-4 min-w-0">
         <div className="flex items-center gap-3">
-          <div className="relative">
+          <div className={`relative transition-all duration-300 hover:scale-110 cursor-pointer ${hapticEffects.logo ? 'haptic-feedback' : ''}`}
+               onClick={() => handleInteractiveClick('logo')}>
             <BrainCircuit style={{ color: themeConfig.colors.primary[400] }} size={32} />
             <div className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full animate-pulse" 
-                 style={{ backgroundColor: themeConfig.colors.success[400] }} />
+                 style={{ 
+                   backgroundColor: themeConfig.colors.success[400],
+                   boxShadow: `0 0 2px ${themeConfig.colors.success[400]}20`
+                 }} />
           </div>
           <div className="flex items-center gap-6">
             <h1 className="text-2xl font-bold tracking-wider bg-clip-text text-transparent"
@@ -139,12 +163,27 @@ export default function Header({ onSearch, isDarkMode, toggleDarkMode }: HeaderP
         <div className="flex items-center gap-5">
           <div className="relative emoji-selector">
             <button
-              onClick={() => setShowEmojiSelector(!showEmojiSelector)}
-              className="hover:scale-110 transition-transform cursor-pointer"
-              style={{ fontSize: '2rem', margin: '0 3rem' }}
+              onClick={() => handleInteractiveClick('emoji-selector', () => setShowEmojiSelector(!showEmojiSelector))}
+              className={`hover:scale-105 transition-all cursor-pointer hover-glow ${hapticEffects['emoji-selector'] ? 'haptic-feedback' : ''}`}
+              style={{ 
+                fontSize: '2rem', 
+                margin: '0 3rem',
+                filter: showEmojiSelector ? `drop-shadow(0 0 4px ${themeConfig.colors.primary[400]}40)` : 'none'
+              }}
               title="Change mood"
             >
               {selectedMoodEmoji}
+              {/* Very subtle mood aura effect */}
+              {showEmojiSelector && (
+                <div 
+                  className="absolute inset-0 rounded-full"
+                  style={{
+                    background: `radial-gradient(circle, ${themeConfig.colors.primary[400]}05, transparent 60%)`,
+                    transform: 'scale(1.1)',
+                    zIndex: -1
+                  }}
+                />
+              )}
             </button>
             {showEmojiSelector && (
               <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 p-4 rounded-xl shadow-2xl z-50 grid grid-cols-6 gap-3 min-w-max backdrop-blur-xl border"
@@ -167,7 +206,7 @@ export default function Header({ onSearch, isDarkMode, toggleDarkMode }: HeaderP
                       setSelectedMoodEmoji(emoji);
                       setShowEmojiSelector(false);
                     }}
-                    className="text-2xl hover:scale-125 transition-all duration-200 p-2 rounded-lg hover:shadow-lg"
+                    className="text-2xl hover:scale-110 transition-all duration-200 p-2 rounded-lg hover:shadow-sm"
                     style={{
                       backgroundColor: 'transparent'
                     }}
@@ -237,8 +276,8 @@ export default function Header({ onSearch, isDarkMode, toggleDarkMode }: HeaderP
           )}
           <div className="relative notifications-dropdown">
             <button 
-              onClick={() => setShowNotifications(!showNotifications)}
-              className="p-2 rounded-lg transition-colors relative"
+              onClick={() => handleInteractiveClick('notifications', () => setShowNotifications(!showNotifications))}
+              className={`p-2 rounded-lg transition-all relative ${hapticEffects.notifications ? 'haptic-feedback' : ''}`}
               style={{
                 color: themeConfig.colors.neutral[400],
                 backgroundColor: 'transparent'
@@ -253,8 +292,11 @@ export default function Header({ onSearch, isDarkMode, toggleDarkMode }: HeaderP
               }}
             >
               <Bell size={18} />
-              <div className="absolute top-1 right-1 w-2 h-2 rounded-full" 
-                   style={{ backgroundColor: themeConfig.colors.danger[400] }} />
+              <div className="absolute top-1 right-1 w-2 h-2 rounded-full animate-pulse" 
+                   style={{ 
+                     backgroundColor: themeConfig.colors.danger[400],
+                     boxShadow: `0 0 3px ${themeConfig.colors.danger[400]}40`
+                   }} />
             </button>
             {showNotifications && (
               <div className="absolute top-full right-0 mt-2 w-80 rounded-xl shadow-2xl z-50 backdrop-blur-xl border max-h-96 overflow-y-auto"
@@ -329,8 +371,8 @@ export default function Header({ onSearch, isDarkMode, toggleDarkMode }: HeaderP
 
           <div className="relative account-dropdown">
             <button 
-              onClick={() => setShowAccountMenu(!showAccountMenu)}
-              className="p-2 rounded-lg transition-colors"
+              onClick={() => handleInteractiveClick('account', () => setShowAccountMenu(!showAccountMenu))}
+              className={`p-2 rounded-lg transition-all ${hapticEffects.account ? 'haptic-feedback' : ''}`}
               style={{
                 color: themeConfig.colors.neutral[400],
                 backgroundColor: 'transparent'
