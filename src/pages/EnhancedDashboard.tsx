@@ -3,9 +3,11 @@ import {
   Maximize,
   Minimize,
   Edit,
+  Save,
 } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import Header from '../components/dashboard/Header';
+import Footer from '../components/dashboard/Footer';
 import { SmartHub, TaskManager, Productivity } from '../components/dashboard';
 
 
@@ -73,39 +75,178 @@ const FocusHubCard: React.FC<GlowCardProps> = ({ className = '', ...props }) => 
   </GlowCard>
 );
 
-const NotesCard: React.FC<GlowCardProps> = ({ className = '', ...props }) => (
-  <GlowCard className={`p-4 ${className}`} {...props}>
-    <div className="h-full flex flex-col">
-      <h2 className="text-lg font-bold text-slate-200 mb-4 flex items-center gap-2">
-        <Edit size={16} className="text-indigo-400" />
-        Smart Notes
-      </h2>
-      <div className="flex-1 space-y-4">
-        <div className="p-4 bg-slate-800/50 rounded-lg border border-slate-700">
-          <h3 className="font-semibold text-slate-300 mb-2">Quick Note</h3>
-          <textarea 
-            className="w-full h-24 bg-slate-900/50 border border-slate-600 rounded p-3 text-slate-200 resize-none focus:outline-none focus:border-indigo-500"
-            placeholder="Jot down your thoughts..."
-          />
+const NotesCard: React.FC<GlowCardProps> = ({ className = '', ...props }) => {
+  const { themeConfig } = useTheme();
+  const [noteContent, setNoteContent] = useState('');
+  const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
+  const [historicalNotes, setHistoricalNotes] = useState<any[]>([]);
+
+  const noteTemplates = [
+    { name: 'Meeting', icon: '📝', content: '# Meeting Notes\n\n## Date: \n## Attendees:\n\n## Agenda:\n\n## Notes:\n\n## Action Items:\n' },
+    { name: 'Idea', icon: '💡', content: '# New Idea\n\n## Concept:\n\n## Benefits:\n\n## Next Steps:\n' },
+    { name: 'Task', icon: '✅', content: '# Task List\n\n- [ ] \n- [ ] \n- [ ] \n' },
+    { name: 'Journal', icon: '📔', content: '# Daily Journal\n\n## Date: \n\n## Thoughts:\n\n## Mood:\n\n## Goals for tomorrow:\n' }
+  ];
+
+  const handleTemplateClick = (template: any) => {
+    setNoteContent(template.content);
+    setSelectedTemplate(template);
+  };
+
+  const handleSaveNote = () => {
+    if (noteContent.trim() === '') return;
+
+    const newNote = {
+      id: Date.now(),
+      title: noteContent.split('\n')[0].replace(/^#+\s*/, '') || `Note ${new Date().toLocaleTimeString()}`,
+      content: noteContent,
+      date: new Date().toISOString(),
+    };
+
+    setHistoricalNotes(prev => [newNote, ...prev.slice(0, 4)]);
+    setNoteContent('');
+    setSelectedTemplate(null);
+  };
+
+  return (
+    <GlowCard className={`p-4 ${className}`} {...props}>
+      <div className="h-full flex flex-col">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-bold flex items-center gap-2" style={{ color: themeConfig.colors.neutral[200] }}>
+            <Edit size={16} style={{ color: themeConfig.colors.success[400] }} /> 
+            Smart Notes
+          </h2>
         </div>
-        <div className="space-y-2">
-          <h3 className="font-semibold text-slate-300 text-sm">Recent Notes</h3>
-          {['Meeting notes from today', 'Project ideas', 'Research findings'].map((note, i) => (
-            <div key={i} className="p-2 bg-slate-800/30 rounded border border-slate-700/50 hover:border-slate-600 transition-colors">
-              <span className="text-slate-400 text-sm">{note}</span>
-            </div>
-          ))}
+
+        {/* Template Selector and Save Button */}
+        <div className="flex justify-between items-center gap-3 mb-3">
+          <div className="flex gap-1">
+            {noteTemplates.map((template, index) => (
+              <button
+                key={index}
+                onClick={() => handleTemplateClick(template)}
+                className="flex items-center gap-1 text-xs rounded px-2 py-1 transition-all"
+                style={{
+                  backgroundColor: selectedTemplate?.name === template.name
+                    ? `${themeConfig.colors.success[600]}20`
+                    : `${themeConfig.colors.neutral[700]}50`,
+                  color: selectedTemplate?.name === template.name
+                    ? themeConfig.colors.success[300]
+                    : themeConfig.colors.neutral[300]
+                }}
+                onMouseEnter={(e) => {
+                  if (selectedTemplate?.name !== template.name) {
+                    e.currentTarget.style.backgroundColor = themeConfig.colors.neutral[700];
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (selectedTemplate?.name !== template.name) {
+                    e.currentTarget.style.backgroundColor = `${themeConfig.colors.neutral[700]}50`;
+                  }
+                }}
+              >
+                <span className="text-xs">{template.icon}</span>
+                {template.name}
+              </button>
+            ))}
+          </div>
+          
+          <button
+            onClick={handleSaveNote}
+            disabled={noteContent.trim() === ''}
+            className="flex items-center gap-1 text-xs font-semibold py-1 px-3 rounded-lg transition-all border"
+            style={{
+              backgroundColor: noteContent.trim() === '' 
+                ? `${themeConfig.colors.neutral[700]}30` 
+                : `${themeConfig.colors.success[600]}20`,
+              color: noteContent.trim() === '' 
+                ? themeConfig.colors.neutral[500] 
+                : themeConfig.colors.success[300],
+              borderColor: noteContent.trim() === '' 
+                ? `${themeConfig.colors.neutral[600]}30` 
+                : `${themeConfig.colors.success[500]}30`,
+              cursor: noteContent.trim() === '' ? 'not-allowed' : 'pointer'
+            }}
+            onMouseEnter={(e) => {
+              if (noteContent.trim() !== '') {
+                e.currentTarget.style.backgroundColor = `${themeConfig.colors.success[600]}30`;
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (noteContent.trim() !== '') {
+                e.currentTarget.style.backgroundColor = `${themeConfig.colors.success[600]}20`;
+              }
+            }}
+          >
+            <Save size={12} /> Save
+          </button>
+        </div>
+
+        {/* Main Content - Split Layout */}
+        <div className="flex-grow flex gap-4 min-h-0">
+          {/* Left Side - Note Editor */}
+          <div className="flex-1 flex flex-col">
+            <textarea
+              placeholder="Start writing your thoughts..."
+              className="w-full rounded-lg p-3 transition-all resize-none custom-scrollbar text-sm flex-grow focus:outline-none focus:ring-1"
+              style={{
+                backgroundColor: `${themeConfig.colors.neutral[900]}70`,
+                border: `1px solid ${themeConfig.colors.neutral[700]}50`,
+                color: themeConfig.colors.neutral[300],
+                focusRingColor: themeConfig.colors.success[500]
+              }}
+              value={noteContent}
+              onChange={(e) => setNoteContent(e.target.value)}
+            />
+          </div>
+
+          {/* Right Side - Historical Notes */}
+          <div className="w-32 flex flex-col">
+            <h3 className="font-semibold text-xs mb-2" style={{ color: themeConfig.colors.neutral[400] }}>Recent</h3>
+            {historicalNotes.length === 0 ? (
+              <div className="flex-1 flex items-center justify-center" style={{ color: themeConfig.colors.neutral[500] }}>
+                <div className="text-center">
+                  <Edit size={16} className="mx-auto mb-1 opacity-50" />
+                  <p className="text-xs">No notes</p>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-1.5 overflow-y-auto flex-1 custom-scrollbar">
+                {historicalNotes.map(note => (
+                  <div
+                    key={note.id}
+                    onClick={() => setNoteContent(note.content)}
+                    className="p-2 rounded cursor-pointer group transition-all border"
+                    style={{
+                      backgroundColor: `${themeConfig.colors.neutral[900]}50`,
+                      borderColor: `${themeConfig.colors.neutral[700]}30`
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = `${themeConfig.colors.neutral[800]}70`;
+                      e.currentTarget.style.borderColor = `${themeConfig.colors.neutral[600]}50`;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = `${themeConfig.colors.neutral[900]}50`;
+                      e.currentTarget.style.borderColor = `${themeConfig.colors.neutral[700]}30`;
+                    }}
+                  >
+                    <p className="text-xs mb-1" style={{ color: themeConfig.colors.neutral[400] }}>
+                      {new Date(note.date).toLocaleDateString()}
+                    </p>
+                    <p className="text-xs" style={{ color: themeConfig.colors.neutral[500] }}>
+                      {new Date(note.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
-  </GlowCard>
-);
+    </GlowCard>
+  );
+};
 
-const Footer = () => (
-  <footer className="flex items-center justify-between p-2 text-slate-400 h-12 flex-shrink-0 border-t border-slate-700/50">
-    <span className="text-xs">Lucaverse Hub © {new Date().getFullYear()}</span>
-  </footer>
-);
 
 /* ----------------------------- Dashboard Page -------------------------------- */
 

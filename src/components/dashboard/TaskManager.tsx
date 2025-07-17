@@ -1,173 +1,323 @@
 import React, { useState } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
+import { Target, Plus, ListTodo, CheckCircle, Circle } from 'lucide-react';
 
 export default function TaskManager() {
   const { themeConfig } = useTheme();
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-
-  const mainTasks = [
-    { id: 1, title: 'Design system architecture', progress: 80, priority: 'high', statusColor: themeConfig.colors.danger[500] },
-    { id: 2, title: 'Implement authentication flow', progress: 60, priority: 'medium', statusColor: themeConfig.colors.warning[500] },
-    { id: 3, title: 'Build dashboard components', progress: 40, priority: 'normal', statusColor: themeConfig.colors.success[500] },
+  
+  const initialTasks = [
+    {
+      id: 1,
+      text: 'Complete dashboard UI redesign',
+      completed: false,
+      priority: 'High',
+      dueDate: '2024-01-15',
+      subtasks: [
+        { id: 1, text: 'Design new header component', completed: true },
+        { id: 2, text: 'Update footer with features', completed: false }
+      ]
+    },
+    {
+      id: 2,
+      text: 'Implement task management system',
+      completed: false,
+      priority: 'Medium',
+      dueDate: '2024-01-20',
+      subtasks: []
+    },
+    {
+      id: 3,
+      text: 'Setup authentication flow',
+      completed: true,
+      priority: 'High',
+      dueDate: '2024-01-10',
+      subtasks: [
+        { id: 3, text: 'Create login component', completed: true },
+        { id: 4, text: 'Add JWT token handling', completed: true }
+      ]
+    },
+    {
+      id: 4,
+      text: 'Write documentation',
+      completed: false,
+      priority: 'Low',
+      dueDate: '2024-01-25',
+      subtasks: []
+    },
+    {
+      id: 5,
+      text: 'Performance optimization',
+      completed: false,
+      priority: 'Medium',
+      dueDate: '2024-01-18',
+      subtasks: [
+        { id: 5, text: 'Bundle size analysis', completed: false },
+        { id: 6, text: 'Code splitting implementation', completed: false }
+      ]
+    }
   ];
 
-  const subtasks = [
-    { id: 1, title: 'Design glassmorphism components', completed: 0, total: 0 },
-  ];
+  const [taskList, setTaskList] = useState(initialTasks);
+  const [newTaskText, setNewTaskText] = useState('');
+  const [showAddTask, setShowAddTask] = useState(false);
 
-  const filters = ['Daily', 'Meeting', 'Research', 'Code'];
-  const actions = ['Export', 'Clear Done'];
-
-  const toggleFilter = (filter: string) => {
-    setSelectedFilters(prev => 
-      prev.includes(filter) 
-        ? prev.filter(f => f !== filter)
-        : [...prev, filter]
-    );
+  const toggleTask = (id: number) => {
+    setTaskList(prev => prev.map(task => 
+      task.id === id ? { ...task, completed: !task.completed } : task
+    ));
   };
 
-  const completedCount = 1;
-  const totalCount = 3;
-  const progressPercentage = 33;
-  const highPriorityCount = 1;
+  const toggleSubtask = (taskId: number, subtaskId: number) => {
+    setTaskList(prev => prev.map(task => 
+      task.id === taskId ? {
+        ...task,
+        subtasks: task.subtasks.map(subtask =>
+          subtask.id === subtaskId ? { ...subtask, completed: !subtask.completed } : subtask
+        )
+      } : task
+    ));
+  };
+
+  const addTask = () => {
+    if (newTaskText.trim() === '') return;
+    
+    const newTask = {
+      id: Date.now(),
+      text: newTaskText,
+      completed: false,
+      priority: 'Medium',
+      dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      subtasks: []
+    };
+    
+    setTaskList(prev => [...prev, newTask]);
+    setNewTaskText('');
+    setShowAddTask(false);
+  };
+
+  const completedTasks = taskList.filter(t => t.completed).length;
+  const totalTasks = taskList.length;
+  const progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'High':
+        return {
+          bg: `${themeConfig.colors.danger[500]}20`,
+          text: themeConfig.colors.danger[400],
+          border: `${themeConfig.colors.danger[500]}30`
+        };
+      case 'Medium':
+        return {
+          bg: `${themeConfig.colors.warning[500]}20`,
+          text: themeConfig.colors.warning[400],
+          border: `${themeConfig.colors.warning[500]}30`
+        };
+      case 'Low':
+        return {
+          bg: `${themeConfig.colors.success[500]}20`,
+          text: themeConfig.colors.success[400],
+          border: `${themeConfig.colors.success[500]}30`
+        };
+      default:
+        return {
+          bg: `${themeConfig.colors.neutral[500]}20`,
+          text: themeConfig.colors.neutral[400],
+          border: `${themeConfig.colors.neutral[500]}30`
+        };
+    }
+  };
 
   return (
-    <div className="h-full flex flex-col overflow-hidden">
-      {/* Title bar with target icon + title + expand + subtitle */}
-      <div className="mb-3 flex-shrink-0">
-        <div className="flex items-center justify-between mb-1">
-          <div className="flex items-center space-x-2">
-            <span className="text-lg filter drop-shadow-lg">🎯</span>
-            <h2 className="text-lg font-bold" style={{ 
-              color: themeConfig.colors.primary[200],
-              textShadow: `0 0 10px ${themeConfig.colors.primary[500]}60`
-            }}>Mission Control</h2>
-          </div>
-          <button className="transition-colors hover:opacity-75" style={{ color: themeConfig.colors.neutral[400] }}>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
-            </svg>
+    <div className="h-full flex flex-col">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-bold flex items-center gap-2" style={{ color: themeConfig.colors.neutral[200] }}>
+          <Target size={16} style={{ color: themeConfig.colors.secondary[400] }} /> 
+          Mission Control
+          <span className="text-xs px-2 py-0.5 rounded"
+                style={{ 
+                  color: themeConfig.colors.neutral[300],
+                  backgroundColor: `${themeConfig.colors.neutral[700]}50` 
+                }}>
+            {taskList.filter(t => !t.completed).length}
+          </span>
+        </h2>
+        
+        <div className="flex gap-2">
+          <button
+            onClick={() => setShowAddTask(!showAddTask)}
+            className="flex items-center gap-1 text-xs font-semibold py-1.5 px-3 rounded-md transition-all border"
+            style={{
+              backgroundColor: `${themeConfig.colors.secondary[600]}30`,
+              color: themeConfig.colors.secondary[200],
+              borderColor: `${themeConfig.colors.secondary[500]}50`
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = `${themeConfig.colors.secondary[600]}40`;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = `${themeConfig.colors.secondary[600]}30`;
+            }}
+          >
+            <Plus size={12} /> Add Task
+          </button>
+          
+          <button className="flex items-center gap-1 text-xs font-semibold py-1.5 px-3 rounded-md transition-all border"
+                  style={{
+                    backgroundColor: `${themeConfig.colors.neutral[700]}50`,
+                    color: themeConfig.colors.neutral[300],
+                    borderColor: `${themeConfig.colors.neutral[600]}50`
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = themeConfig.colors.neutral[700];
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = `${themeConfig.colors.neutral[700]}50`;
+                  }}>
+            <ListTodo size={12} /> Reminders
           </button>
         </div>
-        <p className="text-xs" style={{ color: themeConfig.colors.neutral[400] }}>
-          {completedCount}/{totalCount} Completed · {progressPercentage}% Progress · {highPriorityCount} High Priority
-        </p>
       </div>
 
-      {/* Content split: Left and Right */}
-      <div className="grid grid-cols-2 gap-3 flex-1 overflow-hidden">
-        {/* Left side */}
-        <div className="flex flex-col space-y-2 overflow-hidden">
-          {/* Main Tasks section */}
-          <div className="flex-1 overflow-hidden">
-            <div className="flex items-center justify-between mb-2 flex-shrink-0">
-              <h3 className="text-xs font-bold flex items-center" style={{ color: themeConfig.colors.neutral[300] }}>
-                <span className="mr-1">📋</span>
-                Main Tasks
-              </h3>
-              <button className="px-2 py-1 rounded text-xs transition-all"
-                      style={{ 
-                        backgroundColor: themeConfig.colors.primary[700],
-                        color: themeConfig.colors.neutral[100]
-                      }}>
-                + Add
-              </button>
-            </div>
+      {/* Progress Bar */}
+      <div className="mb-4">
+        <div className="flex justify-between text-xs mb-1" style={{ color: themeConfig.colors.neutral[400] }}>
+          <span>Progress</span>
+          <span>{completedTasks}/{totalTasks} ({progress.toFixed(0)}%)</span>
+        </div>
+        <div className="w-full rounded-full h-2" style={{ backgroundColor: `${themeConfig.colors.neutral[700]}50` }}>
+          <div 
+            className="h-2 rounded-full transition-all duration-700"
+            style={{ 
+              width: `${progress}%`,
+              backgroundImage: `linear-gradient(to right, ${themeConfig.colors.secondary[500]}, ${themeConfig.colors.primary[500]})`
+            }}
+          ></div>
+        </div>
+      </div>
 
-            <div className="space-y-1 mb-2 flex-1 overflow-y-auto">
-              {mainTasks.map((task) => (
-                <div
-                  key={task.id}
-                  className="p-2 rounded border transition-all"
-                  style={{ backgroundColor: themeConfig.colors.neutral[800], borderColor: themeConfig.colors.neutral[700] }}
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <div className="flex items-center space-x-2 min-w-0">
-                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: task.statusColor }}></div>
-                      <span className="text-xs truncate" style={{ color: themeConfig.colors.neutral[100] }}>{task.title}</span>
-                    </div>
-                  </div>
-                  <div className="w-full rounded-full h-1 mb-1" style={{ backgroundColor: themeConfig.colors.neutral[700] }}>
-                    <div 
-                      className="h-1 rounded-full transition-all duration-300"
-                      style={{ width: `${task.progress}%`, backgroundColor: themeConfig.colors.primary[500] }}
-                    ></div>
-                  </div>
-                  <div className="text-xs" style={{ color: themeConfig.colors.neutral[400] }}>{task.progress}% complete</div>
-                </div>
-              ))}
-            </div>
-
-            {/* Tag buttons */}
-            <div className="mb-2 flex-shrink-0">
-              <div className="flex flex-wrap gap-1">
-                {filters.map((filter) => (
-                  <button
-                    key={filter}
-                    onClick={() => toggleFilter(filter)}
-                    className="px-2 py-1 rounded text-xs transition-all"
-                    style={{
-                      backgroundColor: selectedFilters.includes(filter) ? themeConfig.colors.primary[700] : themeConfig.colors.neutral[800],
-                      color: selectedFilters.includes(filter) ? themeConfig.colors.neutral[100] : themeConfig.colors.neutral[300]
-                    }}
-                  >
-                    {filter}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Footer buttons */}
-            <div className="flex gap-1 flex-shrink-0">
-              {actions.map((action) => (
-                <button
-                  key={action}
-                  className="px-2 py-1 rounded text-xs transition-all"
-                  style={{ backgroundColor: themeConfig.colors.neutral[800], color: themeConfig.colors.neutral[300] }}
-                >
-                  {action}
-                </button>
-              ))}
-            </div>
+      {/* Add Task Form */}
+      {showAddTask && (
+        <div className="mb-3 p-2 rounded-lg" style={{ backgroundColor: `${themeConfig.colors.neutral[900]}50` }}>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={newTaskText}
+              onChange={(e) => setNewTaskText(e.target.value)}
+              placeholder="New task..."
+              className="flex-grow rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 transition-all"
+              style={{
+                backgroundColor: `${themeConfig.colors.neutral[800]}50`,
+                border: `1px solid ${themeConfig.colors.neutral[600]}`,
+                color: themeConfig.colors.neutral[200],
+                focusRingColor: themeConfig.colors.secondary[500]
+              }}
+              onKeyPress={(e) => e.key === 'Enter' && addTask()}
+              autoFocus
+            />
+            <button
+              onClick={addTask}
+              className="px-2 py-1 rounded text-xs transition-colors"
+              style={{
+                backgroundColor: themeConfig.colors.secondary[600],
+                color: themeConfig.colors.neutral[100]
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = themeConfig.colors.secondary[700];
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = themeConfig.colors.secondary[600];
+              }}
+            >
+              Add
+            </button>
           </div>
         </div>
+      )}
 
-        {/* Right side */}
-        <div className="flex flex-col overflow-hidden">
-          {/* Subtasks section */}
-          <div className="flex-1 overflow-hidden">
-            <div className="flex items-center justify-between mb-2 flex-shrink-0">
-              <h3 className="text-xs font-bold flex items-center" style={{ color: themeConfig.colors.neutral[300] }}>
-                <span className="mr-1">➤</span>
-                Subtasks
-              </h3>
-              <button className="px-2 py-1 rounded text-xs transition-all"
-                      style={{ 
-                        backgroundColor: themeConfig.colors.primary[700],
-                        color: themeConfig.colors.neutral[100]
-                      }}>
-                + Add
+      {/* Tasks List */}
+      <div className="space-y-2 overflow-y-auto flex-grow custom-scrollbar">
+        {taskList.slice(0, 10).map(task => (
+          <div 
+            key={task.id} 
+            className="group p-2 rounded-lg transition-all duration-300 border"
+            style={{
+              backgroundColor: task.completed 
+                ? `${themeConfig.colors.neutral[800]}30` 
+                : `${themeConfig.colors.neutral[900]}50`,
+              borderColor: task.completed 
+                ? `${themeConfig.colors.neutral[700]}30` 
+                : `${themeConfig.colors.neutral[700]}50`,
+              color: task.completed ? themeConfig.colors.neutral[500] : themeConfig.colors.neutral[200]
+            }}
+            onMouseEnter={(e) => {
+              if (!task.completed) {
+                e.currentTarget.style.backgroundColor = `${themeConfig.colors.neutral[800]}70`;
+              }
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = task.completed 
+                ? `${themeConfig.colors.neutral[800]}30` 
+                : `${themeConfig.colors.neutral[900]}50`;
+            }}
+          >
+            <div className="flex items-center gap-2">
+              <button onClick={() => toggleTask(task.id)} className="flex-shrink-0">
+                {task.completed ? 
+                  <CheckCircle size={16} style={{ color: themeConfig.colors.success[500] }} /> : 
+                  <Circle size={16} style={{ color: themeConfig.colors.neutral[600] }} />
+                }
               </button>
+              
+              <div className="flex-grow min-w-0">
+                <span className={`block text-sm truncate ${task.completed ? 'line-through' : ''}`}>
+                  {task.text}
+                </span>
+                <div className="flex items-center gap-2 text-xs" style={{ color: themeConfig.colors.neutral[500] }}>
+                  <span>{new Date(task.dueDate).toLocaleDateString()}</span>
+                </div>
+              </div>
+              
+              <span className="text-xs px-2 py-0.5 rounded-full font-medium border"
+                    style={{
+                      backgroundColor: getPriorityColor(task.priority).bg,
+                      color: getPriorityColor(task.priority).text,
+                      borderColor: getPriorityColor(task.priority).border
+                    }}>
+                {task.priority}
+              </span>
             </div>
 
-            <div className="space-y-1 overflow-y-auto">
-              {subtasks.map((subtask) => (
-                <div
-                  key={subtask.id}
-                  className="p-2 rounded border transition-all"
-                  style={{ backgroundColor: themeConfig.colors.neutral[800], borderColor: themeConfig.colors.neutral[700] }}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs truncate" style={{ color: themeConfig.colors.neutral[100] }}>{subtask.title}</span>
-                    <span className="text-xs flex-shrink-0" style={{ color: themeConfig.colors.neutral[400] }}>
-                      {subtask.completed}/{subtask.total} completed
+            {/* Subtasks */}
+            {task.subtasks && task.subtasks.length > 0 && (
+              <div className="ml-6 mt-2 space-y-1">
+                {task.subtasks.map(subtask => (
+                  <div key={subtask.id} className="flex items-center gap-2 text-xs">
+                    <button onClick={() => toggleSubtask(task.id, subtask.id)}>
+                      {subtask.completed ? 
+                        <CheckCircle size={12} style={{ color: themeConfig.colors.success[600] }} /> : 
+                        <Circle size={12} style={{ color: themeConfig.colors.neutral[700] }} />
+                      }
+                    </button>
+                    <span className={`${subtask.completed ? 'line-through' : ''}`}
+                          style={{ 
+                            color: subtask.completed ? themeConfig.colors.neutral[600] : themeConfig.colors.neutral[400] 
+                          }}>
+                      {subtask.text}
                     </span>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
-        </div>
+        ))}
+        
+        {taskList.length === 0 && (
+          <div className="text-center py-8" style={{ color: themeConfig.colors.neutral[500] }}>
+            <Target size={32} className="mx-auto mb-2 opacity-50" />
+            <p className="text-sm">No tasks yet</p>
+          </div>
+        )}
       </div>
     </div>
   );
